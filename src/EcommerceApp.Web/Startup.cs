@@ -26,13 +26,13 @@ namespace EcommerceApp.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("SQLEXPRESS"))
-            );
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("SQLEXPRESS")));
             services.AddDefaultIdentity<AppUser>(options =>
                 options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>();
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +61,7 @@ namespace EcommerceApp.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
