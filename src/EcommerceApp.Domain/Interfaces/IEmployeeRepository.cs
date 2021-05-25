@@ -6,14 +6,14 @@ namespace EcommerceApp.Domain.Interfaces
 {
     public interface IEmployeeRepository
     {
-        Task AddEmplyee(Employee employee);
+        Task AddEmplyeeAsync(Employee employee);
 
-        Task<Employee> GetEmployee(int id);
+        Task<Employee> GetEmployeeAsync(int id);
 
-        Task<IQueryable<Employee>> GetEmployees();
+        Task<IQueryable<Employee>> GetEmployeesAsync();
 
-        Task UpdateEmployee(int id);
+        Task UpdateEmployeeAsync(Employee employee);
 
-        Task DeleteEmployee(int id);
+        Task DeleteEmployeeAsync(int id);
     }
 }
