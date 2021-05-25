@@ -10,6 +10,6 @@ namespace EcommerceApp.Infrastructure
         {
         }
 
-        public DbSet<Employee> Employees;
+        public DbSet<Employee> Employees { get; set; }
     }
 }
