@@ -11,6 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using EcommerceApp.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using EcommerceApp.Application;
+using EcommerceApp.Domain.Model;
 
 namespace EcommerceApp.Web
 {
@@ -33,6 +35,8 @@ namespace EcommerceApp.Web
                 options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<AppDbContext>();
             services.AddControllersWithViews();
+
+            services.AddApplication();
 
             services.AddAuthorization(options =>
             {
