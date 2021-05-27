@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Domain.Interfaces;
@@ -19,10 +21,10 @@ namespace EcommerceApp.Application.Services
             _repository = repository;
         }
 
-        public async Task AddEmployeeAsync(EmployeeVM employee)
+        public async Task AddEmployeeAsync(EmployeeVM employeeVM)
         {
-            var employeeVM = _mapper.Map<Employee>(employee);
-            await _repository.AddEmplyeeAsync(employeeVM);
+            var employee = _mapper.Map<Employee>(employeeVM);
+            await _repository.AddEmplyeeAsync(employee);
         }
 
         public async Task<EmployeeVM> GetEmployeeAsync(int id)
@@ -31,10 +33,10 @@ namespace EcommerceApp.Application.Services
             return _mapper.Map<EmployeeVM>(employee);
         }
 
-        public async Task<IQueryable<EmployeeVM>> GetEmployeesAsync()
+        public async Task<List<EmployeeVM>> GetEmployeesAsync()
         {
-            var employees = await _repository.GetEmployeesAsync();
-            return _mapper.Map<IQueryable<EmployeeVM>>(employees);
+            var employees = (await _repository.GetEmployeesAsync()).ToList();
+            return _mapper.Map<List<EmployeeVM>>(employees);
         }
 
         public async Task UpdateEmployeeAsync(EmployeeVM employeeVM)

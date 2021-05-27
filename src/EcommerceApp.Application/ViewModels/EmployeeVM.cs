@@ -11,7 +11,7 @@ namespace EcommerceApp.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Model.Employee, EmployeeVM>();
+            profile.CreateMap<Domain.Model.Employee, EmployeeVM>().ReverseMap();
         }
     }
 }
