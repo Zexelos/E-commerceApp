@@ -1,4 +1,6 @@
 using System.Reflection;
+using EcommerceApp.Application.Interfaces;
+using EcommerceApp.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EcommerceApp.Application
@@ -8,7 +10,7 @@ namespace EcommerceApp.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
+            services.AddScoped<IEmployeeService, EmployeeService>();
             return services;
         }
     }

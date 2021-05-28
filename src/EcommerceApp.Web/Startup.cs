@@ -37,6 +37,7 @@ namespace EcommerceApp.Web
             services.AddControllersWithViews();
 
             services.AddApplication();
+            services.AddInfrastructure();
 
             services.AddAuthorization(options =>
             {
