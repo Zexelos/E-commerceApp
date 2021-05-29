@@ -30,6 +30,7 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(addedEmployee);
                 Assert.Equal(employee, addedEmployee);
             }
+            connection.Close();
         }
 
         [Fact]
@@ -50,8 +51,9 @@ namespace EcommerceApp.Infrastructure.Tests
                 var repository = new EmployeeRepository(context);
                 var getEmployee = await repository.GetEmployeeAsync(employee.Id);
                 Assert.NotNull(getEmployee);
-                Assert.Equal(employee, getEmployee);
+                Assert.Equal(employee.Id, getEmployee.Id);
             }
+            connection.Close();
         }
 
         [Fact]
@@ -77,6 +79,7 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(getEmployees);
                 Assert.Equal(employees, getEmployees);
             }
+            connection.Close();
         }
 
         [Fact]
@@ -106,6 +109,7 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(updatedEmployee);
                 Assert.Equal(employee2, updatedEmployee);
             }
+            connection.Close();
         }
 
         [Fact]
@@ -128,6 +132,7 @@ namespace EcommerceApp.Infrastructure.Tests
                 var deletedEmployee = await context.Employees.FindAsync(employee.Id);
                 Assert.Null(deletedEmployee);
             }
+            connection.Close();
         }
     }
 }
