@@ -23,7 +23,7 @@ namespace EcommerceApp.Infrastructure.Repositories
 
         public async Task<Employee> GetEmployeeAsync(int id)
         {
-            return await _context.Employees.FindAsync(id);
+            return await _context.Employees.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IQueryable<Employee>> GetEmployeesAsync()

@@ -1,6 +1,6 @@
 @model EcommerceApp.Application.ViewModels.EmployeeVM
 @{
-    ViewData["Title"] = "Update Employee";
+ViewData["Title"] = "Update Employee";
 }
 <center>
     <h1>@ViewData["Title"]</h1>
@@ -30,6 +30,14 @@
             <div class="form-group">
                 <label asp-for="Position"></label>
                 <input asp-for="@Model.Position" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Email"></label>
+                <input asp-for="@Model.Email" />
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Password">Password (leave blank to keep old password)</label>
+                <input asp-for="@Model.Password" />
             </div>
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
