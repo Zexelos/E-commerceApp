@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Linq;
 using System.Reflection;
 using System;
@@ -17,208 +18,196 @@ namespace EcommerceApp.Application.Tests
 {
     public class EmployeeServiceUnitTests
     {
-        public Mock<UserManager<AppUser>> GetMockUserManager()
+        private readonly EmployeeService _sut;
+        private readonly Mock<IMapper> _mapper = new();
+        private readonly Mock<IEmployeeRepository> _employeeRepository = new();
+        private readonly Mock<UserManager<AppUser>> _userManager;
+
+        public EmployeeServiceUnitTests()
         {
-            var mockUserStore = new Mock<IUserStore<AppUser>>();
-            return new Mock<UserManager<AppUser>>(mockUserStore.Object, null, null, null, null, null, null, null, null);
+            var userStore = new Mock<IUserStore<AppUser>>();
+            _userManager = new Mock<UserManager<AppUser>>(userStore.Object, null, null, null, null, null, null, null, null);
+            _sut = new EmployeeService(_mapper.Object, _employeeRepository.Object, _userManager.Object);
         }
 
         [Fact]
-        public async Task CheckAddEmployee()
+        public async Task AddEmployee_MapperShouldReturnEmployee()
         {
-            var employee = new Employee();
-
-            var employeeVMe = new EmployeeVM();
-
-            var employeeVM = new EmployeeVM
+            // Arrange
+            var employeeVM = new EmployeeVM()
             {
-                Id = 100,
-                FirstName = "Zordon",
-                LastName = "Rasista",
-                Position = "edhsrth",
-                Email = "maniel@pajac.com",
-                Password = "Pa$$w0rd!"
+                FirstName = "maciek",
+                LastName = "makowski"
             };
 
-            var user = new AppUser { UserName = employeeVM.Email, Email = employeeVM.Email };
-
-            var config = new MapperConfiguration(c => c.AddProfile(new MappingProfile()));
-
-            var mapper = config.CreateMapper();
-
-            var mock = new Mock<IEmployeeRepository>();
-
-            var mock2 = GetMockUserManager();
-
-            mock.SetupAsync(s => s.AddEmplyeeAsync(It.IsAny<Employee>())).Callback<Employee>((p) =>
+            var employee = new Employee()
             {
-                employee = p;
-            });
+                FirstName = "maciek",
+                LastName = "makowski"
+            };
 
-            mock2.Setup(m => m.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>())).Callback<AppUser, string>((a, s) =>
-             {
-                 employeeVMe.Email = a.Email;
-                 employeeVMe.Password = s;
-             });
+            _mapper.Setup(s => s.Map<Employee>(employeeVM)).Returns(employee);
 
-            var service = new EmployeeService(mapper, mock.Object, mock2.Object);
+            // Act
+            await _sut.AddEmployeeAsync(employeeVM);
 
-            await service.AddEmployeeAsync(employeeVM);
-
-            mock.Verify(x => x.AddEmplyeeAsync(It.IsAny<Employee>()), Times.Once());
-            mock2.Verify(x => x.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Once());
-
+            // Assert 
+            _userManager.Verify(s => s.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Once);
+            _employeeRepository.Verify(s => s.AddEmplyeeAsync(It.IsAny<Employee>()), Times.Once);
             Assert.Equal(employee.FirstName, employeeVM.FirstName);
             Assert.Equal(employee.LastName, employeeVM.LastName);
-            Assert.Equal(employee.Position, employeeVM.Position);
-            Assert.Equal(employeeVMe.Email, employeeVM.Email);
-            Assert.Equal(employeeVMe.Password, employeeVM.Password);
         }
 
         [Fact]
-        public async Task CheckGetEmployee()
+        public async Task GetEmployeeAsync_ReturnEMployeeVM()
         {
-            var employee = new Employee
+            // Arrange
+            Employee employee = new()
             {
-                Id = 100,
-                FirstName = "adssad",
-                LastName = "sadsad",
-                Position = "edhsrsadasdth"
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski"
             };
 
-            var config = new MapperConfiguration(c => c.AddProfile(new MappingProfile()));
+            EmployeeVM employeeVM = new()
+            {
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski"
+            };
 
-            var mapper = config.CreateMapper();
+            _employeeRepository.Setup(s => s.GetEmployeeAsync(employee.Id)).ReturnsAsync(employee);
 
-            var mock = new Mock<IEmployeeRepository>();
+            _mapper.Setup(s => s.Map<EmployeeVM>(employee)).Returns(employeeVM);
 
-            var mock2 = GetMockUserManager();
+            // Act
+            var result = await _sut.GetEmployeeAsync(employee.Id);
 
-            mock.SetupAsync(s => s.GetEmployeeAsync(It.IsAny<int>())).Returns(employee);
-
-            var service = new EmployeeService(mapper, mock.Object, mock2.Object);
-
-            var result = await service.GetEmployeeAsync(employee.Id);
-
+            // Assert
+            Assert.Equal(employee.Id, result.Id);
             Assert.Equal(employee.FirstName, result.FirstName);
+            Assert.Equal(employee.LastName, result.LastName);
         }
 
         [Fact]
-        public async Task CheckEmployeesExistence()
+        public async Task GetEmployeesAsync_ReturnListOfEmployeeVM()
         {
-            var employee1 = new Employee { Id = 100, FirstName = "adssad", LastName = "sadsad", Position = "edhsrsadasdth" };
-            var employee2 = new Employee { Id = 150, FirstName = "sadfsd", LastName = "o7hl9", Position = "edhsrsadasy35w3wdth" };
-            var employee3 = new Employee { Id = 200, FirstName = "34t34t", LastName = "sa34xtdsad", Position = "w434b5" };
-
-            List<Employee> employees = new() { employee1, employee2, employee3 };
-
-            var config = new MapperConfiguration(c => c.AddProfile(new MappingProfile()));
-
-            var mapper = config.CreateMapper();
-
-            var mock = new Mock<IEmployeeRepository>();
-
-            var mock2 = GetMockUserManager();
-
-            mock.SetupAsync(s => s.GetEmployeesAsync()).Returns(employees.AsQueryable());
-
-            var service = new EmployeeService(mapper, mock.Object, mock2.Object);
-
-            var result = await service.GetEmployeesAsync();
-
-            Assert.NotNull(result);
-            for (int i = 0; i < employees.Count; i++)
+            // Arrange
+            List<Employee> employees = new()
             {
-                Assert.Equal(employees[i].FirstName, result[i].FirstName);
-                Assert.Equal(employees[i].LastName, result[i].LastName);
-                Assert.Equal(employees[i].Position, result[i].Position);
-            }
+                new Employee() { FirstName = "maciek", LastName = "makowski" },
+                new Employee() { FirstName = "swe9guhv", LastName = "s34c63w4" },
+            };
+
+            List<EmployeeVM> employeesVM = new()
+            {
+                new EmployeeVM() { FirstName = "maciek", LastName = "makowski" },
+                new EmployeeVM() { FirstName = "swe9guhv", LastName = "s34c63w4" },
+            };
+
+            _employeeRepository.Setup(s => s.GetEmployeesAsync()).ReturnsAsync(employees.AsQueryable);
+
+            _mapper.Setup(s => s.Map<List<EmployeeVM>>(employees)).Returns(employeesVM);
+
+            // Act
+            var result = await _sut.GetEmployeesAsync();
+
+            // Assert
+            Assert.Equal(result[0].FirstName, employeesVM[0].FirstName);
+            Assert.Equal(result[1].LastName, employeesVM[1].LastName);
+        }
+
+        [Fact]
+        public async Task UpdateEmployeeAsync_ShouldUpdateEEmployee()
+        {
+            // Arrange
+            Employee employee = new()
+            {
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski",
+                AppUserId = "w23qrx2q3",
+            };
+
+            EmployeeVM employeeVM = new()
+            {
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski",
+                Password = "asfew"
+            };
+
+            EmployeeVM employeeVM2 = new()
+            {
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski",
+                Password = null
+            };
+
+            AppUser user = new()
+            {
+                Id = "w23qrx2q3"
+            };
+
+            _employeeRepository.Setup(s => s.GetEmployeeAsync(employeeVM.Id)).ReturnsAsync(employee);
+
+            _userManager.Setup(s => s.FindByIdAsync(employee.AppUserId)).ReturnsAsync(new AppUser()
+            {
+                Id = "w23qrx2q3"
+            });
+
+            _mapper.Setup(s => s.Map<Employee>(employeeVM)).Returns(employee);
+
+            // Act
+            await _sut.UpdateEmployeeAsync(employeeVM);
+
+            // Assert
+            Assert.Equal(employee.Id, employeeVM.Id);
+            Assert.Equal(employee.AppUserId, user.Id);
+            _userManager.Verify(v => v.SetEmailAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Once);
+            _userManager.Verify(v => v.UpdateNormalizedEmailAsync(It.IsAny<AppUser>()), Times.Once);
+            _userManager.Verify(v => v.SetUserNameAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Once);
+            _userManager.Verify(v => v.UpdateNormalizedUserNameAsync(It.IsAny<AppUser>()), Times.Once);
+            _userManager.Verify(v => v.ResetPasswordAsync(It.IsAny<AppUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
         public async Task CheckUpdateEmployee()
         {
-            var employee = new Employee();
-
-            var employeeVMe = new EmployeeVM();
-
-            var employeeVM = new EmployeeVM
+            // Arrange
+            EmployeeVM employeeVM = new()
             {
-                Id = 100,
-                FirstName = "Zordon",
-                LastName = "Rasista",
-                Position = "edhsrth",
-                Email = "maniel@pajac.com",
-                Password = "Pa$$w0rd!"
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski",
+                Password = "asfew"
             };
 
-            var userE = new AppUser();
-
-            var user = new AppUser
+            Employee employee = new()
             {
-                Id = "sfawrg",
-                UserName = "Zordon",
-                Email = "maniel@pajac.com"
+                Id = 10,
+                FirstName = "maciek",
+                LastName = "makowski",
+                AppUserId = "w23qrx2q3",
             };
 
-            var config = new MapperConfiguration(c => c.AddProfile(new MappingProfile()));
-
-            var mapper = config.CreateMapper();
-
-            var mock = new Mock<IEmployeeRepository>();
-
-            var mock2 = GetMockUserManager();
-
-            mock2.SetupAsync(s => s.FindByIdAsync(It.IsAny<string>())).Returns(user);
-
-            mock2.Setup(s => s.SetEmailAsync(user, It.IsAny<string>())).Callback<AppUser, string>((a, s) =>
+            AppUser user = new()
             {
-                Assert.Equal(a.Id, user.Id);
-                Assert.Equal(a.UserName, user.UserName);
-                Assert.Equal(a.Email, user.Email);
-            });
+                Id = "w23qrx2q3"
+            };
 
-            mock.SetupAsync(s => s.UpdateEmployeeAsync(It.IsAny<Employee>())).Callback<Employee>((p) =>
-            {
-                employee = p;
-            });
+            _employeeRepository.Setup(s => s.GetEmployeeAsync(employeeVM.Id)).ReturnsAsync(employee);
 
-            var service = new EmployeeService(mapper, mock.Object, mock2.Object);
+            _userManager.Setup(s => s.FindByIdAsync(employee.AppUserId)).ReturnsAsync(user);
 
-            await service.UpdateEmployeeAsync(employeeVM);
+            // Act
+            await _sut.DeleteEmployeeAsync(employeeVM.Id);
 
-            mock.Verify(x => x.UpdateEmployeeAsync(It.IsAny<Employee>()), Times.Once());
-
-            Assert.Equal(employee.FirstName, employeeVM.FirstName);
-            Assert.Equal(employee.LastName, employeeVM.LastName);
-            Assert.Equal(employee.Position, employeeVM.Position);
+            // Assert
+            Assert.Equal(user.Id, employee.AppUserId);
+            _userManager.Verify(v => v.DeleteAsync(It.IsAny<AppUser>()), Times.Once);
+            _employeeRepository.Verify(v => v.DeleteEmployeeAsync(It.IsAny<int>()), Times.Once);
         }
-        /*
-                [Fact]
-                public async Task CheckIfRepositoryDeleteMethodWasCalledWithCorrectData()
-                {
-                    var employee1 = new Employee();
-                    var employee2 = new Employee { Id = 150, FirstName = "sadfsd", LastName = "o7hl9", Position = "edhsrsadasy35w3wdth" };
-
-                    var config = new MapperConfiguration(c => c.AddProfile(new MappingProfile()));
-
-                    var mapper = config.CreateMapper();
-
-                    var mock = new Mock<IEmployeeRepository>();
-
-                    mock.SetupAsync(s => s.DeleteEmployeeAsync(It.IsAny<int>())).Callback<int>((p) =>
-                    {
-                        employee1.Id = p;
-                    });
-
-                    var service = new EmployeeService(mapper, mock.Object);
-
-                    await service.DeleteEmployeeAsync(employee2.Id);
-
-                    mock.Verify(x => x.DeleteEmployeeAsync(It.IsAny<int>()), Times.Once());
-
-                    Assert.Equal(employee1.Id, employee2.Id);
-                }
-        */
     }
 }
