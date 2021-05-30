@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ namespace EcommerceApp.Application.Services
             employee.AppUserId = user.Id;
             await _userManager.CreateAsync(user, employeeVM.Password);
             await _repository.AddEmplyeeAsync(employee);
+            var claim = new Claim("IsEmployee", "True");
+            await _userManager.AddClaimAsync(user, claim);
         }
 
         public async Task<EmployeeVM> GetEmployeeAsync(int id)
@@ -66,8 +69,8 @@ namespace EcommerceApp.Application.Services
         {
             var employee = await _repository.GetEmployeeAsync(id);
             var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            await _userManager.DeleteAsync(user);
             await _repository.DeleteEmployeeAsync(id);
+            await _userManager.DeleteAsync(user);
         }
     }
 }

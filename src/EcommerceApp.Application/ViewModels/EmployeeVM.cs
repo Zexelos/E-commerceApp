@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;
+using FluentValidation;
 
 namespace EcommerceApp.Application.ViewModels
 {
@@ -11,8 +12,8 @@ namespace EcommerceApp.Application.ViewModels
         public string LastName { get; set; }
         public string Position { get; set; }
 
-        [Required]
-        [EmailAddress]
+        //[Required]
+        //[EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -24,6 +25,18 @@ namespace EcommerceApp.Application.ViewModels
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Domain.Model.Employee, EmployeeVM>().ReverseMap();
+        }
+    }
+
+    public class EmployeeVMValidator : AbstractValidator<EmployeeVM>
+    {
+        public EmployeeVMValidator()
+        {
+            RuleFor(x => x.Id).NotNull();
+            RuleFor(x => x.FirstName).NotEmpty().MinimumLength(2).MaximumLength(50).WithMessage("The {FirstName} must be at least {MinLengthAttribute} and at max {MaxLengthAttribute} characters long.");
+            RuleFor(x => x.LastName).NotEmpty().MinimumLength(2).MaximumLength(50).WithMessage("The {LastName} must be at least {MinLengthAttribute} and at max {MaxLengthAttribute} characters long.");
+            RuleFor(x => x.Position).NotEmpty().MinimumLength(2).MaximumLength(50).WithMessage("The {Position} must be at least {MinLengthAttribute} and at max {MaxLengthAttribute} characters long.");
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
         }
     }
 }

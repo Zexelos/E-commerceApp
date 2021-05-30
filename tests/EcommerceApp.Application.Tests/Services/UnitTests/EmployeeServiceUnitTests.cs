@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading;
 using System.Linq;
 using System.Reflection;
@@ -54,6 +55,7 @@ namespace EcommerceApp.Application.Tests
             // Assert 
             _userManager.Verify(s => s.CreateAsync(It.IsAny<AppUser>(), It.IsAny<string>()), Times.Once);
             _employeeRepository.Verify(s => s.AddEmplyeeAsync(It.IsAny<Employee>()), Times.Once);
+            _userManager.Verify(s => s.AddClaimAsync(It.IsAny<AppUser>(), It.IsAny<Claim>()), Times.Once);
             Assert.Equal(employee.FirstName, employeeVM.FirstName);
             Assert.Equal(employee.LastName, employeeVM.LastName);
         }

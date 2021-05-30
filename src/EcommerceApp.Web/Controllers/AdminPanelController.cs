@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Net;
 using System;
 using System.Collections.Generic;
@@ -40,27 +41,49 @@ namespace EcommerceApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEmployee(EmployeeVM employeeVM)
         {
-            await _employeeService.AddEmployeeAsync(employeeVM);
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                await _employeeService.AddEmployeeAsync(employeeVM);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> UpdateEmployee(int id)
+        public async Task<IActionResult> UpdateEmployee(int? id)
         {
-            var model = await _employeeService.GetEmployeeAsync(id);
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/EditEmployee/21");
+            }
+            var model = await _employeeService.GetEmployeeAsync(id.Value);
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateEmployee(EmployeeVM employeeVM)
         {
-            await _employeeService.UpdateEmployeeAsync(employeeVM);
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                await _employeeService.UpdateEmployeeAsync(employeeVM);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
-        public async Task<IActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployee(int? id)
         {
-            await _employeeService.DeleteEmployeeAsync(id);
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/EditEmployee/21");
+            }
+            await _employeeService.DeleteEmployeeAsync(id.Value);
             return RedirectToAction("Index");
         }
 

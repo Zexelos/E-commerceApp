@@ -33,10 +33,10 @@
                             @Html.DisplayFor(modelItem => item.Position)
                         </td>
                         <td>
-                            <a class="nav-link text-blue" asp-area="" asp-controller="AdminPanel"
+                            <a class="btn btn-success" asp-area="" asp-controller="AdminPanel"
                             asp-action="UpdateEmployee" asp-route-id="@item.Id">Edit</a>
 
-                            <a class="nav-link text-blue" asp-area="" asp-controller="AdminPanel"
+                            <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel"
                             asp-action="DeleteEmployee" asp-route-id="@item.Id">Remove</a>
                         </td>
                     </tr>
