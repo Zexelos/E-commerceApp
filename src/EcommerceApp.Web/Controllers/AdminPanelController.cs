@@ -17,10 +17,10 @@ namespace EcommerceApp.Web.Controllers
     [Authorize("Admin")]
     public class AdminPanelController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<AdminPanelController> _logger;
         private readonly IEmployeeService _employeeService;
 
-        public AdminPanelController(ILogger<HomeController> logger, IEmployeeService employeeService)
+        public AdminPanelController(ILogger<AdminPanelController> logger, IEmployeeService employeeService)
         {
             _logger = logger;
             _employeeService = employeeService;
@@ -57,7 +57,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/EditEmployee/21");
+                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/UpdateEmployee/21");
             }
             var model = await _employeeService.GetEmployeeAsync(id.Value);
             return View(model);
@@ -81,7 +81,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/EditEmployee/21");
+                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/DeleteEmployee/21");
             }
             await _employeeService.DeleteEmployeeAsync(id.Value);
             return RedirectToAction("Index");
