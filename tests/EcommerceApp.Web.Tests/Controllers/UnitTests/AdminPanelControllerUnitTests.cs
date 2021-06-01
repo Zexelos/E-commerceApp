@@ -1,3 +1,5 @@
+using System.Net;
+using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -101,18 +103,17 @@ namespace EcommerceApp.Web.Tests
         [Fact]
         public async Task UpdateEmployee_GET_ReturnNotFoundResultWhenIdIsNull()
         {
-            // Arrange
-
             // Act
             var result = await _sut.UpdateEmployee(id: null);
 
             // Assert
             Assert.NotNull(result);
-            Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
         [Fact]
-        public async Task UpdateEmployee_GET_ReturnNotFoundResultWhenIdHasValue()
+        public async Task UpdateEmployee_GET_ReturnViewResultWhenIdHasValue()
         {
             // Arrange
             EmployeeVM employeeVM = new()
@@ -135,6 +136,49 @@ namespace EcommerceApp.Web.Tests
         }
 
         [Fact]
+        public async Task UpdateEmployee_POST_ReturnRedirectToActionResultWhenModelStateIsValid()
+        {
+            // Arrange
+            EmployeeVM employeeVM = new()
+            {
+                Id = 100,
+                FirstName = "adsfwgge",
+                LastName = "sdgwgerh"
+            };
+
+            // Act
+            var result = await _sut.UpdateEmployee(employeeVM);
+
+            // Assert
+            _service.Verify(s => s.UpdateEmployeeAsync(employeeVM), Times.Once);
+            Assert.NotNull(result);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectToActionResult.ActionName);
+        }
+
+        [Fact]
+        public async Task UpdateEmployee_POST_ReturnBadRequestResultWhenModelStateIsInvalid()
+        {
+            // Arrange
+            EmployeeVM employeeVM = new()
+            {
+                Id = 100,
+                FirstName = "adsfwgge",
+                LastName = "sdgwgerh"
+            };
+
+            _sut.ModelState.AddModelError("error", "jakis error");
+
+            // Act
+            var result = await _sut.UpdateEmployee(employeeVM);
+
+            // Assert
+            Assert.NotNull(result);
+            var badRequestResult = Assert.IsType<BadRequestResult>(result);
+            Assert.Equal((int)HttpStatusCode.BadRequest, badRequestResult.StatusCode);
+        }
+
+        [Fact]
         public async Task DeleteEmployee_ReturnNotFoundResultWhenIdIsNull()
         {
             // Arrange
@@ -144,7 +188,8 @@ namespace EcommerceApp.Web.Tests
 
             // Assert
             Assert.NotNull(result);
-            Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
         [Fact]
