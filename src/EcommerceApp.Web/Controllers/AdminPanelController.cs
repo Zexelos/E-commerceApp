@@ -86,7 +86,7 @@ namespace EcommerceApp.Web.Controllers
             await _employeeService.DeleteEmployeeAsync(id.Value);
             return RedirectToAction("Index");
         }
-
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
