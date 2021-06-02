@@ -20,7 +20,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeExistenceAfterAdd()
+        public async Task AddEmplyeeAsync_AddEmployee()
         {
             var employee = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 
@@ -36,7 +36,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeExists()
+        public async Task GetEmployeeAsync_ReturnEmployee()
         {
             var employee = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 
@@ -53,7 +53,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeesExists()
+        public async Task GetEmployeesAsync_ReturnIQueryableOfEmployees()
         {
             var employee1 = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
             var employee2 = new Employee { Id = 150, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
@@ -73,7 +73,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeChangedAfterUpdate()
+        public async Task UpdateEmployeeAsync_UpdateEmployee()
         {
             var employee1 = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
             var employee2 = new Employee { Id = 100, FirstName = "Maniek", LastName = "Fajowski", Position = "act4c4" };
@@ -97,7 +97,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeAfterDelete()
+        public async Task DeleteEmployeeAsync_DeleteEmployee()
         {
             var employee = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 

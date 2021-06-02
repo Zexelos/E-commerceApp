@@ -20,7 +20,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task AddCategoryAsync_()
+        public async Task AddCategoryAsync_AddCategory()
         {
             var category = new Category { Id = 100, Name = "Food", Description = "dobre bardzo" };
 
@@ -36,7 +36,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeExists()
+        public async Task GetCategoryAsync_ReturnCategory()
         {
             var category = new Category { Id = 101, Name = "Food", Description = "dobre bardzo" };
 
@@ -53,7 +53,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeesExists()
+        public async Task GetCategoriesAsync_ReturnIQueryableOfCategories()
         {
             var category1 = new Category { Id = 101, Name = "Food", Description = "dobre bardzo" };
             var category2 = new Category { Id = 102, Name = "w4d5", Description = "do43wt4zo" };
@@ -73,7 +73,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeChangedAfterUpdate()
+        public async Task UpdateCategoryAsync_UpdateCategory()
         {
             var category1 = new Category { Id = 101, Name = "Food", Description = "dobre bardzo" };
             var category2 = new Category { Id = 101, Name = "w4d5", Description = "do43wt4zo" };
@@ -97,7 +97,7 @@ namespace EcommerceApp.Infrastructure.Tests
         }
 
         [Fact]
-        public async Task CheckEmployeeAfterDelete()
+        public async Task DeleteCategoryAsync_DeleteCategory()
         {
             var category = new Category { Id = 101, Name = "Food", Description = "dobre bardzo" };
 
