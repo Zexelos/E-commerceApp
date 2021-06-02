@@ -2,7 +2,6 @@ using System;
 using Xunit;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Infrastructure.Repositories;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Collections.Generic;

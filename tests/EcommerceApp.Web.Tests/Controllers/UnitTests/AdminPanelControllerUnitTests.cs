@@ -1,6 +1,4 @@
 using System.Net;
-using System.Reflection;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;

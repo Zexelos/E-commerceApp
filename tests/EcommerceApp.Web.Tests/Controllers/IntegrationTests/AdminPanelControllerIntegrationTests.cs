@@ -4,20 +4,13 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EcommerceApp.Application.ViewModels;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authentication;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using EcommerceApp.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
 using EcommerceApp.Domain.Models;
 
 namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
