@@ -11,17 +11,20 @@ namespace EcommerceApp.Infrastructure.Tests
 {
     public class EmployeeRepositoryUnitTests
     {
+        private readonly DbContextOptions<AppDbContext> _options;
+
+        public EmployeeRepositoryUnitTests()
+        {
+            _options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+        }
+
         [Fact]
         public async Task CheckEmployeeExistenceAfterAdd()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            var options = new DbContextOptionsBuilder<AppDbContext>().UseSqlite(connection).Options;
-
             var employee = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(_options))
             {
                 context.Database.EnsureCreated();
                 var repository = new EmployeeRepository(context);
@@ -30,20 +33,14 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(addedEmployee);
                 Assert.Equal(employee, addedEmployee);
             }
-            connection.Close();
         }
 
         [Fact]
         public async Task CheckEmployeeExists()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            var options = new DbContextOptionsBuilder<AppDbContext>().UseSqlite(connection).Options;
-
             var employee = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(_options))
             {
                 context.Database.EnsureCreated();
                 await context.AddAsync(employee);
@@ -53,22 +50,16 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(getEmployee);
                 Assert.Equal(employee.Id, getEmployee.Id);
             }
-            connection.Close();
         }
 
         [Fact]
         public async Task CheckEmployeesExists()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            var options = new DbContextOptionsBuilder<AppDbContext>().UseSqlite(connection).Options;
-
             var employee1 = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
             var employee2 = new Employee { Id = 150, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
             var employee3 = new Employee { Id = 200, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(_options))
             {
                 context.Database.EnsureCreated();
                 List<Employee> employees = new() { employee1, employee2, employee3 };
@@ -79,28 +70,22 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(getEmployees);
                 Assert.Equal(employees, getEmployees);
             }
-            connection.Close();
         }
 
         [Fact]
         public async Task CheckEmployeeChangedAfterUpdate()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            var options = new DbContextOptionsBuilder<AppDbContext>().UseSqlite(connection).Options;
-
             var employee1 = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
             var employee2 = new Employee { Id = 100, FirstName = "Maniek", LastName = "Fajowski", Position = "act4c4" };
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(_options))
             {
                 context.Database.EnsureCreated();
                 await context.AddAsync(employee1);
                 await context.SaveChangesAsync();
             }
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(_options))
             {
                 context.Database.EnsureCreated();
                 var repository = new EmployeeRepository(context);
@@ -109,20 +94,14 @@ namespace EcommerceApp.Infrastructure.Tests
                 Assert.NotNull(updatedEmployee);
                 Assert.Equal(employee2, updatedEmployee);
             }
-            connection.Close();
         }
 
         [Fact]
         public async Task CheckEmployeeAfterDelete()
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            var options = new DbContextOptionsBuilder<AppDbContext>().UseSqlite(connection).Options;
-
             var employee = new Employee { Id = 100, FirstName = "Zordon", LastName = "Rasista", Position = "edhsrth" };
 
-            using (var context = new AppDbContext(options))
+            using (var context = new AppDbContext(_options))
             {
                 context.Database.EnsureCreated();
                 await context.AddAsync(employee);
@@ -132,7 +111,6 @@ namespace EcommerceApp.Infrastructure.Tests
                 var deletedEmployee = await context.Employees.FindAsync(employee.Id);
                 Assert.Null(deletedEmployee);
             }
-            connection.Close();
         }
     }
 }

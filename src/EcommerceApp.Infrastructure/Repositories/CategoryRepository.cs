@@ -20,7 +20,7 @@ namespace EcommerceApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Category> GetEmployeeAsync(int id)
+        public async Task<Category> GetCategoryAsync(int id)
         {
             return await _context.Categories.FindAsync(id);
         }
