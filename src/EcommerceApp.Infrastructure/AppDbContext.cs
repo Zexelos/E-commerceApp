@@ -1,4 +1,4 @@
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,14 +12,8 @@ namespace EcommerceApp.Infrastructure
 
         public DbSet<Employee> Employees { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        public DbSet<Category> Categories { get; set; }
 
-            modelBuilder.Entity<AppUser>()
-                .HasOne(a => a.Employee)
-                .WithOne(b => b.AppUser)
-                .HasForeignKey<Employee>(b => b.AppUserId);
-        }
+        public DbSet<Product> Products { get; set; }
     }
 }

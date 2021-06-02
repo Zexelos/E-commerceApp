@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Infrastructure.Repositories
@@ -39,10 +39,10 @@ namespace EcommerceApp.Infrastructure.Repositories
 
         public async Task DeleteEmployeeAsync(int id)
         {
-            var employeeToDelete = await _context.Employees.FindAsync(id);
-            if (employeeToDelete != null)
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee != null)
             {
-                _context.Remove(employeeToDelete);
+                _context.Remove(employee);
                 await _context.SaveChangesAsync();
             }
         }

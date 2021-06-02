@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Domain.Interfaces;
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace EcommerceApp.Application.Services
@@ -69,7 +68,7 @@ namespace EcommerceApp.Application.Services
         {
             var employee = await _repository.GetEmployeeAsync(id);
             var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            await _repository.DeleteEmployeeAsync(id);
+            //await _repository.DeleteEmployeeAsync(id);
             await _userManager.DeleteAsync(user);
         }
     }

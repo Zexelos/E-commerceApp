@@ -25,7 +25,7 @@ namespace EcommerceApp.Web.Controllers
             _logger = logger;
             _employeeService = employeeService;
         }
-
+        
         public async Task<IActionResult> Index()
         {
             var model = await _employeeService.GetEmployeesAsync();

@@ -50,8 +50,6 @@ namespace EcommerceApp.Web.Tests
         [Fact]
         public void AddEmployee_GET_ReturnCorrectViewResult()
         {
-            // Arrange
-
             // Act
             var result = _sut.AddEmployee();
 

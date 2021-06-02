@@ -9,7 +9,7 @@ using EcommerceApp.Application.Mapping;
 using EcommerceApp.Application.Services;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Domain.Interfaces;
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 using Moq;
 using Xunit;
 using System.Collections.Generic;

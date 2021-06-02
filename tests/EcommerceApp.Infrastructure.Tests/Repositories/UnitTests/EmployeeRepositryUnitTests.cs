@@ -1,6 +1,6 @@
 using System;
 using Xunit;
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 using EcommerceApp.Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

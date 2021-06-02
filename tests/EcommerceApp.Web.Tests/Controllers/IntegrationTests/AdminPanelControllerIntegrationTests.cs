@@ -18,7 +18,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using EcommerceApp.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 
 namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 {

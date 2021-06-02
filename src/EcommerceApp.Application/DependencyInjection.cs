@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.Services;

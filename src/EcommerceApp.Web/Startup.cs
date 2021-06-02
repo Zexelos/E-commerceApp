@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using EcommerceApp.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using EcommerceApp.Application;
-using EcommerceApp.Domain.Model;
+using EcommerceApp.Domain.Models;
 
 namespace EcommerceApp.Web
 {

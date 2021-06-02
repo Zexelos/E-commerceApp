@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace EcommerceApp.Domain.Model
+namespace EcommerceApp.Domain.Models
 {
     public class AppUser : IdentityUser
     {
