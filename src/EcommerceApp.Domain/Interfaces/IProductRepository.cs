@@ -1,6 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Models;
-using System.Collections.Generic;
 
 namespace EcommerceApp.Domain.Interfaces
 {
@@ -10,7 +10,7 @@ namespace EcommerceApp.Domain.Interfaces
 
         Task<Product> GetProductAsync(int id);
 
-        Task<List<Product>> GetProductsAsync();
+        Task<IQueryable<Product>> GetProductsAsync();
 
         Task UpdateProductAsync(Product product);
 

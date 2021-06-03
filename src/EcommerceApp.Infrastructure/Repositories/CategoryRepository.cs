@@ -33,7 +33,7 @@ namespace EcommerceApp.Infrastructure.Repositories
 
         public async Task UpdateCategoryAsync(Category category)
         {
-            _context.Update(category);
+            _context.Categories.Update(category);
             await _context.SaveChangesAsync();
         }
 
@@ -42,7 +42,7 @@ namespace EcommerceApp.Infrastructure.Repositories
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
-                _context.Remove(category);
+                _context.Categories.Remove(category);
                 await _context.SaveChangesAsync();
             }
         }

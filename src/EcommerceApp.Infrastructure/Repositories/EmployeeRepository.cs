@@ -33,7 +33,7 @@ namespace EcommerceApp.Infrastructure.Repositories
 
         public async Task UpdateEmployeeAsync(Employee employee)
         {
-            _context.Update(employee);
+            _context.Employees.Update(employee);
             await _context.SaveChangesAsync();
         }
 
@@ -42,7 +42,7 @@ namespace EcommerceApp.Infrastructure.Repositories
             var employee = await _context.Employees.FindAsync(id);
             if (employee != null)
             {
-                _context.Remove(employee);
+                _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
             }
         }
