@@ -5,7 +5,6 @@ using System.Reflection;
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using EcommerceApp.Application.Mapping;
 using EcommerceApp.Application.Services;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Domain.Interfaces;
@@ -209,7 +208,7 @@ namespace EcommerceApp.Application.Tests
             // Assert
             Assert.Equal(user.Id, employee.AppUserId);
             _userManager.Verify(v => v.DeleteAsync(It.IsAny<AppUser>()), Times.Once);
-            _employeeRepository.Verify(v => v.DeleteEmployeeAsync(It.IsAny<int>()), Times.Once);
+            //_employeeRepository.Verify(v => v.DeleteEmployeeAsync(It.IsAny<int>()), Times.Once);
         }
     }
 }
