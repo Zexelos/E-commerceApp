@@ -13,6 +13,9 @@ namespace EcommerceApp.Domain.Models
         [StringLength(50, MinimumLength = 2)]
         public string Name { get; set; }
 
+        [StringLength(200, MinimumLength = 2)]
+        public string Description { get; set; }
+
         [Required]
         [Column(TypeName = "decimal(18,2")]
         public decimal UnitPrice { get; set; }
