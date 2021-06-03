@@ -93,7 +93,7 @@ namespace EcommerceApp.Web.Controllers
             {
                 return NotFound("You must pass a valid Product ID in the route");
             }
-            var model = await _productService.GetProductWithCategoriesAsync(id.Value);
+            var model = await _productService.GetProductAsync(id.Value);
             return View(model);
         }
 
