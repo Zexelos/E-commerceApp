@@ -15,9 +15,11 @@ namespace EcommerceApp.Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddMvc().AddFluentValidation();
             services.AddTransient<IValidator<EmployeeVM>, EmployeeVMValidator>();
             services.AddTransient<IValidator<CategoryVM>, CategoryVMValidator>();
+            services.AddTransient<IValidator<ProductVM>, ProductVMValidator>();
             return services;
         }
     }

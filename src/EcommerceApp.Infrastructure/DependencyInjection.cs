@@ -1,4 +1,3 @@
-using System.Reflection;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +10,7 @@ namespace EcommerceApp.Application
         {
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             return services;
         }
     }
