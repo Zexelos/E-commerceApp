@@ -25,7 +25,7 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 var sut = new CategoryRepository(context);
                 await sut.AddCategoryAsync(category);
                 var addedCategory = await context.Categories.FindAsync(category.Id);
@@ -41,7 +41,7 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 await context.AddAsync(category);
                 await context.SaveChangesAsync();
                 var sut = new CategoryRepository(context);
@@ -60,7 +60,7 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 List<Category> categories = new() { category1, category2, category3 };
                 await context.AddRangeAsync(categories);
                 await context.SaveChangesAsync();
@@ -79,14 +79,14 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 await context.AddAsync(category1);
                 await context.SaveChangesAsync();
             }
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 var sut = new CategoryRepository(context);
                 await sut.UpdateCategoryAsync(category2);
                 var updatedCategory = await context.Categories.FindAsync(category2.Id);
@@ -102,7 +102,7 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 await context.AddAsync(category);
                 await context.SaveChangesAsync();
                 var sut = new CategoryRepository(context);

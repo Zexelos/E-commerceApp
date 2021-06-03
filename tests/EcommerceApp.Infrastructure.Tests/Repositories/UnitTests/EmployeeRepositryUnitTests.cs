@@ -25,12 +25,12 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
-                var repository = new EmployeeRepository(context);
-                await repository.AddEmplyeeAsync(employee);
-                var addedEmployee = await context.Employees.FindAsync(employee.Id);
-                Assert.NotNull(addedEmployee);
-                Assert.Equal(employee, addedEmployee);
+                await context.Database.EnsureCreatedAsync();
+                var sut = new EmployeeRepository(context);
+                await sut.AddEmplyeeAsync(employee);
+                var result = await context.Employees.FindAsync(employee.Id);
+                Assert.NotNull(result);
+                Assert.Equal(employee, result);
             }
         }
 
@@ -41,13 +41,13 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 await context.AddAsync(employee);
                 await context.SaveChangesAsync();
-                var repository = new EmployeeRepository(context);
-                var getEmployee = await repository.GetEmployeeAsync(employee.Id);
-                Assert.NotNull(getEmployee);
-                Assert.Equal(employee.Id, getEmployee.Id);
+                var sut = new EmployeeRepository(context);
+                var result = await sut.GetEmployeeAsync(employee.Id);
+                Assert.NotNull(result);
+                Assert.Equal(employee.Id, result.Id);
             }
         }
 
@@ -60,14 +60,14 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 List<Employee> employees = new() { employee1, employee2, employee3 };
                 await context.AddRangeAsync(employees);
                 await context.SaveChangesAsync();
-                var repository = new EmployeeRepository(context);
-                var getEmployees = await repository.GetEmployeesAsync();
-                Assert.NotNull(getEmployees);
-                Assert.Equal(employees, getEmployees);
+                var sut = new EmployeeRepository(context);
+                var result = await sut.GetEmployeesAsync();
+                Assert.NotNull(result);
+                Assert.Equal(employees, result);
             }
         }
 
@@ -79,19 +79,19 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 await context.AddAsync(employee1);
                 await context.SaveChangesAsync();
             }
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
-                var repository = new EmployeeRepository(context);
-                await repository.UpdateEmployeeAsync(employee2);
-                var updatedEmployee = await context.Employees.FindAsync(employee2.Id);
-                Assert.NotNull(updatedEmployee);
-                Assert.Equal(employee2, updatedEmployee);
+                await context.Database.EnsureCreatedAsync();
+                var sut = new EmployeeRepository(context);
+                await sut.UpdateEmployeeAsync(employee2);
+                var result = await context.Employees.FindAsync(employee2.Id);
+                Assert.NotNull(result);
+                Assert.Equal(employee2, result);
             }
         }
 
@@ -102,13 +102,13 @@ namespace EcommerceApp.Infrastructure.Tests
 
             using (var context = new AppDbContext(_options))
             {
-                context.Database.EnsureCreated();
+                await context.Database.EnsureCreatedAsync();
                 await context.AddAsync(employee);
                 await context.SaveChangesAsync();
-                var repository = new EmployeeRepository(context);
-                await repository.DeleteEmployeeAsync(employee.Id);
-                var deletedEmployee = await context.Employees.FindAsync(employee.Id);
-                Assert.Null(deletedEmployee);
+                var sut = new EmployeeRepository(context);
+                await sut.DeleteEmployeeAsync(employee.Id);
+                var result = await context.Employees.FindAsync(employee.Id);
+                Assert.Null(result);
             }
         }
     }
