@@ -12,41 +12,54 @@ namespace EcommerceApp.Application.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _repository;
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IMapper mapper, IProductRepository repository)
+        public ProductService(IMapper mapper, IProductRepository repository, ICategoryRepository categoryRepository)
         {
             _mapper = mapper;
-            _repository = repository;
+            _productRepository = repository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task AddProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);
-            await _repository.AddProductAsync(product);
+            await _productRepository.AddProductAsync(product);
         }
 
-        public async Task<Product> GetProductAsync(int id)
+        public async Task<ProductVM> GetProductAsync(int id)
         {
-            return await _repository.GetProductAsync(id);
+            var product = await _productRepository.GetProductAsync(id);
+            return _mapper.Map<ProductVM>(product);
+        }
+
+        public async Task<ProductVM> GetProductWithCategoriesAsync(int id)
+        {
+            var product = await _productRepository.GetProductAsync(id);
+            var categories = await _categoryRepository.GetCategoriesAsync();
+            var categoryMap = _mapper.Map<List<CategoriesVM>>(categories);
+            var productMap = _mapper.Map<ProductVM>(product);
+            productMap.Categories = categoryMap;
+            return productMap;
         }
 
         public async Task<List<ProductVM>> GetProductsAsync()
         {
-            var products = (await _repository.GetProductsAsync()).ToList();
+            var products = (await _productRepository.GetProductsAsync()).ToList();
             return _mapper.Map<List<ProductVM>>(products);
         }
 
         public async Task UpdateProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);
-            await _repository.UpdateProductAsync(product);
+            await _productRepository.UpdateProductAsync(product);
         }
 
         public async Task DeleteProductAsync(int id)
         {
-            await _repository.DeleteProductAsync(id);
+            await _productRepository.DeleteProductAsync(id);
         }
     }
 }
