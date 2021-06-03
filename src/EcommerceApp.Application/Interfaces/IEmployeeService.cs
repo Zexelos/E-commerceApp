@@ -6,10 +6,10 @@ namespace EcommerceApp.Application.Interfaces
 {
     public interface IEmployeeService
     {
-        Task AddEmployeeAsync(EmployeeVM employee);
+        Task AddEmployeeAsync(EmployeeVM employeeVM);
         Task<EmployeeVM> GetEmployeeAsync(int id);
         Task<List<EmployeeVM>> GetEmployeesAsync();
-        Task UpdateEmployeeAsync(EmployeeVM employee);
+        Task UpdateEmployeeAsync(EmployeeVM employeeVM);
         Task DeleteEmployeeAsync(int id);
     }
 }

@@ -68,7 +68,6 @@ namespace EcommerceApp.Application.Services
         {
             var employee = await _repository.GetEmployeeAsync(id);
             var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            //await _repository.DeleteEmployeeAsync(id);
             await _userManager.DeleteAsync(user);
         }
     }
