@@ -1,12 +1,24 @@
 @model EcommerceApp.Application.ViewModels.CategoryVM
 @{
-    ViewData["Title"] = "Add Category";
+    ViewData["Title"] = "Update Category";
 }
 <center>
     <h1>@ViewData["Title"]</h1>
-    <p>Fill in the fields and create a new category</p>
+    <p>Current category</p>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>@Model.Name</dd>
+            <dt>Description</dt>
+            <dd>@Model.Description</dd>
+            <dt>Picture</dt>
+            <dd>@Model.Picture</dd>
+        </dl>
+    </div>
+
+    <p>Fill in the fields to update current category</p>
     <div class="col-md-6">
-        <form asp-action="AddCategory">
+        <form asp-action="UpdateCategory">
             <div class="form-group">
                 <label asp-for="@Model.Name"></label>
                 <input asp-for="@Model.Name" />
@@ -22,11 +34,11 @@
                 <input asp-for="@Model.Picture" />
                  <p><span asp-validation-for="@Model.Picture" class="text-danger"></span></p>
             </div>
-            <button type="submit" class="btn btn-primary">Add Category</button>
+            <button type="submit" class="btn btn-primary">Update category</button>
         </form>
     </div>
 </center>
 
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
