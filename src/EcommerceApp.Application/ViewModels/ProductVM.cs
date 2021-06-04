@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System;
 using FluentValidation;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;

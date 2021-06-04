@@ -1,0 +1,62 @@
+@using EcommerceApp.Application.Interfaces
+@using EcommerceApp.Application.ViewModels
+@model EcommerceApp.Application.ViewModels.ProductVM
+@inject ICategoryService CategoryService
+@{
+    ViewData["Title"] = "Update Product";
+    List<CategoryVM> list = await CategoryService.GetCategoriesAsync();
+}
+<center>
+    <h1>@ViewData["Title"]</h1>
+    <p>Current category</p>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>@Model.Name</dd>
+            <dt>Description</dt>
+            <dd>@Model.Description</dd>
+            <dt>Price</dt>
+            <dd>@Model.UnitPrice</dd>
+            <dt>Units In Stock</dt>
+            <dd>@Model.UnitsInStock</dd>
+            <dt>Category Name</dt>
+            <dd>@Model.CategoryName</dd>
+        </dl>
+    </div>
+
+    <p>Fill in the fields to update current product</p>
+    <div class="col-md-6">
+        <form asp-action="UpdateProduct">
+            <div class="form-group">
+                <label asp-for="@Model.Name"></label>
+                <input asp-for="@Model.Name" />
+                <p><span asp-validation-for="@Model.Name" class="text-danger"></span></p>
+            </div>
+            <div class="form-group"> 
+                <label asp-for="@Model.Description"></label>
+                <input asp-for="@Model.Description" />
+                <p><span asp-validation-for="@Model.Description" class="text-danger"></span></p>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.UnitPrice"></label>
+                <input asp-for="@Model.UnitPrice" />
+                 <p><span asp-validation-for="@Model.UnitPrice" class="text-danger"></span></p>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.UnitsInStock"></label>
+                <input asp-for="@Model.UnitsInStock" />
+                 <p><span asp-validation-for="@Model.UnitsInStock" class="text-danger"></span></p>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.CategoryName"></label>
+                @Html.DropDownListFor(x => x.CategoryName, new SelectList(list.Select(x => x.Name)), "SelectList Category",
+                new { @class ="form-control" })
+            </div>
+            <button type="submit" class="btn btn-primary">Update category</button>
+        </form>
+    </div>
+</center>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -30,8 +30,11 @@ namespace EcommerceApp.Application
             // Arrange
             var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
             var product = new Product { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
+            var category = new Category { Id = 1, Name = "Pieczywo", Description = "dobre" };
 
             _mapper.Setup(s => s.Map<Product>(productVM)).Returns(product);
+
+            _categoryRepository.Setup(s => s.GetCategoryAsync(product.CategoryName)).ReturnsAsync(category);
 
             // Act
             await _sut.AddProductAsync(productVM);
@@ -92,8 +95,11 @@ namespace EcommerceApp.Application
             // Ararnge
             var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
             var product = new Product { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
+            var category = new Category { Id = 1, Name = "Pieczywo", Description = "dobre" };
 
             _mapper.Setup(s => s.Map<Product>(productVM)).Returns(product);
+
+            _categoryRepository.Setup(s => s.GetCategoryAsync(product.CategoryName)).ReturnsAsync(category);
 
             // Act
             await _sut.UpdateProductAsync(productVM);
