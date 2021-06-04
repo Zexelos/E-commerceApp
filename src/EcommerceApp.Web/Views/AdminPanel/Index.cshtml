@@ -5,43 +5,41 @@
 <div class="text-center">
     <h1 class="display-4">Admin panel</h1>
     <a class="btn btn-primary" asp-area="" asp-controller="AdminPanel" asp-action="AddEmployee">AddEmployee</a>
-    <form asp-action="Index" asp-controller="AdminPanel">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Position</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FirstName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LastName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Position)
-                        </td>
-                        <td>
-                            <a class="btn btn-success" asp-area="" asp-controller="AdminPanel"
-                            asp-action="UpdateEmployee" asp-route-id="@item.Id">Edit</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Position</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    <a class="btn btn-success" asp-area="" asp-controller="AdminPanel" asp-action="UpdateEmployee"
+                        asp-route-id="@item.Id">Edit</a>
 
-                            <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel"
-                            asp-action="DeleteEmployee" asp-route-id="@item.Id">Remove</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </form>
+                    <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel" asp-action="DeleteEmployee"
+                        asp-route-id="@item.Id">Remove</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
 </div>

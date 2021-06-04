@@ -82,21 +82,14 @@ namespace EcommerceApp.Web.Tests
         }
 
         [Fact]
-        public async Task AddProduct_GET_ReturnViewResult()
+        public void AddProduct_GET_ReturnViewResult()
         {
-            // Arrange
-            var categoryVMs = GetCategoryVMs();
-
-            _categoryService.Setup(s => s.GetCategoriesAsync()).ReturnsAsync(categoryVMs);
-
             // Act
-            var result = await _sut.AddProduct();
+            var result = _sut.AddProduct();
 
             // Assert
             Assert.NotNull(result);
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<List<CategoryVM>>(viewResult.ViewData.Model);
-            Assert.Equal(categoryVMs.Count, model.Count);
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]

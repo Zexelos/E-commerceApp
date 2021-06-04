@@ -1,0 +1,32 @@
+@model EcommerceApp.Application.ViewModels.CategoryVM
+@{
+    ViewData["Title"] = "Add Category";
+}
+<center>
+    <h1>@ViewData["Title"]</h1>
+    <p>Fill in the fields and create a new category</p>
+    <div class="col-md-6">
+        <form asp-action="AddCategory">
+            <div class="form-group">
+                <label asp-for="@Model.Name"></label>
+                <input asp-for="@Model.Name" />
+                <p><span asp-validation-for="@Model.Name" class="text-danger"></span></p>
+            </div>
+            <div class="form-group"> 
+                <label asp-for="@Model.Description">Last Name</label>
+                <input asp-for="@Model.Description" />
+                <p><span asp-validation-for="@Model.Description" class="text-danger"></span></p>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Picture"></label>
+                <input asp-for="@Model.Picture" />
+                 <p><span asp-validation-for="@Model.Picture" class="text-danger"></span></p>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
+</center>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

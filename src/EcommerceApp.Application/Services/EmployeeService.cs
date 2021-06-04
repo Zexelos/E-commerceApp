@@ -33,6 +33,7 @@ namespace EcommerceApp.Application.Services
             await _repository.AddEmplyeeAsync(employee);
             var claim = new Claim("IsEmployee", "True");
             await _userManager.AddClaimAsync(user, claim);
+            await _userManager.ConfirmEmailAsync(user, await _userManager.GenerateEmailConfirmationTokenAsync(user));
         }
 
         public async Task<EmployeeVM> GetEmployeeAsync(int id)

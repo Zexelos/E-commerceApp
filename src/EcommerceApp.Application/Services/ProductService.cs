@@ -26,17 +26,15 @@ namespace EcommerceApp.Application.Services
         public async Task AddProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);
+            var category = await _categoryRepository.GetCategoryAsync(product.CategoryName);
+            product.CategoryId = category.Id;
             await _productRepository.AddProductAsync(product);
         }
 
         public async Task<ProductVM> GetProductAsync(int id)
         {
             var product = await _productRepository.GetProductAsync(id);
-            var categories = await _categoryRepository.GetCategoriesAsync();
-            var categoryMap = _mapper.Map<List<CategoriesVM>>(categories);
-            var productMap = _mapper.Map<ProductVM>(product);
-            productMap.Categories = categoryMap;
-            return productMap;
+            return _mapper.Map<ProductVM>(product);
         }
 
         public async Task<List<ProductVM>> GetProductsAsync()

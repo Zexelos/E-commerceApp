@@ -47,35 +47,13 @@ namespace EcommerceApp.Application
             var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
             var product = new Product { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
 
-            var category1 = new Category { Id = 100, Name = "sgfawer", Description = "wsgerwweg" };
-            var category2 = new Category { Id = 150, Name = "ergf34", Description = "56vu68" };
-            var category3 = new Category { Id = 200, Name = "eargg3", Description = "hqb2424" };
-
-            var categories = new List<Category> { category1, category2, category3 };
-
-            var categoriesVM1 = new CategoriesVM { Id = 100, Name = "sgfawer" };
-            var categoriesVM2 = new CategoriesVM { Id = 150, Name = "ergf34" };
-            var categoriesVM3 = new CategoriesVM { Id = 200, Name = "eargg3" };
-
-            var categoriesVM = new List<CategoriesVM> { categoriesVM1, categoriesVM2, categoriesVM3 };
-
-            var productVMWithCategoriesList = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2, Categories = categoriesVM };
-
-            _productRepository.Setup(s => s.GetProductAsync(product.Id)).ReturnsAsync(product);
-
-            _categoryRepository.Setup(s => s.GetCategoriesAsync()).ReturnsAsync(categories.AsQueryable());
-
-            _mapper.Setup(s => s.Map<List<CategoriesVM>>(categories)).Returns(categoriesVM);
-
-            _mapper.Setup(s => s.Map<ProductVM>(product)).Returns(productVM);
+            _mapper.Setup(s => s.Map<Product>(productVM)).Returns(product);
 
             // Act
-            var result = await _sut.GetProductAsync(product.Id);
+            await _sut.AddProductAsync(productVM);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(productVMWithCategoriesList.Id, result.Id);
-            Assert.Equal(productVMWithCategoriesList.Categories, result.Categories);
+            _productRepository.Verify(v => v.AddProductAsync(product), Times.Once);
         }
 
         [Fact]

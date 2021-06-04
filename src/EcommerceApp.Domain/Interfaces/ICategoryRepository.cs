@@ -7,13 +7,10 @@ namespace EcommerceApp.Domain.Interfaces
     public interface ICategoryRepository
     {
         Task AddCategoryAsync(Category category);
-
         Task<Category> GetCategoryAsync(int id);
-
+        Task<Category> GetCategoryAsync(string name);
         Task<IQueryable<Category>> GetCategoriesAsync();
-
         Task UpdateCategoryAsync(Category category);
-
         Task DeleteCategoryAsync(int id);
     }
 }

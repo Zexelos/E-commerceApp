@@ -6,17 +6,18 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using EcommerceApp.Application.ViewModels;
+using System.Linq;
 
 namespace EcommerceApp.Web.Controllers
 {
-    [Authorize("Admin, Employee")]
+    [Authorize("CanAccessEmployeePanel")]
     public class EmployeePanelController : Controller
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<EmployeePanelController> _logger;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
 
-        public EmployeePanelController(ILogger logger, ICategoryService categoryService, IProductService productService)
+        public EmployeePanelController(ILogger<EmployeePanelController> logger, ICategoryService categoryService, IProductService productService)
         {
             _logger = logger;
             _categoryService = categoryService;
@@ -47,10 +48,9 @@ namespace EcommerceApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddProduct()
+        public IActionResult AddProduct()
         {
-            var model = await _categoryService.GetCategoriesAsync();
-            return View(model);
+            return View();
         }
 
         [HttpPost]
