@@ -61,7 +61,7 @@ namespace EcommerceApp.Web.Controllers
                 return BadRequest();
             }
             await _categoryService.AddCategoryAsync(categoryVM);
-            return RedirectToAction(nameof(AddCategory));
+            return RedirectToAction(nameof(Categories));
         }
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace EcommerceApp.Web.Controllers
                 return BadRequest();
             }
             await _productService.AddProductAsync(productVM);
-            return RedirectToAction(nameof(AddProduct));
+            return RedirectToAction(nameof(Products));
         }
 
         [HttpGet]

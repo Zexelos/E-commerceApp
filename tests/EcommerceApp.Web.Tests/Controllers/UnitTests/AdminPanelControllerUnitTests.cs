@@ -23,7 +23,7 @@ namespace EcommerceApp.Web.Tests
         }
 
         [Fact]
-        public async Task Index_ReturnCorrectViewResult()
+        public async Task Index_ReturnViewResult()
         {
             // Arrange
             List<EmployeeVM> employeeVMs = new()
