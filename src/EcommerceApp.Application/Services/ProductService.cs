@@ -12,15 +12,17 @@ namespace EcommerceApp.Application.Services
 {
     public class ProductService : IProductService
     {
+        private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
+        private readonly IImageConverterService _imageConverterService;
 
-        public ProductService(IMapper mapper, IProductRepository repository, ICategoryRepository categoryRepository)
+        public ProductService(IMapper mapper, IProductRepository repository, ICategoryRepository categoryRepository, IImageConverterService imageConverterService)
         {
             _mapper = mapper;
             _productRepository = repository;
             _categoryRepository = categoryRepository;
+            _imageConverterService = imageConverterService;
         }
 
         public async Task AddProductAsync(ProductVM productVM)
@@ -28,13 +30,16 @@ namespace EcommerceApp.Application.Services
             var product = _mapper.Map<Product>(productVM);
             var category = await _categoryRepository.GetCategoryAsync(product.CategoryName);
             product.CategoryId = category.Id;
+            product.Image = await _imageConverterService.GetByteArrayFromImage(productVM.FormFileImage);
             await _productRepository.AddProductAsync(product);
         }
 
         public async Task<ProductVM> GetProductAsync(int id)
         {
             var product = await _productRepository.GetProductAsync(id);
-            return _mapper.Map<ProductVM>(product);
+            var productVM = _mapper.Map<ProductVM>(product);
+            productVM.ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(productVM.Image);
+            return productVM;
         }
 
         public async Task<List<ProductVM>> GetProductsAsync()

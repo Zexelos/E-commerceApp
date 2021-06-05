@@ -11,14 +11,14 @@
             <dd>@Model.Name</dd>
             <dt>Description</dt>
             <dd>@Model.Description</dd>
-            <dt>Picture</dt>
-            <dd>@Model.Picture</dd>
+            <dt>Image</dt>
+            <img src="@Model.ImageToDisplay" />
         </dl>
     </div>
 
     <p>Fill in the fields to update current category</p>
     <div class="col-md-6">
-        <form asp-action="UpdateCategory">
+        <form asp-action="UpdateCategory" enctype="multipart/form-data">
             <div class="form-group">
                 <label asp-for="@Model.Name"></label>
                 <input asp-for="@Model.Name" />
@@ -30,9 +30,9 @@
                 <p><span asp-validation-for="@Model.Description" class="text-danger"></span></p>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Picture"></label>
-                <input asp-for="@Model.Picture" />
-                 <p><span asp-validation-for="@Model.Picture" class="text-danger"></span></p>
+                <label asp-for="@Model.FormFileImage"></label>
+                <input asp-for="@Model.FormFileImage" />
+                <p><span asp-validation-for="@Model.FormFileImage" class="text-danger"></span></p>
             </div>
             <button type="submit" class="btn btn-primary">Update category</button>
         </form>

@@ -14,23 +14,28 @@ namespace EcommerceApp.Application.Services
     {
         private readonly ICategoryRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IImageConverterService _imageConverterService;
 
-        public CategoryService(IMapper mapper, ICategoryRepository repository)
+        public CategoryService(IMapper mapper, ICategoryRepository repository, IImageConverterService imageConverterService)
         {
             _mapper = mapper;
             _repository = repository;
+            _imageConverterService = imageConverterService;
         }
 
         public async Task AddCategoryAsync(CategoryVM categoryVM)
         {
             var category = _mapper.Map<Category>(categoryVM);
+            category.Image = await _imageConverterService.GetByteArrayFromImage(categoryVM.FormFileImage);
             await _repository.AddCategoryAsync(category);
         }
 
         public async Task<CategoryVM> GetCategoryAsync(int id)
         {
             var category = await _repository.GetCategoryAsync(id);
-            return _mapper.Map<CategoryVM>(category);
+            var categoryVM = _mapper.Map<CategoryVM>(category);
+            categoryVM.ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(categoryVM.Image);
+            return categoryVM;
         }
 
         public async Task<List<CategoryVM>> GetCategoriesAsync()

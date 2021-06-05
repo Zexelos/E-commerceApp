@@ -21,12 +21,14 @@
             <dd>@Model.UnitsInStock</dd>
             <dt>Category Name</dt>
             <dd>@Model.CategoryName</dd>
+            <dt>Image</dt>
+            <dd><img src="@Model.ImageToDisplay" /></dd>
         </dl>
     </div>
 
     <p>Fill in the fields to update current product</p>
     <div class="col-md-6">
-        <form asp-action="UpdateProduct">
+        <form asp-action="UpdateProduct" enctype="multipart/form-data">
             <div class="form-group">
                 <label asp-for="@Model.Name"></label>
                 <input asp-for="@Model.Name" />
@@ -51,6 +53,11 @@
                 <label asp-for="@Model.CategoryName"></label>
                 @Html.DropDownListFor(x => x.CategoryName, new SelectList(list.Select(x => x.Name)), "SelectList Category",
                 new { @class ="form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.FormFileImage"></label>
+                <input asp-for="@Model.FormFileImage" />
+                <p><span asp-validation-for="@Model.FormFileImage" class="text-danger"></span></p>
             </div>
             <button type="submit" class="btn btn-primary">Update category</button>
         </form>

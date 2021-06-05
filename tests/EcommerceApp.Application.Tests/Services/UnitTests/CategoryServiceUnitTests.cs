@@ -13,6 +13,7 @@ using EcommerceApp.Domain.Models;
 using Moq;
 using Xunit;
 using System.Collections.Generic;
+using EcommerceApp.Application.Interfaces;
 
 namespace EcommerceApp.Application.Tests
 {
@@ -21,10 +22,11 @@ namespace EcommerceApp.Application.Tests
         private readonly CategoryService _sut;
         private readonly Mock<IMapper> _mapper = new();
         private readonly Mock<ICategoryRepository> _repository = new();
+        private readonly Mock<IImageConverterService> _imageConverterService = new();
 
         public CategoryServiceUnitTests()
         {
-            _sut = new CategoryService(_mapper.Object, _repository.Object);
+            _sut = new CategoryService(_mapper.Object, _repository.Object, _imageConverterService.Object);
         }
 
         [Fact]

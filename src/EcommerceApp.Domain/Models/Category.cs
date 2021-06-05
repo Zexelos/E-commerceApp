@@ -16,7 +16,7 @@ namespace EcommerceApp.Domain.Models
         [StringLength(200, MinimumLength = 2)]
         public string Description { get; set; }
 
-        public byte[] Picture { get; set; }
+        public byte[] Image { get; set; }
 
         [InverseProperty(nameof(Product.Category))]
         public virtual ICollection<Product> Products { get; set; }
