@@ -1,11 +1,6 @@
-using System.Timers;
-using System.Threading;
 using System.Linq;
-using System.Reflection;
-using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using EcommerceApp.Application.Mapping;
 using EcommerceApp.Application.Services;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Domain.Interfaces;
@@ -14,6 +9,7 @@ using Moq;
 using Xunit;
 using System.Collections.Generic;
 using EcommerceApp.Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace EcommerceApp.Application.Tests
 {
@@ -23,6 +19,7 @@ namespace EcommerceApp.Application.Tests
         private readonly Mock<IMapper> _mapper = new();
         private readonly Mock<ICategoryRepository> _repository = new();
         private readonly Mock<IImageConverterService> _imageConverterService = new();
+        private readonly Mock<IFormFile> _formFile = new();
 
         public CategoryServiceUnitTests()
         {
@@ -33,10 +30,12 @@ namespace EcommerceApp.Application.Tests
         public async Task AddCategoryAsync_MethodsRunOnce()
         {
             // Arrange
-            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
+            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
             _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
+
+            _imageConverterService.Setup(s => s.GetByteArrayFromImage(_formFile.Object)).ReturnsAsync(categoryVM.Image);
 
             // Act
             await _sut.AddCategoryAsync(categoryVM);
@@ -49,11 +48,14 @@ namespace EcommerceApp.Application.Tests
         public async Task GetCategoryAsync_ReturnCategoryVM()
         {
             // Arrange
-            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
+            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
             _repository.Setup(s => s.GetCategoryAsync(categoryVM.Id)).ReturnsAsync(category);
+
             _mapper.Setup(s => s.Map<CategoryVM>(category)).Returns(categoryVM);
+
+            _imageConverterService.Setup(s => s.GetImageStringFromByteArray(categoryVM.Image));
 
             // Act
             var result = await _sut.GetCategoryAsync(categoryVM.Id);
@@ -94,10 +96,12 @@ namespace EcommerceApp.Application.Tests
         public async Task UpdateCategoryAsync_RunsMethodsOnce()
         {
             // Arrange
-            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
+            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
             _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
+
+            _imageConverterService.Setup(s => s.GetImageStringFromByteArray(categoryVM.Image));
 
             // Act
             await _sut.UpdateCategoryAsync(categoryVM);

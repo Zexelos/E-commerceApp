@@ -20,8 +20,15 @@ namespace EcommerceApp.Application.Services
 
         public string GetImageStringFromByteArray(byte[] byteArray)
         {
-            string imageBase64Data = Convert.ToBase64String(byteArray);
-            return string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+            if (byteArray.Length > 0)
+            {
+                string imageData = Convert.ToBase64String(byteArray);
+                return string.Format("data:image/jpg;base64,{0}", imageData);
+            }
+            else
+            {
+                return "No photo available";
+            }
         }
     }
 }

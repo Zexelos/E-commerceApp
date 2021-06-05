@@ -22,7 +22,14 @@
             <dt>Category Name</dt>
             <dd>@Model.CategoryName</dd>
             <dt>Image</dt>
-            <dd><img src="@Model.ImageToDisplay" /></dd>
+            @if (Model.ImageToDisplay == "No photo available")
+            {
+                <dd>@Model.ImageToDisplay</dd>
+            }
+            else
+            {
+                <dd><img src="@Model.ImageToDisplay" width="256" height="256" /></dd>
+            }
         </dl>
     </div>
 

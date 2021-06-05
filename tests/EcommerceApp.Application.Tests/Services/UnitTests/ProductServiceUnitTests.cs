@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using EcommerceApp.Application.Services;
@@ -9,6 +8,8 @@ using EcommerceApp.Domain.Models;
 using Moq;
 using Xunit;
 using System.Linq;
+using EcommerceApp.Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace EcommerceApp.Application
 {
@@ -18,23 +19,27 @@ namespace EcommerceApp.Application
         private readonly Mock<IMapper> _mapper = new();
         private readonly Mock<IProductRepository> _productRepository = new();
         private readonly Mock<ICategoryRepository> _categoryRepository = new();
+        private readonly Mock<IImageConverterService> _imageConverterService = new();
+        private readonly Mock<IFormFile> _formFile = new();
 
         public ProductServiceUnitTests()
         {
-            _sut = new ProductService(_mapper.Object, _productRepository.Object, _categoryRepository.Object);
+            _sut = new ProductService(_mapper.Object, _productRepository.Object, _categoryRepository.Object, _imageConverterService.Object);
         }
 
         [Fact]
         public async Task AddProductAsync_MethodsRunOnce()
         {
             // Arrange
-            var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
+            var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2, Image = new byte[] { 1, 15 } };
             var product = new Product { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
             var category = new Category { Id = 1, Name = "Pieczywo", Description = "dobre" };
 
             _mapper.Setup(s => s.Map<Product>(productVM)).Returns(product);
 
             _categoryRepository.Setup(s => s.GetCategoryAsync(product.CategoryName)).ReturnsAsync(category);
+
+            _imageConverterService.Setup(s => s.GetByteArrayFromImage(_formFile.Object)).ReturnsAsync(productVM.Image);
 
             // Act
             await _sut.AddProductAsync(productVM);
@@ -47,16 +52,21 @@ namespace EcommerceApp.Application
         public async Task GetProductAsync_ReturnProduct()
         {
             // Arrange
-            var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
+            var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2, Image = new byte[] { 1, 15 }, ImageToDisplay = "swegwe" };
             var product = new Product { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
 
-            _mapper.Setup(s => s.Map<Product>(productVM)).Returns(product);
+            _productRepository.Setup(s => s.GetProductAsync(productVM.Id)).ReturnsAsync(product);
+
+            _mapper.Setup(s => s.Map<ProductVM>(product)).Returns(productVM);
+
+            _imageConverterService.Setup(s => s.GetImageStringFromByteArray(productVM.Image)).Returns(productVM.ImageToDisplay);
 
             // Act
-            await _sut.AddProductAsync(productVM);
+            var result = await _sut.GetProductAsync(productVM.Id);
 
             // Assert
-            _productRepository.Verify(v => v.AddProductAsync(product), Times.Once);
+            Assert.NotNull(result);
+            Assert.Equal(productVM, result);
         }
 
         [Fact]
@@ -93,13 +103,15 @@ namespace EcommerceApp.Application
         public async Task UpdateProductAsync_MethodsRunOnce()
         {
             // Ararnge
-            var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
+            var productVM = new ProductVM { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2, Image = new byte[] { 1, 15 } };
             var product = new Product { Id = 100, Name = "Mleko", Description = "erbt5gh35hh", UnitPrice = 12.32m, UnitsInStock = 2 };
             var category = new Category { Id = 1, Name = "Pieczywo", Description = "dobre" };
 
             _mapper.Setup(s => s.Map<Product>(productVM)).Returns(product);
 
             _categoryRepository.Setup(s => s.GetCategoryAsync(product.CategoryName)).ReturnsAsync(category);
+
+            _imageConverterService.Setup(s => s.GetByteArrayFromImage(_formFile.Object)).ReturnsAsync(productVM.Image);
 
             // Act
             await _sut.UpdateProductAsync(productVM);

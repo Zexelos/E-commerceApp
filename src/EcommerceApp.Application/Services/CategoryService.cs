@@ -47,6 +47,7 @@ namespace EcommerceApp.Application.Services
         public async Task UpdateCategoryAsync(CategoryVM categoryVM)
         {
             var category = _mapper.Map<Category>(categoryVM);
+            category.Image = await _imageConverterService.GetByteArrayFromImage(categoryVM.FormFileImage);
             await _repository.UpdateCategoryAsync(category);
         }
 

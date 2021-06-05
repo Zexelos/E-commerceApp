@@ -53,6 +53,7 @@ namespace EcommerceApp.Application.Services
             var product = _mapper.Map<Product>(productVM);
             var category = await _categoryRepository.GetCategoryAsync(product.CategoryName);
             product.CategoryId = category.Id;
+            product.Image = await _imageConverterService.GetByteArrayFromImage(productVM.FormFileImage);
             await _productRepository.UpdateProductAsync(product);
         }
 
