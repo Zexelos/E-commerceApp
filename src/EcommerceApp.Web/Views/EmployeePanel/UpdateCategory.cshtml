@@ -23,7 +23,12 @@
         </dl>
     </div>
     <p>Fill in the fields to update current category</p>
-    <partial name="_CategoryFormPartial" />
+    <div class="col-md-6">
+        <form asp-action="UpdateCategory" enctype="multipart/form-data">
+            <partial name="_CategoryFormPartial" />
+            <button type="submit" class="btn btn-primary">Update Category</button>
+        </form>
+    </div>
 </center>
 
 @section Scripts {
