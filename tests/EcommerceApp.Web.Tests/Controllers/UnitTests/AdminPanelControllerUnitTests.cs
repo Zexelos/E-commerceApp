@@ -15,15 +15,16 @@ namespace EcommerceApp.Web.Tests
     {
         private readonly AdminPanelController _sut;
         private readonly Mock<ILogger<AdminPanelController>> _logger = new();
-        private readonly Mock<IEmployeeService> _service = new();
+        private readonly Mock<IEmployeeService> _employeeService = new();
+        private readonly Mock<ISearchService> _searchService = new();
 
         public AdminPanelControllerUnitTests()
         {
-            _sut = new AdminPanelController(_logger.Object, _service.Object);
+            _sut = new AdminPanelController(_logger.Object, _employeeService.Object, _searchService.Object);
         }
 
         [Fact]
-        public async Task Index_ReturnViewResult()
+        public async Task Index_ReturnViewResultWithAllEmployees()
         {
             // Arrange
             List<EmployeeVM> employeeVMs = new()
@@ -32,16 +33,39 @@ namespace EcommerceApp.Web.Tests
                 new EmployeeVM { FirstName = "gf34fz", LastName = "jkm8b7" },
             };
 
-            _service.Setup(s => s.GetEmployeesAsync()).ReturnsAsync(employeeVMs);
+            _employeeService.Setup(s => s.GetEmployeesAsync()).ReturnsAsync(employeeVMs);
 
             // Act
-            var result = await _sut.Index();
+            var result = await _sut.Index(string.Empty, string.Empty);
 
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<List<EmployeeVM>>(viewResult.Model);
             Assert.Equal(model[0].FirstName, employeeVMs[0].FirstName);
+            Assert.Equal(model.Count, employeeVMs.Count);
+        }
+
+        [Fact]
+        public async Task Index_ReturnViewResultWithSearchedEmployees()
+        {
+            // Arrange
+            List<EmployeeVM> employeeVMs = new()
+            {
+                new EmployeeVM { FirstName = "Maciek", LastName = "g43grea" },
+                new EmployeeVM { FirstName = "asdasaciekasd", LastName = "jkm8b7" },
+            };
+
+            _searchService.Setup(s => s.EmployeeSearchAsync("FirstName", "aciek")).ReturnsAsync(employeeVMs);
+
+            // Act
+            var result = await _sut.Index("FirstName", "aciek");
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<EmployeeVM>>(viewResult.Model);
+            Assert.Equal(employeeVMs[0].FirstName, model[0].FirstName);
             Assert.Equal(model.Count, employeeVMs.Count);
         }
 
@@ -70,7 +94,7 @@ namespace EcommerceApp.Web.Tests
             var result = await _sut.AddEmployee(employeeVM);
 
             // Assert
-            _service.Verify(s => s.AddEmployeeAsync(It.IsAny<EmployeeVM>()), Times.Once);
+            _employeeService.Verify(s => s.AddEmployeeAsync(It.IsAny<EmployeeVM>()), Times.Once);
             Assert.NotNull(result);
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirectToActionResult.ActionName);
@@ -119,7 +143,7 @@ namespace EcommerceApp.Web.Tests
                 LastName = "sdgwgerh"
             };
 
-            _service.Setup(s => s.GetEmployeeAsync(employeeVM.Id)).ReturnsAsync(employeeVM);
+            _employeeService.Setup(s => s.GetEmployeeAsync(employeeVM.Id)).ReturnsAsync(employeeVM);
 
             // Act
             var result = await _sut.UpdateEmployee(employeeVM.Id);
@@ -146,7 +170,7 @@ namespace EcommerceApp.Web.Tests
             var result = await _sut.UpdateEmployee(employeeVM);
 
             // Assert
-            _service.Verify(s => s.UpdateEmployeeAsync(employeeVM), Times.Once);
+            _employeeService.Verify(s => s.UpdateEmployeeAsync(employeeVM), Times.Once);
             Assert.NotNull(result);
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirectToActionResult.ActionName);
@@ -203,7 +227,7 @@ namespace EcommerceApp.Web.Tests
             var result = await _sut.DeleteEmployee(employeeVM.Id);
 
             // Assert
-            _service.Verify(s => s.DeleteEmployeeAsync(employeeVM.Id), Times.Once);
+            _employeeService.Verify(s => s.DeleteEmployeeAsync(employeeVM.Id), Times.Once);
             Assert.NotNull(result);
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Index", redirectToActionResult.ActionName);

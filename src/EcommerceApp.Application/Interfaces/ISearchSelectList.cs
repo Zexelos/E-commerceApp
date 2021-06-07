@@ -7,5 +7,6 @@ namespace EcommerceApp.Application.Interfaces
     {
         List<SelectListItem> CategorySelectList { get; }
         List<SelectListItem> ProductSelectList { get; }
+        List<SelectListItem> EmployeeSelectList { get; }
     }
 }

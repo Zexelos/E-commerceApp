@@ -17,9 +17,13 @@ namespace EcommerceApp.Domain.Models
         public string LastName { get; set; }
 
         [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
         [StringLength(50, MinimumLength = 2)]
         public string Position { get; set; }
-        
+
         [Required]
         public string AppUserId { get; set; }
 

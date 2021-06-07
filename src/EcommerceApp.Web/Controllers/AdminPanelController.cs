@@ -19,17 +19,22 @@ namespace EcommerceApp.Web.Controllers
     {
         private readonly ILogger<AdminPanelController> _logger;
         private readonly IEmployeeService _employeeService;
+        private readonly ISearchService _searchService;
 
-        public AdminPanelController(ILogger<AdminPanelController> logger, IEmployeeService employeeService)
+        public AdminPanelController(ILogger<AdminPanelController> logger, IEmployeeService employeeService, ISearchService searchService)
         {
             _logger = logger;
             _employeeService = employeeService;
+            _searchService = searchService;
         }
-        
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string selectedValue, string searchString)
         {
-            var model = await _employeeService.GetEmployeesAsync();
-            return View(model);
+            if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
+            {
+                return View(await _searchService.EmployeeSearchAsync(selectedValue, searchString));
+            }
+            return View(await _employeeService.GetEmployeesAsync());
         }
 
         [HttpGet]
@@ -86,7 +91,7 @@ namespace EcommerceApp.Web.Controllers
             await _employeeService.DeleteEmployeeAsync(id.Value);
             return RedirectToAction("Index");
         }
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

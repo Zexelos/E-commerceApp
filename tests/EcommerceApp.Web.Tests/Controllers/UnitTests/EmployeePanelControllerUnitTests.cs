@@ -36,7 +36,7 @@ namespace EcommerceApp.Web.Tests
         }
 
         [Fact]
-        public async Task Categories_ReturnViewResult()
+        public async Task Categories_ReturnViewResultWithAllCategories()
         {
             // Arrange
             var categoryVMs = GetCategoryVMs();
@@ -44,7 +44,7 @@ namespace EcommerceApp.Web.Tests
             _categoryService.Setup(s => s.GetCategoriesAsync()).ReturnsAsync(categoryVMs);
 
             // Act
-            var result = await _sut.Categories();
+            var result = await _sut.Categories(string.Empty, string.Empty);
 
             // Assert
             Assert.NotNull(result);
@@ -54,7 +54,26 @@ namespace EcommerceApp.Web.Tests
         }
 
         [Fact]
-        public async Task Products_ReturnViewResult()
+        public async Task Categories_ReturnViewResultWithSearchedCategories()
+        {
+            // Arrange
+            var categoryVMs = GetCategoryVMs();
+
+            _searchService.Setup(s => s.CategorySearchAsync("Name", "aciek")).ReturnsAsync(categoryVMs);
+
+            // Act
+            var result = await _sut.Categories("Name", "aciek");
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<CategoryVM>>(viewResult.ViewData.Model);
+            Assert.Equal(categoryVMs[0].Name, model[0].Name);
+            Assert.Equal(categoryVMs.Count, model.Count);
+        }
+
+        [Fact]
+        public async Task Products_ReturnViewResultWithAllProducts()
         {
             // Arrange
             var productVMs = GetProductVMs();
@@ -62,12 +81,31 @@ namespace EcommerceApp.Web.Tests
             _productService.Setup(s => s.GetProductsAsync()).ReturnsAsync(productVMs);
 
             // Act
-            var result = await _sut.Products();
+            var result = await _sut.Products(string.Empty, string.Empty);
 
             // Assert
             Assert.NotNull(result);
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<List<ProductVM>>(viewResult.ViewData.Model);
+            Assert.Equal(productVMs.Count, model.Count);
+        }
+
+        [Fact]
+        public async Task Products_ReturnViewResultWithSearchedProducts()
+        {
+            // Arrange
+            var productVMs = GetProductVMs();
+
+            _searchService.Setup(s => s.ProductSearchAsync("Name", "aciek")).ReturnsAsync(productVMs);
+
+            // Act
+            var result = await _sut.Products("Name", "aciek");
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<List<ProductVM>>(viewResult.ViewData.Model);
+            Assert.Equal(productVMs[0].Name, model[0].Name);
             Assert.Equal(productVMs.Count, model.Count);
         }
 
@@ -158,18 +196,18 @@ namespace EcommerceApp.Web.Tests
         // Helper methods
         private static List<CategoryVM> GetCategoryVMs()
         {
-            var categoryVM1 = new CategoryVM { Id = 100, Name = "argrarg", Description = "sadwegwe" };
-            var categoryVM2 = new CategoryVM { Id = 150, Name = "g534", Description = "xwafx" };
-            var categoryVM3 = new CategoryVM { Id = 200, Name = "vh4weh4w", Description = "2xt42xy" };
+            var categoryVM1 = new CategoryVM { Id = 100, Name = "Maciek", Description = "sadwegwe" };
+            var categoryVM2 = new CategoryVM { Id = 150, Name = "aciek", Description = "xwafx" };
+            var categoryVM3 = new CategoryVM { Id = 200, Name = "asdfaciekasge", Description = "2xt42xy" };
 
             return new List<CategoryVM> { categoryVM1, categoryVM2, categoryVM3 };
         }
 
         private static List<ProductVM> GetProductVMs()
         {
-            var productVM1 = new ProductVM { Id = 100, Name = "argrarg", Description = "sadwegwe" };
-            var productVM2 = new ProductVM { Id = 150, Name = "g534", Description = "xwafx" };
-            var productVM3 = new ProductVM { Id = 200, Name = "vh4weh4w", Description = "2xt42xy" };
+            var productVM1 = new ProductVM { Id = 100, Name = "Maciek", Description = "sadwegwe" };
+            var productVM2 = new ProductVM { Id = 150, Name = "aciek", Description = "xwafx" };
+            var productVM3 = new ProductVM { Id = 200, Name = "asdfaciekasge", Description = "2xt42xy" };
 
             return new List<ProductVM> { productVM1, productVM2, productVM3 };
         }
