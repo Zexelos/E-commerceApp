@@ -11,7 +11,7 @@ namespace EcommerceApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20210526192523_testAppUserForeighKey")]
-    partial class testAppUserForeighKey
+    partial class TestAppUserForeighKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

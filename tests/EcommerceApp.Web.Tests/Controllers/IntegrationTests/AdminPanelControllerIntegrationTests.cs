@@ -48,35 +48,31 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 
                     var sp = services.BuildServiceProvider();
 
-                    using (var scope = sp.CreateScope())
+                    using var scope = sp.CreateScope();
+                    using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    try
                     {
-                        using (var context = scope.ServiceProvider.GetRequiredService<AppDbContext>())
+                        context.Database.EnsureCreated();
+                        context.Employees.Add(
+                        new Employee
                         {
-                            try
+                            Id = 1,
+                            FirstName = "Test",
+                            LastName = "Last",
+                            Position = "Position",
+                            AppUserId = "123test"
+                        });
+                        context.Users.Add(
+                            new AppUser
                             {
-                                context.Database.EnsureCreated();
-                                context.Employees.Add(
-                                new Employee
-                                {
-                                    Id = 1,
-                                    FirstName = "Test",
-                                    LastName = "Last",
-                                    Position = "Position",
-                                    AppUserId = "123test"
-                                });
-                                context.Users.Add(
-                                    new AppUser
-                                    {
-                                        Id = "123test"
-                                    }
-                                );
-                                context.SaveChanges();
+                                Id = "123test"
                             }
-                            catch (Exception ex)
-                            {
-                                throw new(ex.Message);
-                            }
-                        }
+                        );
+                        context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new(ex.Message);
                     }
                 });
             }).CreateClient(new WebApplicationFactoryClientOptions

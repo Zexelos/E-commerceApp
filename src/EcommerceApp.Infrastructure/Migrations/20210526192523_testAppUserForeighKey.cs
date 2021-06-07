@@ -2,7 +2,7 @@
 
 namespace EcommerceApp.Infrastructure.Migrations
 {
-    public partial class testAppUserForeighKey : Migration
+    public partial class TestAppUserForeighKey : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

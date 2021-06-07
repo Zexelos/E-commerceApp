@@ -11,14 +11,12 @@ namespace EcommerceApp.Application.Services
     {
         public async Task<byte[]> GetByteArrayFromImage(IFormFile formFile)
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            if (formFile != null)
             {
-                if (formFile != null)
-                {
-                    await formFile.CopyToAsync(stream);
-                }
-                return stream.ToArray();
+                await formFile.CopyToAsync(stream);
             }
+            return stream.ToArray();
         }
 
         public string GetImageStringFromByteArray(byte[] byteArray)

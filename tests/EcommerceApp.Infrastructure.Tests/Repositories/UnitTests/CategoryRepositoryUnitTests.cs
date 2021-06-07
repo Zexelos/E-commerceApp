@@ -23,15 +23,13 @@ namespace EcommerceApp.Infrastructure.Tests
         {
             var category = new Category { Id = 100, Name = "Food", Description = "dobre bardzo" };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                var sut = new CategoryRepository(context);
-                await sut.AddCategoryAsync(category);
-                var addedCategory = await context.Categories.FindAsync(category.Id);
-                Assert.NotNull(addedCategory);
-                Assert.Equal(category, addedCategory);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            var sut = new CategoryRepository(context);
+            await sut.AddCategoryAsync(category);
+            var addedCategory = await context.Categories.FindAsync(category.Id);
+            Assert.NotNull(addedCategory);
+            Assert.Equal(category, addedCategory);
         }
 
         [Fact]
@@ -39,16 +37,14 @@ namespace EcommerceApp.Infrastructure.Tests
         {
             var category = new Category { Id = 101, Name = "Food", Description = "dobre bardzo" };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                await context.AddAsync(category);
-                await context.SaveChangesAsync();
-                var sut = new CategoryRepository(context);
-                var getCategory = await sut.GetCategoryAsync(category.Id);
-                Assert.NotNull(getCategory);
-                Assert.Equal(category.Id, category.Id);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            await context.AddAsync(category);
+            await context.SaveChangesAsync();
+            var sut = new CategoryRepository(context);
+            var getCategory = await sut.GetCategoryAsync(category.Id);
+            Assert.NotNull(getCategory);
+            Assert.Equal(category.Id, category.Id);
         }
 
         [Fact]
@@ -58,17 +54,15 @@ namespace EcommerceApp.Infrastructure.Tests
             var category2 = new Category { Id = 102, Name = "w4d5", Description = "do43wt4zo" };
             var category3 = new Category { Id = 103, Name = "34wctf3", Description = "dob34cty3qwy45yrdzo" };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                List<Category> categories = new() { category1, category2, category3 };
-                await context.AddRangeAsync(categories);
-                await context.SaveChangesAsync();
-                var sut = new CategoryRepository(context);
-                var getCategories = await sut.GetCategoriesAsync();
-                Assert.NotNull(getCategories);
-                Assert.Equal(categories, getCategories);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            List<Category> categories = new() { category1, category2, category3 };
+            await context.AddRangeAsync(categories);
+            await context.SaveChangesAsync();
+            var sut = new CategoryRepository(context);
+            var getCategories = await sut.GetCategoriesAsync();
+            Assert.NotNull(getCategories);
+            Assert.Equal(categories, getCategories);
         }
 
         [Fact]
@@ -100,16 +94,14 @@ namespace EcommerceApp.Infrastructure.Tests
         {
             var category = new Category { Id = 101, Name = "Food", Description = "dobre bardzo" };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                await context.AddAsync(category);
-                await context.SaveChangesAsync();
-                var sut = new CategoryRepository(context);
-                await sut.DeleteCategoryAsync(category.Id);
-                var deletedCategory = await context.Categories.FindAsync(category.Id);
-                Assert.Null(deletedCategory);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            await context.AddAsync(category);
+            await context.SaveChangesAsync();
+            var sut = new CategoryRepository(context);
+            await sut.DeleteCategoryAsync(category.Id);
+            var deletedCategory = await context.Categories.FindAsync(category.Id);
+            Assert.Null(deletedCategory);
         }
     }
 }

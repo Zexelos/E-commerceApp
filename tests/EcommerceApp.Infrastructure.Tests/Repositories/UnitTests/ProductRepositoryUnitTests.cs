@@ -23,15 +23,13 @@ namespace EcommerceApp.Infrastructure.Tests.Repositories.UnitTests
         {
             var product = new Product { Id = 100, Name = "sagwer", Description = "esragberg", UnitPrice = 12.32m, UnitsInStock = 2 };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                var sut = new ProductRepository(context);
-                await sut.AddProductAsync(product);
-                var result = await context.Products.FindAsync(product.Id);
-                Assert.NotNull(result);
-                Assert.Equal(result, product);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            var sut = new ProductRepository(context);
+            await sut.AddProductAsync(product);
+            var result = await context.Products.FindAsync(product.Id);
+            Assert.NotNull(result);
+            Assert.Equal(result, product);
         }
 
         [Fact]
@@ -39,16 +37,14 @@ namespace EcommerceApp.Infrastructure.Tests.Repositories.UnitTests
         {
             var product = new Product { Id = 100, Name = "sagwer", Description = "esragberg", UnitPrice = 12.32m, UnitsInStock = 2 };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                await context.Products.AddAsync(product);
-                await context.SaveChangesAsync();
-                var sut = new ProductRepository(context);
-                var result = await sut.GetProductAsync(product.Id);
-                Assert.NotNull(result);
-                Assert.Equal(product, result);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            await context.Products.AddAsync(product);
+            await context.SaveChangesAsync();
+            var sut = new ProductRepository(context);
+            var result = await sut.GetProductAsync(product.Id);
+            Assert.NotNull(result);
+            Assert.Equal(product, result);
         }
 
         [Fact]
@@ -59,16 +55,14 @@ namespace EcommerceApp.Infrastructure.Tests.Repositories.UnitTests
             var product3 = new Product { Id = 200, Name = "ecrye", Description = "vgw53", UnitPrice = 12.2m, UnitsInStock = 1 };
             var products = new List<Product> { product1, product2, product3 };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                await context.Products.AddRangeAsync(products);
-                await context.SaveChangesAsync();
-                var sut = new ProductRepository(context);
-                var result = await sut.GetProductsAsync();
-                Assert.NotNull(result);
-                Assert.Equal(products, result);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            await context.Products.AddRangeAsync(products);
+            await context.SaveChangesAsync();
+            var sut = new ProductRepository(context);
+            var result = await sut.GetProductsAsync();
+            Assert.NotNull(result);
+            Assert.Equal(products, result);
         }
 
         [Fact]
@@ -100,16 +94,14 @@ namespace EcommerceApp.Infrastructure.Tests.Repositories.UnitTests
         {
             var product = new Product { Id = 100, Name = "sagwer", Description = "esragberg", UnitPrice = 12.32m, UnitsInStock = 2 };
 
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                await context.Products.AddAsync(product);
-                await context.SaveChangesAsync();
-                var sut = new ProductRepository(context);
-                await sut.DeleteProductAsync(product.Id);
-                var result = await context.Products.FindAsync(product.Id);
-                Assert.Null(result);
-            }
+            using var context = new AppDbContext(_options);
+            await context.Database.EnsureCreatedAsync();
+            await context.Products.AddAsync(product);
+            await context.SaveChangesAsync();
+            var sut = new ProductRepository(context);
+            await sut.DeleteProductAsync(product.Id);
+            var result = await context.Products.FindAsync(product.Id);
+            Assert.Null(result);
         }
     }
 }
