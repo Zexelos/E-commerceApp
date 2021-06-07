@@ -1,0 +1,11 @@
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace EcommerceApp.Application.Interfaces
+{
+    public interface ISearchSelectList
+    {
+        List<SelectListItem> CategorySelectList { get; }
+        List<SelectListItem> ProductSelectList { get; }
+    }
+}

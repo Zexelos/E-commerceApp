@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection.Metadata;
 using System;
 using EcommerceApp.Application.Interfaces;
@@ -16,12 +17,14 @@ namespace EcommerceApp.Web.Controllers
         private readonly ILogger<EmployeePanelController> _logger;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
+        private readonly ISearchService _searchService;
 
-        public EmployeePanelController(ILogger<EmployeePanelController> logger, ICategoryService categoryService, IProductService productService)
+        public EmployeePanelController(ILogger<EmployeePanelController> logger, ICategoryService categoryService, IProductService productService, ISearchService searchService)
         {
             _logger = logger;
             _categoryService = categoryService;
             _productService = productService;
+            _searchService = searchService;
         }
 
         public IActionResult Index()
@@ -29,16 +32,22 @@ namespace EcommerceApp.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Categories()
+        public async Task<IActionResult> Categories(string selectedValue, string searchString)
         {
-            var model = await _categoryService.GetCategoriesAsync();
-            return View(model);
+            if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
+            {
+                return View(await _searchService.CategorySearchAsync(selectedValue, searchString));
+            }
+            return View(await _categoryService.GetCategoriesAsync());
         }
 
-        public async Task<IActionResult> Products()
+        public async Task<IActionResult> Products(string selectedValue, string searchString)
         {
-            var model = await _productService.GetProductsAsync();
-            return View(model);
+            if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
+            {
+                return View(await _searchService.ProductSearchAsync(selectedValue, searchString));
+            }
+            return View(await _productService.GetProductsAsync());
         }
 
         [HttpGet]

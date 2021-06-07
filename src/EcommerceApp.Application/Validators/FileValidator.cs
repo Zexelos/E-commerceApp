@@ -7,9 +7,9 @@ namespace EcommerceApp.Application.Validators
     {
         public FileValidator()
         {
-            RuleFor(x => x.Length).NotNull().LessThanOrEqualTo(2000000)
+            RuleFor(x => x.Length).LessThanOrEqualTo(2000000)
                 .WithMessage("File size is larger than allowed,max 2MB");
-            RuleFor(x => x.ContentType).NotNull().Must(x =>
+            RuleFor(x => x.ContentType).Must(x =>
                 x.Equals("image/jpeg") ||
                 x.Equals("image/jpg") ||
                 x.Equals("image/png"))

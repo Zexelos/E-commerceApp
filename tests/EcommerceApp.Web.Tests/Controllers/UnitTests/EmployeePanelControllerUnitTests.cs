@@ -17,10 +17,11 @@ namespace EcommerceApp.Web.Tests
         private readonly Mock<ILogger<EmployeePanelController>> _logger = new();
         private readonly Mock<ICategoryService> _categoryService = new();
         private readonly Mock<IProductService> _productService = new();
+        private readonly Mock<ISearchService> _searchService = new();
 
         public EmployeePanelControllerUnitTests()
         {
-            _sut = new EmployeePanelController(_logger.Object, _categoryService.Object, _productService.Object);
+            _sut = new EmployeePanelController(_logger.Object, _categoryService.Object, _productService.Object, _searchService.Object);
         }
 
         [Fact]

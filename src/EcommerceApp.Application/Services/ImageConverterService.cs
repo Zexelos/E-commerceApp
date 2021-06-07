@@ -13,7 +13,10 @@ namespace EcommerceApp.Application.Services
         {
             using (var stream = new MemoryStream())
             {
-                await formFile.CopyToAsync(stream);
+                if (formFile != null)
+                {
+                    await formFile.CopyToAsync(stream);
+                }
                 return stream.ToArray();
             }
         }

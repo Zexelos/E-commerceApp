@@ -1,6 +1,7 @@
 using System.Reflection;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.Policies;
+using EcommerceApp.Application.Resources;
 using EcommerceApp.Application.Services;
 using EcommerceApp.Application.Validators;
 using EcommerceApp.Application.ViewModels;
@@ -21,6 +22,7 @@ namespace EcommerceApp.Application
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IImageConverterService, ImageConverterService>();
+            services.AddScoped<ISearchService, SearchService>();
             services.AddMvc().AddFluentValidation();
             services.AddTransient<IValidator<EmployeeVM>, EmployeeVMValidator>();
             services.AddTransient<IValidator<CategoryVM>, CategoryVMValidator>();
@@ -28,6 +30,7 @@ namespace EcommerceApp.Application
             services.AddTransient<IValidator<IFormFile>, FileValidator>();
             services.AddSingleton<IAuthorizationHandler, HasIsAdminClaimHandler>();
             services.AddSingleton<IAuthorizationHandler, HasIsEmployeeClaimHandler>();
+            services.AddSingleton<ISearchSelectList, SearchSelectList>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("CanAccessEmployeePanel", policybuilder => policybuilder.Requirements.Add(new CanAccessEmployeePanelRequirement()));

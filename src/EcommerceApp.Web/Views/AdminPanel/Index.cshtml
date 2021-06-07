@@ -4,7 +4,7 @@
 }
 <div class="text-center">
     <h1 class="display-4">Admin panel</h1>
-    <p><a class="btn btn-primary" asp-area="" asp-controller="AdminPanel" asp-action="AddEmployee">Add Employee</a></p>
+    <p><a class="btn btn-success" asp-area="" asp-controller="AdminPanel" asp-action="AddEmployee">Add Employee</a></p>
     <table class="table">
         <thead>
             <tr>
@@ -32,7 +32,7 @@
                     @Html.DisplayFor(modelItem => item.Position)
                 </td>
                 <td>
-                    <a class="btn btn-success" asp-area="" asp-controller="AdminPanel" asp-action="UpdateEmployee"
+                    <a class="btn btn-primary" asp-area="" asp-controller="AdminPanel" asp-action="UpdateEmployee"
                         asp-route-id="@item.Id">Edit</a>
 
                     <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel" asp-action="DeleteEmployee"

@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using EcommerceApp.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using EcommerceApp.Application;
 using EcommerceApp.Domain.Models;
 using System.Globalization;
