@@ -4,6 +4,8 @@
 }
 <center>
     <h1>@ViewData["Title"]</h1>
+</center>
+<span style="float: left">
     <p>Current category</p>
     <div>
         <dl class="dl-horizontal">
@@ -22,13 +24,17 @@
             }
         </dl>
     </div>
-    <p>Fill in the fields to update current category</p>
-    <div class="col-md-6">
-        <form asp-action="UpdateCategory" enctype="multipart/form-data">
-            <partial name="_CategoryFormPartial" />
-            <button type="submit" class="btn btn-primary">Update Category</button>
-        </form>
-    </div>
+</span>
+<center>
+    <span style="float: center">
+        <div class="col-md-6">
+            <p>Fill in the fields to update current category</p>
+            <form asp-action="UpdateCategory" enctype="multipart/form-data">
+                <partial name="_CategoryFormPartial" />
+                <button type="submit" class="btn btn-primary">Update Category</button>
+            </form>
+        </div>
+    </span>
 </center>
 
 @section Scripts {

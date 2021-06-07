@@ -4,8 +4,8 @@
 }
 <center>
     <h1>@ViewData["Title"]</h1>
-    <p>Fill in the fields to create a new product</p>
     <div class="col-md-6">
+    <p>Fill in the fields to create a new product</p>
         <form asp-action="AddProduct" enctype="multipart/form-data">
             <partial name="_ProductFormPartial" />
             <button type="submit" class="btn btn-primary">Add Product</button>

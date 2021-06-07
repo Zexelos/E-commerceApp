@@ -4,8 +4,8 @@
 }
 <center>
     <h1>@ViewData["Title"]</h1>
-    <p>Fill in the fields to create a new category</p>
     <div class="col-md-6">
+    <p>Fill in the fields to create a new category</p>
         <form asp-action="AddCategory" enctype="multipart/form-data">
             <partial name="_CategoryFormPartial" />
             <button type="submit" class="btn btn-primary">Add Category</button>
