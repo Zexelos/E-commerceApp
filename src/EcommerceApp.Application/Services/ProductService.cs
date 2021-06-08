@@ -48,6 +48,17 @@ namespace EcommerceApp.Application.Services
             return _mapper.Map<List<ProductVM>>(products);
         }
 
+        public async Task<List<ProductVM>> GetProductsWithImageAsync()
+        {
+            var products = (await _productRepository.GetProductsAsync()).ToList();
+            var productVMs = _mapper.Map<List<ProductVM>>(products);
+            for (int i = 0; i < productVMs.Count; i++)
+            {
+                productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(productVMs[i].Image);
+            }
+            return productVMs;
+        }
+
         public async Task UpdateProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);

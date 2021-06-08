@@ -23,7 +23,7 @@ namespace EcommerceApp.Application.Services
             return new HomeVM
             {
                 Categories = await _categoryService.GetCategoriesAsync(),
-                Products = GetRandomAmountOfProductVMsFromList(await _productService.GetProductsAsync(), 8)
+                Products = GetRandomAmountOfProductVMsFromList(await _productService.GetProductsWithImageAsync(), 8)
             };
         }
 

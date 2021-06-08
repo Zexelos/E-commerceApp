@@ -9,6 +9,7 @@ namespace EcommerceApp.Application.Interfaces
         Task AddProductAsync(ProductVM product);
         Task<ProductVM> GetProductAsync(int id);
         Task<List<ProductVM>> GetProductsAsync();
+        Task<List<ProductVM>> GetProductsWithImageAsync();
         Task UpdateProductAsync(ProductVM product);
         Task DeleteProductAsync(int id);
     }
