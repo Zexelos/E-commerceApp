@@ -1,0 +1,17 @@
+@model EcommerceApp.Application.ViewModels.HomeVM
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" role="button" data-toggle="dropdown"
+                id="navbarDropdown">Categories</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                @foreach (var category in Model.Categories)
+                {
+                    <a class="dropdown-item" asp-controller="Category" asp-action="ActionName"
+                    asp-route-paramName=@category.Name>@Html.DisplayFor(x => category.Name)
+                    </a>
+                }
+            </div>
+        </li>
+    </div>
+</nav>
