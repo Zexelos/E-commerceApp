@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Domain.Interfaces;
@@ -52,6 +53,16 @@ namespace EcommerceApp.Application.Services
         {
             var products = (await _productRepository.GetProductsAsync()).ToList();
             var productVMs = _mapper.Map<List<ProductVM>>(products);
+            for (int i = 0; i < productVMs.Count; i++)
+            {
+                productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(productVMs[i].Image);
+            }
+            return productVMs;
+        }
+
+        public async Task<List<ProductVM>> GetProductsByCategoryNameAsync(string name)
+        {
+            var productVMs = (await _productRepository.GetProductsAsync()).Where(x => x.CategoryName == name).ProjectTo<ProductVM>(_mapper.ConfigurationProvider).ToList();
             for (int i = 0; i < productVMs.Count; i++)
             {
                 productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(productVMs[i].Image);

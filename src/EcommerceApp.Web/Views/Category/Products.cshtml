@@ -1,9 +1,9 @@
-﻿@model EcommerceApp.Application.ViewModels.HomeVM
+@model List<EcommerceApp.Application.ViewModels.ProductVM>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Products";
 }
 <div class="row">
-    @foreach (var item in Model.Products)
+    @foreach (var item in Model)
     {
         <div class="col-md-3">
             <div class="card">

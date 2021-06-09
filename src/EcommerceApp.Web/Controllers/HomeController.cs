@@ -27,7 +27,7 @@ namespace EcommerceApp.Web.Controllers
             var model = await _homeService.GetHomeVMAsync();
             return View(model);
         }
-
+        
         public IActionResult Privacy()
         {
             return View();

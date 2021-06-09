@@ -1,6 +1,4 @@
 using System.Linq;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
@@ -36,6 +34,10 @@ namespace EcommerceApp.Infrastructure.Repositories
         public async Task UpdateProductAsync(Product product)
         {
             _context.Products.Update(product);
+            if (product.Image.Length == 0)
+            {
+                _context.Entry(product).Property(x => x.Image).IsModified = false;
+            }
             await _context.SaveChangesAsync();
         }
 

@@ -27,7 +27,7 @@ namespace EcommerceApp.Application.Services
             };
         }
 
-        private List<ProductVM> GetRandomAmountOfProductVMsFromList(List<ProductVM> list, int itemAmount)
+        private static List<ProductVM> GetRandomAmountOfProductVMsFromList(List<ProductVM> list, int itemAmount)
         {
             var random = new Random();
             var result = new List<ProductVM>();
