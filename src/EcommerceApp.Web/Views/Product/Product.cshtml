@@ -1,0 +1,13 @@
+@model EcommerceApp.Application.ViewModels.ProductVM
+@{
+    ViewData["Title"] = "Product";
+}
+<center>
+    <h1>@Model.Name</h1>
+    <dl class="dl-horizontal">
+            <dd><img src=@Model.ImageToDisplay width="254" height="256" /></dd>
+            <dd>Price: @Model.UnitPrice</dd>
+            <dd>Left is stock: @Model.UnitsInStock</dd>
+            <dd>@Model.Description</dd>
+        </dl>
+</center>

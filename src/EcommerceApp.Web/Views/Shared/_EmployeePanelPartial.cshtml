@@ -5,12 +5,10 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject IAuthorizationService AuthorizationService
-
 @{
     var requirement = new CanAccessEmployeePanelRequirement();
     var authorizationResult = await AuthorizationService.AuthorizeAsync(User, "CanAccessEmployeePanel");
 }
-
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User) && authorizationResult.Succeeded)
     {

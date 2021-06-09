@@ -11,6 +11,7 @@
                 <dd><img src=@item.ImageToDisplay width="254" height="256" /></dd>
                 <p>@item.Description</p>
                 <p>@item.UnitPrice</p>
+                <a asp-controller="Product" asp-action="Product" asp-route-id="@item.Id" class="stretched-link"></a>
             </div>
         </div>
     }
