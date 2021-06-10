@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Interfaces;
 
 namespace EcommerceApp.Web.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,20 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ICustomerRepository _customerRepository;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ICustomerRepository customerRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _customerRepository = customerRepository;
         }
 
         [BindProperty]
@@ -112,6 +116,18 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    var customer = new Customer
+                    {
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        City = Input.City,
+                        PostalCode = Input.PostalCode,
+                        Adress = Input.Adress,
+                        AppUserId = user.Id
+                    };
+
+                    await _customerRepository.AddCustomerAsync(customer);
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

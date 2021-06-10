@@ -30,10 +30,6 @@ namespace EcommerceApp.Domain.Models
         public string Adress { get; set; }
 
         [Required]
-        [StringLength(15, MinimumLength = 7)]
-        public string PhoneNumber { get; set; }
-
-        [Required]
         public string AppUserId { get; set; }
 
         [ForeignKey(nameof(AppUserId))]
