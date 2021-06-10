@@ -70,12 +70,12 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
             public bool IsAdmin { get; set; }
 
             [Required]
-            [Display(Name = "First Name")]
+            [Display(Name = "First name")]
             [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             public string FirstName { get; set; }
 
             [Required]
-            [Display(Name = "Last Name")]
+            [Display(Name = "Last name")]
             [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             public string LastName { get; set; }
 
@@ -85,18 +85,18 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
             public string City { get; set; }
 
             [Required]
-            [Display(Name = "Postal Code")]
+            [Display(Name = "Postal code")]
             [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
             public string PostalCode { get; set; }
 
             [Required]
             [Display(Name = "Adress")]
             [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-            public string Adress { get; set; }
+            public string Address { get; set; }
 
             [Required]
-            [Display(Name = "Phone Number")]
-            [StringLength(15, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 7)]
+            [Phone]
+            [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
         }
 
@@ -112,7 +112,7 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = Input.Email, Email = Input.Email };
+                var user = new AppUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -122,7 +122,7 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
                         LastName = Input.LastName,
                         City = Input.City,
                         PostalCode = Input.PostalCode,
-                        Adress = Input.Adress,
+                        Address = Input.Address,
                         AppUserId = user.Id
                     };
 

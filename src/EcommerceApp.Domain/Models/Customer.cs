@@ -27,7 +27,7 @@ namespace EcommerceApp.Domain.Models
 
         [Required]
         [StringLength(50, MinimumLength = 2)]
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         [Required]
         public string AppUserId { get; set; }

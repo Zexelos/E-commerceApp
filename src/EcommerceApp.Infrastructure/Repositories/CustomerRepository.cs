@@ -27,6 +27,12 @@ namespace EcommerceApp.Infrastructure.Repositories
             return await _context.Customers.FindAsync(id);
         }
 
+        public async Task<int> GetCustomerIdAsync(string appUserId)
+        {
+            var customer = await _context.Customers.AsNoTracking().FirstOrDefaultAsync(x => x.AppUserId == appUserId);
+            return customer.Id;
+        }
+
         public async Task<IQueryable<Customer>> GetCustomersAsync()
         {
             return (await _context.Customers.ToListAsync()).AsQueryable();
