@@ -18,7 +18,6 @@ namespace EcommerceApp.Domain.Models
         public int CartId { get; set; }
 
         [ForeignKey(nameof(CartId))]
-        [InverseProperty("CartItems")]
-        public Cart Cart { get; set; }
+        public virtual Cart Cart { get; set; }
     }
 }

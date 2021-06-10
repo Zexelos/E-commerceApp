@@ -18,6 +18,8 @@ namespace EcommerceApp.Infrastructure
 
         public DbSet<CartItem> CartItems { get; set; }
 
-        public DbSet<Cart> Cart { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
     }
 }

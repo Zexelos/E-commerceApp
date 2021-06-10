@@ -1,9 +1,10 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceApp.Domain.Models
 {
-    public class Employee
+    public class Customer
     {
         [Key]
         public int Id { get; set; }
@@ -17,12 +18,20 @@ namespace EcommerceApp.Domain.Models
         public string LastName { get; set; }
 
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        [StringLength(50, MinimumLength = 2)]
+        public string City { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 5)]
+        public string PostalCode { get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 2)]
-        public string Position { get; set; }
+        public string Adress { get; set; }
+
+        [Required]
+        [StringLength(15, MinimumLength = 7)]
+        public string PhoneNumber { get; set; }
 
         [Required]
         public string AppUserId { get; set; }

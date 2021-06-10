@@ -9,7 +9,12 @@ namespace EcommerceApp.Domain.Models
         [Key]
         public int Id { get; set; }
 
-        [InverseProperty(nameof(CartItem.Cart))]
-        public ICollection<CartItem> CartItems { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
+
+        [Required]
+        public int CustomerId { get; set; }
+
+        [ForeignKey(nameof(CustomerId))]
+        public Customer Customer { get; set; }
     }
 }

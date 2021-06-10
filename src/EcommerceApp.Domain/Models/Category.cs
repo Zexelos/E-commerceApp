@@ -18,7 +18,6 @@ namespace EcommerceApp.Domain.Models
 
         public byte[] Image { get; set; }
 
-        [InverseProperty(nameof(Product.Category))]
         public virtual ICollection<Product> Products { get; set; }
     }
 }

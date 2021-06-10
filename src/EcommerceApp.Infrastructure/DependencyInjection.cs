@@ -11,6 +11,7 @@ namespace EcommerceApp.Application
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             return services;
         }
     }
