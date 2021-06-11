@@ -89,7 +89,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Category ID in the route");
+                return NotFound("You must pass a valid ID in the route");
             }
             var model = await _categoryService.GetCategoryAsync(id.Value);
             return View(model);
@@ -100,7 +100,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Product ID in the route");
+                return NotFound("You must pass a valid ID in the route");
             }
             var model = await _productService.GetProductAsync(id.Value);
             return View(model);
@@ -132,7 +132,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Category ID in the route");
+                return NotFound("You must pass a valid ID in the route");
             }
             await _categoryService.DeleteCategoryAsync(id.Value);
             return RedirectToAction(nameof(Categories));
@@ -142,7 +142,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Product ID in the route");
+                return NotFound("You must pass a valid ID in the route");
             }
             await _productService.DeleteProductAsync(id.Value);
             return RedirectToAction(nameof(Products));

@@ -1,0 +1,66 @@
+@using EcommerceApp.Application.Interfaces
+@model List<EcommerceApp.Application.ViewModels.CustomerVM>
+@inject ISearchSelectList SearchSelectList
+@{
+    ViewData["Title"] = "Customers Management";
+}
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p>
+    <form method="get" asp-action="Customers">
+        <select asp-items="SearchSelectList.CustomerSelectList" name="SelectedValue"></select>
+        <input text="text" name="SearchString" />
+        <input type="submit" value="Filter" />
+    </form>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>City</th>
+                <th>PostalCode</th>
+                <th>Address</th>
+                <th>PhoneNumber</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PostalCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                    <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel" asp-action="DeleteCustomer"
+                        asp-route-id="@item.Id">Remove</a>
+                </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

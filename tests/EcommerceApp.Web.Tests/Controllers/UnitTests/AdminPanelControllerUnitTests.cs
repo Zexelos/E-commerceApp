@@ -16,11 +16,12 @@ namespace EcommerceApp.Web.Tests
         private readonly AdminPanelController _sut;
         private readonly Mock<ILogger<AdminPanelController>> _logger = new();
         private readonly Mock<IEmployeeService> _employeeService = new();
+        private readonly Mock<ICustomerService> _customerService = new();
         private readonly Mock<ISearchService> _searchService = new();
 
         public AdminPanelControllerUnitTests()
         {
-            _sut = new AdminPanelController(_logger.Object, _employeeService.Object, _searchService.Object);
+            _sut = new AdminPanelController(_logger.Object, _employeeService.Object, _customerService.Object, _searchService.Object);
         }
 
         [Fact]
@@ -36,7 +37,7 @@ namespace EcommerceApp.Web.Tests
             _employeeService.Setup(s => s.GetEmployeesAsync()).ReturnsAsync(employeeVMs);
 
             // Act
-            var result = await _sut.Index(string.Empty, string.Empty);
+            var result = await _sut.Employees(string.Empty, string.Empty);
 
             // Assert
             Assert.NotNull(result);
@@ -59,7 +60,7 @@ namespace EcommerceApp.Web.Tests
             _searchService.Setup(s => s.EmployeeSearchAsync("FirstName", "aciek")).ReturnsAsync(employeeVMs);
 
             // Act
-            var result = await _sut.Index("FirstName", "aciek");
+            var result = await _sut.Employees("FirstName", "aciek");
 
             // Assert
             Assert.NotNull(result);

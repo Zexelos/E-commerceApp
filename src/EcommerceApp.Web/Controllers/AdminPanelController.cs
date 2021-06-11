@@ -19,22 +19,41 @@ namespace EcommerceApp.Web.Controllers
     {
         private readonly ILogger<AdminPanelController> _logger;
         private readonly IEmployeeService _employeeService;
+        private readonly ICustomerService _customerService;
         private readonly ISearchService _searchService;
 
-        public AdminPanelController(ILogger<AdminPanelController> logger, IEmployeeService employeeService, ISearchService searchService)
+        public AdminPanelController(ILogger<AdminPanelController> logger,
+            IEmployeeService employeeService,
+            ICustomerService customerService,
+            ISearchService searchService)
         {
             _logger = logger;
             _employeeService = employeeService;
+            _customerService = customerService;
             _searchService = searchService;
         }
 
-        public async Task<IActionResult> Index(string selectedValue, string searchString)
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Employees(string selectedValue, string searchString)
         {
             if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
             {
                 return View(await _searchService.EmployeeSearchAsync(selectedValue, searchString));
             }
             return View(await _employeeService.GetEmployeesAsync());
+        }
+
+        public async Task<IActionResult> Customers(string selectedValue, string searchString)
+        {
+            if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
+            {
+                return View(await _searchService.CustomerSearchAsync(selectedValue, searchString));
+            }
+            return View(await _customerService.GetCustomersAsync());
         }
 
         [HttpGet]
@@ -49,7 +68,7 @@ namespace EcommerceApp.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _employeeService.AddEmployeeAsync(employeeVM);
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Employees));
             }
             else
             {
@@ -62,7 +81,7 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/UpdateEmployee/21");
+                return NotFound("You must pass a valid ID in the route");
             }
             var model = await _employeeService.GetEmployeeAsync(id.Value);
             return View(model);
@@ -74,7 +93,7 @@ namespace EcommerceApp.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _employeeService.UpdateEmployeeAsync(employeeVM);
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Employees));
             }
             else
             {
@@ -86,10 +105,20 @@ namespace EcommerceApp.Web.Controllers
         {
             if (!id.HasValue)
             {
-                return NotFound("You must pass a valid Employee ID in the route, for example, /AdminPanel/DeleteEmployee/21");
+                return NotFound("You must pass a valid ID in the route");
             }
             await _employeeService.DeleteEmployeeAsync(id.Value);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Employees));
+        }
+
+        public async Task<IActionResult> DeleteCustomer(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            await _customerService.DeleteCustomerAsync(id.Value);
+            return RedirectToAction(nameof(Customers));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
