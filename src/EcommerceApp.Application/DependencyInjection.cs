@@ -5,6 +5,7 @@ using EcommerceApp.Application.Resources;
 using EcommerceApp.Application.Services;
 using EcommerceApp.Application.Validators;
 using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.AdminPanel;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;

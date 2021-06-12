@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;
 
-namespace EcommerceApp.Application.ViewModels
+namespace EcommerceApp.Application.ViewModels.AdminPanel
 {
     public class EmployeeVM : IMapFrom<Domain.Models.Employee>
     {

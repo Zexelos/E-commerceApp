@@ -1,5 +1,5 @@
 @using EcommerceApp.Application.Interfaces
-@model List<EcommerceApp.Application.ViewModels.CustomerVM>
+@model EcommerceApp.Application.ViewModels.AdminPanel.CustomerListVM
 @inject ISearchSelectList SearchSelectList
 @{
     ViewData["Title"] = "Customers Management";
@@ -28,7 +28,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Customers)
             {
                 <tr>
                     <td>

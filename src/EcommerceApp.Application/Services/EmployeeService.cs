@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EcommerceApp.Application.Interfaces;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.AdminPanel;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -39,13 +39,25 @@ namespace EcommerceApp.Application.Services
         public async Task<EmployeeVM> GetEmployeeAsync(int id)
         {
             var employee = await _repository.GetEmployeeAsync(id);
-            return _mapper.Map<EmployeeVM>(employee);
+            var employeeVM = _mapper.Map<EmployeeVM>(employee);
+            var user = await _userManager.FindByIdAsync(employee.AppUserId);
+            employeeVM.Email = user.Email;
+            return employeeVM;
         }
 
-        public async Task<List<EmployeeVM>> GetEmployeesAsync()
+        public async Task<EmployeeListVM> GetEmployeesAsync()
         {
             var employees = (await _repository.GetEmployeesAsync()).ToList();
-            return _mapper.Map<List<EmployeeVM>>(employees);
+            var employeeForListVMs = _mapper.Map<List<EmployeeForListVM>>(employees);
+            for (int i = 0; i < employees.Count; i++)
+            {
+                var user = await _userManager.FindByIdAsync(employees[i].AppUserId);
+                employeeForListVMs[i].Email = user.Email;
+            }
+            return new EmployeeListVM
+            {
+                Employees = employeeForListVMs
+            };
         }
 
         public async Task UpdateEmployeeAsync(EmployeeVM employeeVM)
@@ -69,7 +81,6 @@ namespace EcommerceApp.Application.Services
         {
             var employee = await _repository.GetEmployeeAsync(id);
             var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            //await _repository.DeleteEmployeeAsync(id);
             await _userManager.DeleteAsync(user);
         }
     }

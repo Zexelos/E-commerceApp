@@ -1,4 +1,4 @@
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.AdminPanel;
 using FluentValidation;
 
 namespace EcommerceApp.Application.Validators

@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.AdminPanel;
 
 namespace EcommerceApp.Application.Interfaces
 {
@@ -8,7 +7,7 @@ namespace EcommerceApp.Application.Interfaces
     {
         Task AddEmployeeAsync(EmployeeVM employeeVM);
         Task<EmployeeVM> GetEmployeeAsync(int id);
-        Task<List<EmployeeVM>> GetEmployeesAsync();
+        Task<EmployeeListVM> GetEmployeesAsync();
         Task UpdateEmployeeAsync(EmployeeVM employeeVM);
         Task DeleteEmployeeAsync(int id);
     }

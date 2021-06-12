@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.AdminPanel;
 
 namespace EcommerceApp.Application.Services
 {
@@ -57,37 +58,37 @@ namespace EcommerceApp.Application.Services
             return model;
         }
 
-        public async Task<List<EmployeeVM>> EmployeeSearchAsync(string selectedValue, string searchString)
+        public async Task<EmployeeListVM> EmployeeSearchAsync(string selectedValue, string searchString)
         {
-            var model = new List<EmployeeVM>();
+            var model = new EmployeeListVM();
             var idParse = int.TryParse(searchString, out int id);
-            model = selectedValue switch
+            model.Employees = selectedValue switch
             {
-                "Id" => idParse ? (await _employeeService.GetEmployeesAsync()).Where(x => x.Id == id).ToList() : model,
-                "FirstName" => (await _employeeService.GetEmployeesAsync()).Where(x => x.FirstName.Contains(searchString)).ToList(),
-                "LastName" => (await _employeeService.GetEmployeesAsync()).Where(x => x.LastName.Contains(searchString)).ToList(),
-                "Email" => (await _employeeService.GetEmployeesAsync()).Where(x => x.Email.Contains(searchString)).ToList(),
-                "Position" => (await _employeeService.GetEmployeesAsync()).Where(x => x.Position.Contains(searchString)).ToList(),
-                _ => model
+                "Id" => idParse ? (await _employeeService.GetEmployeesAsync()).Employees.Where(x => x.Id == id).ToList() : model.Employees,
+                "FirstName" => (await _employeeService.GetEmployeesAsync()).Employees.Where(x => x.FirstName.Contains(searchString)).ToList(),
+                "LastName" => (await _employeeService.GetEmployeesAsync()).Employees.Where(x => x.LastName.Contains(searchString)).ToList(),
+                "Email" => (await _employeeService.GetEmployeesAsync()).Employees.Where(x => x.Email.Contains(searchString)).ToList(),
+                "Position" => (await _employeeService.GetEmployeesAsync()).Employees.Where(x => x.Position.Contains(searchString)).ToList(),
+                _ => model.Employees
             };
             return model;
         }
 
-        public async Task<List<CustomerVM>> CustomerSearchAsync(string selectedValue, string searchString)
+        public async Task<CustomerListVM> CustomerSearchAsync(string selectedValue, string searchString)
         {
-            var model = new List<CustomerVM>();
+            var model = new CustomerListVM();
             var idParse = int.TryParse(searchString, out int id);
-            model = selectedValue switch
+            model.Customers = selectedValue switch
             {
-                "Id" => idParse ? (await _customerService.GetCustomersAsync()).Where(x => x.Id == id).ToList() : model,
-                "FirstName" => (await _customerService.GetCustomersAsync()).Where(x => x.FirstName == searchString).ToList(),
-                "LastName" => (await _customerService.GetCustomersAsync()).Where(x => x.LastName == searchString).ToList(),
-                "Email" => (await _customerService.GetCustomersAsync()).Where(x => x.Email == searchString).ToList(),
-                "City" => (await _customerService.GetCustomersAsync()).Where(x => x.City == searchString).ToList(),
-                "PostalCode" => (await _customerService.GetCustomersAsync()).Where(x => x.PostalCode == searchString).ToList(),
-                "Address" => (await _customerService.GetCustomersAsync()).Where(x => x.Address == searchString).ToList(),
-                "PhoneNumber" => (await _customerService.GetCustomersAsync()).Where(x => x.PhoneNumber == searchString).ToList(),
-                _ => model
+                "Id" => idParse ? (await _customerService.GetCustomersAsync()).Customers.Where(x => x.Id == id).ToList() : model.Customers,
+                "FirstName" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.FirstName == searchString).ToList(),
+                "LastName" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.LastName == searchString).ToList(),
+                "Email" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.Email == searchString).ToList(),
+                "City" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.City == searchString).ToList(),
+                "PostalCode" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.PostalCode == searchString).ToList(),
+                "Address" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.Address == searchString).ToList(),
+                "PhoneNumber" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.PhoneNumber == searchString).ToList(),
+                _ => model.Customers
             };
             return model;
         }

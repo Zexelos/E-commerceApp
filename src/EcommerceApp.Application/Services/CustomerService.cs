@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.AdminPanel;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Application.Services
 {
@@ -31,22 +28,25 @@ namespace EcommerceApp.Application.Services
             var customer = await _customerRepository.GetCustomerAsync(id);
             var customerVM = _mapper.Map<CustomerVM>(customer);
             var user = await _userManager.FindByIdAsync(customer.AppUserId);
-            customerVM.Email = await _userManager.GetEmailAsync(user);
-            customerVM.PhoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            customerVM.Email = user.Email;
+            customerVM.PhoneNumber = user.PhoneNumber;
             return customerVM;
         }
 
-        public async Task<List<CustomerVM>> GetCustomersAsync()
+        public async Task<CustomerListVM> GetCustomersAsync()
         {
             var customers = (await _customerRepository.GetCustomersAsync()).ToList();
-            var customerVMs = _mapper.Map<List<CustomerVM>>(customers);
+            var customerForListVMs = _mapper.Map<List<CustomerForListVM>>(customers);
             for (int i = 0; i < customers.Count; i++)
             {
                 var user = await _userManager.FindByIdAsync(customers[i].AppUserId);
-                customerVMs[i].Email = await _userManager.GetEmailAsync(user);
-                customerVMs[i].PhoneNumber = await _userManager.GetPhoneNumberAsync(user);
+                customerForListVMs[i].Email = user.Email;
+                customerForListVMs[i].PhoneNumber = user.PhoneNumber;
             }
-            return customerVMs;
+            return new CustomerListVM
+            {
+                Customers = customerForListVMs
+            };
         }
 
         public async Task DeleteCustomerAsync(int id)

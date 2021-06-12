@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;
 
-namespace EcommerceApp.Application.ViewModels
+namespace EcommerceApp.Application.ViewModels.AdminPanel
 {
-    public class CustomerVM : IMapFrom<Domain.Models.Customer>
+    public class CustomerForListVM : IMapFrom<Domain.Models.Customer>
     {
         [Display(Name = "Id")]
         public int Id { get; set; }
@@ -32,7 +32,7 @@ namespace EcommerceApp.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Customer, CustomerVM>().ReverseMap();
+            profile.CreateMap<Domain.Models.Customer, CustomerForListVM>().ReverseMap();
         }
     }
 }
