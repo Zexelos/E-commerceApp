@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 
 namespace EcommerceApp.Application.Interfaces
 {
@@ -8,7 +7,7 @@ namespace EcommerceApp.Application.Interfaces
     {
         Task AddCategoryAsync(CategoryVM categoryVM);
         Task<CategoryVM> GetCategoryAsync(int id);
-        Task<List<CategoryVM>> GetCategoriesAsync();
+        Task<CategoryListVM> GetCategoriesAsync();
         Task UpdateCategoryAsync(CategoryVM categoryVM);
         Task DeleteCategoryAsync(int id);
     }

@@ -1,13 +1,15 @@
 @using EcommerceApp.Application.Interfaces
-@inject IHomeService HomeService
+@using EcommerceApp.Application.ViewModels.EmployeePanel
+@inject ICategoryService CategoryService
 @{
-    var homeVM = await HomeService.GetHomeVMAsync();
+    ViewData["Title"] = "Add Product";
+    CategoryListVM list = await CategoryService.GetCategoriesAsync();
 }
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle text-dark" role="button" data-toggle="dropdown"
         id="navbarDropdown">Categories</a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        @foreach (var category in homeVM.Categories)
+        @foreach (var category in list.Categories)
         {
             <a class="dropdown-item" asp-controller="Category" asp-action="Products"
             asp-route-categoryName="@category.Name">@Html.DisplayFor(x => category.Name)

@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
+using EcommerceApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +23,12 @@ namespace EcommerceApp.Web.Controllers
         {
             var model = await _productService.GetProductsByCategoryNameAsync(categoryName);
             return View(model);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

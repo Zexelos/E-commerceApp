@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Application.ViewModels.AdminPanel;
 
 namespace EcommerceApp.Application.Services
@@ -27,33 +27,33 @@ namespace EcommerceApp.Application.Services
             _customerService = customerService;
         }
 
-        public async Task<List<CategoryVM>> CategorySearchAsync(string selectedValue, string searchString)
+        public async Task<CategoryListVM> CategorySearchAsync(string selectedValue, string searchString)
         {
-            var model = new List<CategoryVM>();
+            var model = new CategoryListVM();
             var parse = int.TryParse(searchString, out int id);
-            model = selectedValue switch
+            model.Categories = selectedValue switch
             {
-                "Id" => parse ? (await _categoryService.GetCategoriesAsync()).Where(x => x.Id == id).ToList() : model,
-                "Name" => (await _categoryService.GetCategoriesAsync()).Where(x => x.Name.Contains(searchString)).ToList(),
-                _ => model
+                "Id" => parse ? (await _categoryService.GetCategoriesAsync()).Categories.Where(x => x.Id == id).ToList() : model.Categories,
+                "Name" => (await _categoryService.GetCategoriesAsync()).Categories.Where(x => x.Name.Contains(searchString)).ToList(),
+                _ => model.Categories
             };
             return model;
         }
 
-        public async Task<List<ProductVM>> ProductSearchAsync(string selectedValue, string searchString)
+        public async Task<ProductListVM> ProductSearchAsync(string selectedValue, string searchString)
         {
-            var model = new List<ProductVM>();
+            var model = new ProductListVM();
             var idParse = int.TryParse(searchString, out int id);
             var unitPriceParse = decimal.TryParse(searchString, out decimal unitPrice);
             var unitsInStockParse = int.TryParse(searchString, out int unitsInStock);
-            model = selectedValue switch
+            model.Products = selectedValue switch
             {
-                "Id" => idParse ? (await _productService.GetProductsAsync()).Where(x => x.Id == id).ToList() : model,
-                "Name" => (await _productService.GetProductsAsync()).Where(x => x.Name.Contains(searchString)).ToList(),
-                "UnitPrice" => unitPriceParse ? (await _productService.GetProductsAsync()).Where(x => x.UnitPrice == unitPrice).ToList() : model,
-                "UnitsInStock" => unitsInStockParse ? (await _productService.GetProductsAsync()).Where(x => x.UnitsInStock == unitsInStock).ToList() : model,
-                "CategoryName" => (await _productService.GetProductsAsync()).Where(x => x.Name.Contains(searchString)).ToList(),
-                _ => model
+                "Id" => idParse ? (await _productService.GetProductsAsync()).Products.Where(x => x.Id == id).ToList() : model.Products,
+                "Name" => (await _productService.GetProductsAsync()).Products.Where(x => x.Name.Contains(searchString)).ToList(),
+                "UnitPrice" => unitPriceParse ? (await _productService.GetProductsAsync()).Products.Where(x => x.UnitPrice == unitPrice).ToList() : model.Products,
+                "UnitsInStock" => unitsInStockParse ? (await _productService.GetProductsAsync()).Products.Where(x => x.UnitsInStock == unitsInStock).ToList() : model.Products,
+                "CategoryName" => (await _productService.GetProductsAsync()).Products.Where(x => x.Name.Contains(searchString)).ToList(),
+                _ => model.Products
             };
             return model;
         }

@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EcommerceApp.Application.Services;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
 using Moq;

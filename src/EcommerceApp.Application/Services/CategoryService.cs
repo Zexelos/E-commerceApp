@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EcommerceApp.Application.Interfaces;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
 
@@ -26,7 +25,7 @@ namespace EcommerceApp.Application.Services
         public async Task AddCategoryAsync(CategoryVM categoryVM)
         {
             var category = _mapper.Map<Category>(categoryVM);
-            category.Image = await _imageConverterService.GetByteArrayFromImage(categoryVM.FormFileImage);
+            category.Image = await _imageConverterService.GetByteArrayFromFormFile(categoryVM.FormFileImage);
             await _repository.AddCategoryAsync(category);
         }
 
@@ -34,20 +33,24 @@ namespace EcommerceApp.Application.Services
         {
             var category = await _repository.GetCategoryAsync(id);
             var categoryVM = _mapper.Map<CategoryVM>(category);
-            categoryVM.ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(categoryVM.Image);
+            categoryVM.ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(category.Image);
             return categoryVM;
         }
 
-        public async Task<List<CategoryVM>> GetCategoriesAsync()
+        public async Task<CategoryListVM> GetCategoriesAsync()
         {
             var categories = (await _repository.GetCategoriesAsync()).ToList();
-            return _mapper.Map<List<CategoryVM>>(categories);
+            var categoryForListVM = _mapper.Map<List<CategoryForListVM>>(categories);
+            return new CategoryListVM
+            {
+                Categories = categoryForListVM
+            };
         }
 
         public async Task UpdateCategoryAsync(CategoryVM categoryVM)
         {
             var category = _mapper.Map<Category>(categoryVM);
-            category.Image = await _imageConverterService.GetByteArrayFromImage(categoryVM.FormFileImage);
+            category.Image = await _imageConverterService.GetByteArrayFromFormFile(categoryVM.FormFileImage);
             await _repository.UpdateCategoryAsync(category);
         }
 

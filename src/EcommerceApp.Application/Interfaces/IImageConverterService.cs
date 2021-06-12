@@ -5,7 +5,7 @@ namespace EcommerceApp.Application.Interfaces
 {
     public interface IImageConverterService
     {
-        Task<byte[]> GetByteArrayFromImage(IFormFile formFile);
+        Task<byte[]> GetByteArrayFromFormFile(IFormFile formFile);
         string GetImageStringFromByteArray(byte[] byteArray);
     }
 }

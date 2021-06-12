@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 using System.Linq;
+using EcommerceApp.Web.Models;
+using System.Diagnostics;
 
 namespace EcommerceApp.Web.Controllers
 {
@@ -146,6 +148,12 @@ namespace EcommerceApp.Web.Controllers
             }
             await _productService.DeleteProductAsync(id.Value);
             return RedirectToAction(nameof(Products));
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

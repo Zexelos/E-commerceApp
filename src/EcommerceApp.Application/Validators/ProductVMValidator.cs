@@ -1,5 +1,4 @@
-
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 using FluentValidation;
 
 namespace EcommerceApp.Application.Validators

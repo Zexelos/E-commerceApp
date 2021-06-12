@@ -3,7 +3,7 @@ using AutoMapper;
 using EcommerceApp.Application.Mapping;
 using Microsoft.AspNetCore.Http;
 
-namespace EcommerceApp.Application.ViewModels
+namespace EcommerceApp.Application.ViewModels.EmployeePanel
 {
     public class CategoryVM : IMapFrom<Domain.Models.Category>
     {
@@ -14,7 +14,6 @@ namespace EcommerceApp.Application.ViewModels
 
         [Display(Name = "Description")]
         public string Description { get; set; }
-        public byte[] Image { get; set; }
 
         [Display(Name = "Image")]
         public string ImageToDisplay { get; set; }

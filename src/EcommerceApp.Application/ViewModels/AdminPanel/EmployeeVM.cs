@@ -6,6 +6,7 @@ namespace EcommerceApp.Application.ViewModels.AdminPanel
 {
     public class EmployeeVM : IMapFrom<Domain.Models.Employee>
     {
+        [Display(Name = "Id")]
         public int Id { get; set; }
 
         [Display(Name = "First Name")]

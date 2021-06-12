@@ -23,10 +23,10 @@ namespace EcommerceApp.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<CustomerVM> GetCustomerAsync(int id)
+        public async Task<CustomerForListVM> GetCustomerAsync(int id)
         {
             var customer = await _customerRepository.GetCustomerAsync(id);
-            var customerVM = _mapper.Map<CustomerVM>(customer);
+            var customerVM = _mapper.Map<CustomerForListVM>(customer);
             var user = await _userManager.FindByIdAsync(customer.AppUserId);
             customerVM.Email = user.Email;
             customerVM.PhoneNumber = user.PhoneNumber;

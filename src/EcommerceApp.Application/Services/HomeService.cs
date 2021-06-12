@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
-using EcommerceApp.Application.ViewModels;
+using EcommerceApp.Application.ViewModels.Home;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
 
 namespace EcommerceApp.Application.Services
 {
     public class HomeService : IHomeService
     {
-        private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
 
-        public HomeService(ICategoryService categoryService, IProductService productService)
+        public HomeService(IProductService productService)
         {
-            _categoryService = categoryService;
             _productService = productService;
         }
 
@@ -22,15 +21,14 @@ namespace EcommerceApp.Application.Services
         {
             return new HomeVM
             {
-                Categories = await _categoryService.GetCategoriesAsync(),
                 Products = GetRandomAmountOfProductVMsFromList(await _productService.GetProductsWithImageAsync(), 8)
             };
         }
 
-        private static List<ProductVM> GetRandomAmountOfProductVMsFromList(List<ProductVM> list, int itemAmount)
+        private static List<ProductForHomeVM> GetRandomAmountOfProductVMsFromList(List<ProductForHomeVM> list, int itemAmount)
         {
             var random = new Random();
-            var result = new List<ProductVM>();
+            var result = new List<ProductForHomeVM>();
             var checkList = new List<int>();
             if (list.Count <= itemAmount)
             {
