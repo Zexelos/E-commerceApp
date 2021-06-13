@@ -21,7 +21,7 @@ namespace EcommerceApp.Web.Controllers
 
         public async Task<IActionResult> Products(string categoryName)
         {
-            var model = await _productService.GetProductsByCategoryNameAsync(categoryName);
+            var model = await _productService.GetListProductDetailsForUserVMByCategoryNameAsync(categoryName);
             return View(model);
         }
 

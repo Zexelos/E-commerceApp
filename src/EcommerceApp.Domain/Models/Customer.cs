@@ -34,5 +34,7 @@ namespace EcommerceApp.Domain.Models
 
         [ForeignKey(nameof(AppUserId))]
         public virtual AppUser AppUser { get; set; }
+
+        public virtual Cart Cart { get; set; }
     }
 }

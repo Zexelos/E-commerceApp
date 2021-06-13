@@ -20,7 +20,7 @@ namespace EcommerceApp.Web.Controllers
 
         public async Task<IActionResult> Product(int id)
         {
-            var model = await _productService.GetProductAsync(id);
+            var model = await _productService.GetProductDetailsForUserAsync(id);
             return View(model);
         }
 

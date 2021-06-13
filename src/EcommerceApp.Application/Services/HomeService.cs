@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.Home;
-using EcommerceApp.Application.ViewModels.EmployeePanel;
+using EcommerceApp.Application.ViewModels.Product;
 
 namespace EcommerceApp.Application.Services
 {
@@ -25,21 +25,21 @@ namespace EcommerceApp.Application.Services
             };
         }
 
-        private static List<ProductForHomeVM> GetRandomAmountOfProductVMsFromList(List<ProductForHomeVM> list, int itemAmount)
+        private static ListProductDetailsForUserVM GetRandomAmountOfProductVMsFromList(ListProductDetailsForUserVM list, int itemAmount)
         {
             var random = new Random();
-            var result = new List<ProductForHomeVM>();
+            var result = new ListProductDetailsForUserVM();
             var checkList = new List<int>();
-            if (list.Count <= itemAmount)
+            if (list.Products.Count <= itemAmount)
             {
                 return list;
             }
-            while (result.Count <= itemAmount)
+            while (result.Products.Count <= itemAmount)
             {
-                var currentRandom = random.Next(list.Count);
+                var currentRandom = random.Next(list.Products.Count);
                 if (!checkList.Contains(currentRandom))
                 {
-                    result.Add(list[currentRandom]);
+                    result.Products.Add(list.Products[currentRandom]);
                     checkList.Add(currentRandom);
                 }
             }

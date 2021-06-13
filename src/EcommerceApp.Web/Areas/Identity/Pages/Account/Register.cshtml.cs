@@ -26,19 +26,22 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ICustomerRepository _customerRepository;
+        private readonly ICartRepository _cartRepository;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ICustomerRepository customerRepository)
+            ICustomerRepository customerRepository,
+            ICartRepository cartRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _customerRepository = customerRepository;
+            _cartRepository = cartRepository;
         }
 
         [BindProperty]
@@ -112,7 +115,7 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber};
+                var user = new AppUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -127,6 +130,13 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
                     };
 
                     await _customerRepository.AddCustomerAsync(customer);
+
+                    var cart = new Cart
+                    {
+                        CustomerId = customer.Id
+                    };
+
+                    await _cartRepository.AddCartAsync(cart);
 
                     _logger.LogInformation("User created a new account with password.");
 

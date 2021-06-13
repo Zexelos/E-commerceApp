@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;
 
-namespace EcommerceApp.Application.ViewModels.Home
+namespace EcommerceApp.Application.ViewModels.Product
 {
-    public class ProductForHomeVM : IMapFrom<Domain.Models.Product>
+    public class ProductDetailsForUserVM : IMapFrom<Domain.Models.Product>
     {
         [Display(Name = "Id")]
         public int Id { get; set; }
@@ -23,7 +23,7 @@ namespace EcommerceApp.Application.ViewModels.Home
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Product, ProductForHomeVM>().ReverseMap();
+            profile.CreateMap<Domain.Models.Product, ProductDetailsForUserVM>().ReverseMap();
         }
     }
 }

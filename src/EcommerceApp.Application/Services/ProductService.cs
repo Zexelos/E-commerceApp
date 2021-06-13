@@ -6,7 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
-using EcommerceApp.Application.ViewModels.Home;
+using EcommerceApp.Application.ViewModels.Product;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
 
@@ -44,6 +44,14 @@ namespace EcommerceApp.Application.Services
             return productVM;
         }
 
+        public async Task<ProductDetailsForUserVM> GetProductDetailsForUserAsync(int id)
+        {
+            var product = await _productRepository.GetProductAsync(id);
+            var productVM = _mapper.Map<ProductDetailsForUserVM>(product);
+            productVM.ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(product.Image);
+            return productVM;
+        }
+
         public async Task<ProductListVM> GetProductsAsync()
         {
             var products = (await _productRepository.GetProductsAsync()).ToList();
@@ -54,15 +62,18 @@ namespace EcommerceApp.Application.Services
             };
         }
 
-        public async Task<List<ProductForHomeVM>> GetProductsWithImageAsync()
+        public async Task<ListProductDetailsForUserVM> GetProductsWithImageAsync()
         {
             var products = (await _productRepository.GetProductsAsync()).ToList();
-            var productVMs = _mapper.Map<List<ProductForHomeVM>>(products);
-            for (int i = 0; i < productVMs.Count; i++)
+            var productDetailsForUserVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
+            for (int i = 0; i < productDetailsForUserVMs.Count; i++)
             {
-                productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(products[i].Image);
+                productDetailsForUserVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(products[i].Image);
             }
-            return productVMs;
+            return new ListProductDetailsForUserVM
+            {
+                Products = productDetailsForUserVMs
+            };
         }
 
         public async Task<List<ProductVM>> GetProductsByCategoryNameAsync(string name)
@@ -74,6 +85,20 @@ namespace EcommerceApp.Application.Services
                 productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(products[i].Image);
             }
             return productVMs;
+        }
+
+        public async Task<ListProductDetailsForUserVM> GetListProductDetailsForUserVMByCategoryNameAsync(string name)
+        {
+            var products = (await _productRepository.GetProductsAsync()).Where(x => x.CategoryName == name).ToList();
+            var productVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
+            for (int i = 0; i < productVMs.Count; i++)
+            {
+                productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(products[i].Image);
+            }
+            return new ListProductDetailsForUserVM
+            {
+                Products = productVMs
+            };
         }
 
         public async Task UpdateProductAsync(ProductVM productVM)
