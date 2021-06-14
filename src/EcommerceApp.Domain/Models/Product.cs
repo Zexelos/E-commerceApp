@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,5 +34,7 @@ namespace EcommerceApp.Domain.Models
 
         [ForeignKey(nameof(CategoryId))]
         public virtual Category Category { get; set; }
+
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

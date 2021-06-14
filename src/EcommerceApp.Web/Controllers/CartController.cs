@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -23,11 +24,35 @@ namespace EcommerceApp.Web.Controllers
             _cartItemService = cartItemService;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var model = await _cartItemService.GetListCartItemForListVMAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            return View(model);
+        }
+
         public async Task<IActionResult> AddToCart(int id, int quantity)
         {
-            var appUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _cartItemService.AddCartItem(id, quantity, appUserId);
-            return Redirect("/Home/Index");
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> IncreaseCartItemQuantityByOne(int cartItemId)
+        {
+            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DecreaseCartItemQuantityByOne(int cartItemId)
+        {
+            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteCartItem(int cartItemId)
+        {
+            await _cartItemService.DeleteCartItemAsync(cartItemId);
+            return RedirectToAction(nameof(Index));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

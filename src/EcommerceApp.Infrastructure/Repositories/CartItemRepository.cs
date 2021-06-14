@@ -32,6 +32,11 @@ namespace EcommerceApp.Infrastructure.Repositories
             return (await _context.CartItems.ToListAsync()).AsQueryable();
         }
 
+        public async Task<IQueryable<CartItem>> GetCartItemsByCartIdAsync(int cartId)
+        {
+            return (await _context.CartItems.Where(x => x.CartId == cartId).ToListAsync()).AsQueryable();
+        }
+
         public async Task UpdateCartItemAsync(CartItem cartItem)
         {
             _context.CartItems.Update(cartItem);
