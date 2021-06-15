@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Diagnostics;
 using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceApp.Application.ViewModels.Cart
@@ -7,6 +5,8 @@ namespace EcommerceApp.Application.ViewModels.Cart
     public class CartItemForListVM
     {
         public int Id { get; set; }
+
+        public int ProductId { get; set; }
 
         public string Name { get; set; }
 

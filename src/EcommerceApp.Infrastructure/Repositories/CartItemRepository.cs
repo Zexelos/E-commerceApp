@@ -52,5 +52,15 @@ namespace EcommerceApp.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteCartItemsByCartIdAsync(int cartId)
+        {
+            var cartItems = _context.CartItems.Where(x => x.CartId == cartId);
+            if (cartItems != null)
+            {
+                _context.RemoveRange(cartItems);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

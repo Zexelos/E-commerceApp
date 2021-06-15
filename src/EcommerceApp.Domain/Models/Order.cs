@@ -20,5 +20,33 @@ namespace EcommerceApp.Domain.Models
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }
+
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string ShipFirstName { get; set; }
+
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string ShipLastName { get; set; }
+
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string ShipCity { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 5)]
+        public string ShipPostalCode { get; set; }
+
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string ShipAddress { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string ContactEmail { get; set; }
+
+        [Required]
+        [Phone]
+        public string ContactPhoneNumber { get; set; }
     }
 }

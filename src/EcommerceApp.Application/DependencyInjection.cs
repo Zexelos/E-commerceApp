@@ -27,6 +27,7 @@ namespace EcommerceApp.Application
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICartItemService, CartItemService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddMvc().AddFluentValidation();
             services.AddTransient<IValidator<EmployeeVM>, EmployeeVMValidator>();
             services.AddTransient<IValidator<CategoryVM>, CategoryVMValidator>();

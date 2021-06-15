@@ -12,5 +12,6 @@ namespace EcommerceApp.Domain.Interfaces
         Task<IQueryable<CartItem>> GetCartItemsByCartIdAsync(int cartId);
         Task UpdateCartItemAsync(CartItem cartItem);
         Task DeleteCartItemAsync(int id);
+        Task DeleteCartItemsByCartIdAsync(int cartId);
     }
 }

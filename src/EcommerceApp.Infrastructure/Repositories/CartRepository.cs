@@ -20,6 +20,11 @@ namespace EcommerceApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Cart> GetCartAsync(int id)
+        {
+            return await _context.Carts.FindAsync(id);
+        }
+
         public async Task<int> GetCartIdAsync(int customerId)
         {
             return (await _context.Carts.FirstOrDefaultAsync(x => x.CustomerId == customerId)).Id;

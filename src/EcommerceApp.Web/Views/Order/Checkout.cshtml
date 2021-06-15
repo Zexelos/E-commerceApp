@@ -1,0 +1,77 @@
+@using EcommerceApp.Application.ViewModels.Cart
+@model EcommerceApp.Application.ViewModels.Order.OrderCheckoutVM
+@{
+    ViewData["Title"] = "Checkout";
+}
+<center>
+    <h1>@ViewData["Title"]</h1>
+    <table class="table-striped table-dark table-sm text-center">
+        <thead>
+            <tr>
+                <th>ProductId</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <img src="@item.ImageToDisplay" width="128" height="128" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+                </tr>
+            }
+            <th>Final Price</th>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.TotalPrice)
+            </td>
+        </tbody>
+    </table>
+    <p>Your contact information</p>
+    <div>
+        <p>@Model.FirstName @Model.LastName</p>
+        <p>@Model.Email</p>
+        </br>
+        <p>@Model.Address</p>
+        <p>@Model.PostalCode @Model.City</p>
+        <p>@Model.PhoneNumber</p>
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index">Change info</a>
+    </div>
+    <form asp-controller="Order" asp-action="Checkout">
+        <input asp-for="@Model.CartId" type="hidden" />
+        <input asp-for="@Model.CustomerId" type="hidden" />
+        @for (int i = 0; i < Model.CartItems.Count; i++)
+        {
+            <input asp-for="@Model.CartItems[i].ProductId" type="hidden" />
+            <input asp-for="@Model.CartItems[i].Quantity" type="hidden" />
+        }
+        <input asp-for="@Model.TotalPrice" type="hidden" />
+        <input asp-for="@Model.FirstName" type="hidden" />
+        <input asp-for="@Model.LastName" type="hidden" />
+        <input asp-for="@Model.Email" type="hidden" />
+        <input asp-for="@Model.Address" type="hidden" />
+        <input asp-for="@Model.City" type="hidden" />
+        <input asp-for="@Model.PostalCode" type="hidden" />
+        <input asp-for="@Model.PhoneNumber" type="hidden" />
+        <button type="submit" class="btn btn-primary">Finalize</button>
+    </form>
+</center>
