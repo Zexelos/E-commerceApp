@@ -43,6 +43,7 @@ namespace EcommerceApp.Domain.Models
 
         [Required]
         [EmailAddress]
+        [StringLength(256)]
         public string ContactEmail { get; set; }
 
         [Required]

@@ -47,6 +47,12 @@ namespace EcommerceApp.Application.Services
             await _cartItemRepository.AddCartItemAsync(cartItem);
         }
 
+        public async Task<int> GetCartIdByAppUserIdAsync(string appUserId)
+        {
+            var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);
+            return await _cartRepository.GetCartIdAsync(customerId);
+        }
+
         public async Task<ListCartItemForListVM> GetListCartItemForListVMAsync(string appUserId)
         {
             var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);

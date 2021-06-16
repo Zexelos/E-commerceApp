@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.Order;
+using EcommerceApp.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceApp.Web.Controllers
@@ -16,6 +17,7 @@ namespace EcommerceApp.Web.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(CheckCheckoutGetPermission))]
         public async Task<IActionResult> Checkout(int? cartId)
         {
             if (!cartId.HasValue)
@@ -27,6 +29,7 @@ namespace EcommerceApp.Web.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(CheckCheckoutPostPermission))]
         public async Task<IActionResult> Checkout(OrderCheckoutVM orderCheckoutVM)
         {
             if (!ModelState.IsValid)
@@ -36,7 +39,7 @@ namespace EcommerceApp.Web.Controllers
             await _orderService.AddOrderAsync(orderCheckoutVM);
             return RedirectToAction(nameof(CheckoutSuccessful));
         }
-
+        
         public IActionResult CheckoutSuccessful()
         {
             return View();

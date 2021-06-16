@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ using EcommerceApp.Application;
 using EcommerceApp.Domain.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using EcommerceApp.Web.Filters;
 
 namespace EcommerceApp.Web
 {
@@ -49,6 +51,9 @@ namespace EcommerceApp.Web
                     "Employee",
                     policybuilder => policybuilder.RequireClaim("IsEmployee", "True"));
             });
+
+            services.AddScoped<CheckCheckoutGetPermission>();
+            services.AddScoped<CheckCheckoutPostPermission>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
