@@ -32,9 +32,9 @@ namespace EcommerceApp.Infrastructure.Repositories
             return (await _context.Customers.AsNoTracking().FirstOrDefaultAsync(x => x.AppUserId == appUserId)).Id;
         }
 
-        public async Task<IQueryable<Customer>> GetCustomersAsync()
+        public IQueryable<Customer> GetCustomers()
         {
-            return (await _context.Customers.ToListAsync()).AsQueryable();
+            return _context.Customers.AsQueryable();
         }
 
         public async Task UpdateCustomerAsync(Customer customer)

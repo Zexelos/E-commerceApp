@@ -10,7 +10,7 @@ namespace EcommerceApp.Domain.Interfaces
 
         Task<Employee> GetEmployeeAsync(int id);
 
-        Task<IQueryable<Employee>> GetEmployeesAsync();
+        IQueryable<Employee> GetEmployees();
 
         Task UpdateEmployeeAsync(Employee employee);
 

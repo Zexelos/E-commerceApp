@@ -10,6 +10,7 @@ using EcommerceApp.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.AdminPanel;
+using Microsoft.Extensions.Configuration;
 
 namespace EcommerceApp.Web.Controllers
 {
@@ -20,16 +21,18 @@ namespace EcommerceApp.Web.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly ICustomerService _customerService;
         private readonly ISearchService _searchService;
+        private readonly IConfiguration _configuration;
 
         public AdminPanelController(ILogger<AdminPanelController> logger,
             IEmployeeService employeeService,
             ICustomerService customerService,
-            ISearchService searchService)
+            ISearchService searchService, IConfiguration configuration)
         {
             _logger = logger;
             _employeeService = employeeService;
             _customerService = customerService;
             _searchService = searchService;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -37,22 +40,38 @@ namespace EcommerceApp.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Employees(string selectedValue, string searchString)
+        public async Task<IActionResult> Employees(string selectedValue, string searchString, string pageSize, int? pageNumber)
         {
+            if (!int.TryParse(pageSize, out int intPageSize))
+            {
+                intPageSize = _configuration.GetValue("DefaultPageSize", 10);
+            }
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
             if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
             {
-                return View(await _searchService.EmployeeSearchAsync(selectedValue, searchString));
+                return View(await _searchService.SearchPaginatedEmployeesAsync(selectedValue, searchString, intPageSize, pageNumber.Value));
             }
-            return View(await _employeeService.GetEmployeesAsync());
+            return View(await _employeeService.GetPaginatedEmployeesAsync(intPageSize, pageNumber.Value));
         }
 
-        public async Task<IActionResult> Customers(string selectedValue, string searchString)
+        public async Task<IActionResult> Customers(string selectedValue, string searchString, string pageSize, int? pageNumber)
         {
+            if (!int.TryParse(pageSize, out int intPageSize))
+            {
+                intPageSize = _configuration.GetValue("DefaultPageSize", 10);
+            }
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
             if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
             {
-                return View(await _searchService.CustomerSearchAsync(selectedValue, searchString));
+                return View(await _searchService.SearchPaginatedCustomersAsync(selectedValue, searchString, intPageSize, pageNumber.Value));
             }
-            return View(await _customerService.GetCustomersAsync());
+            return View(await _customerService.GetPaginatedCustomersAsync(intPageSize, pageNumber.Value));
         }
 
         [HttpGet]

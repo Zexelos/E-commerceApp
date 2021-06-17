@@ -25,15 +25,15 @@ namespace EcommerceApp.Infrastructure.Repositories
         {
             return await _context.Categories.FindAsync(id);
         }
-
+        
         public async Task<Category> GetCategoryAsync(string name)
         {
             return await _context.Categories.FirstOrDefaultAsync(x => x.Name == name);
         }
 
-        public async Task<IQueryable<Category>> GetCategoriesAsync()
+        public IQueryable<Category> GetAllCategories()
         {
-            return (await _context.Categories.ToListAsync()).AsQueryable();
+            return _context.Categories.AsQueryable();
         }
 
         public async Task UpdateCategoryAsync(Category category)

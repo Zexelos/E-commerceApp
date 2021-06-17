@@ -26,9 +26,9 @@ namespace EcommerceApp.Infrastructure.Repositories
             return await _context.Employees.AsNoTracking().Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IQueryable<Employee>> GetEmployeesAsync()
+        public IQueryable<Employee> GetEmployees()
         {
-            return (await _context.Employees.ToListAsync()).AsQueryable();
+            return _context.Employees.AsQueryable();
         }
 
         public async Task UpdateEmployeeAsync(Employee employee)

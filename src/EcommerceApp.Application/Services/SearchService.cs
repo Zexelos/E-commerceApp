@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Application.ViewModels.AdminPanel;
+using EcommerceApp.Application.ViewModels;
 
 namespace EcommerceApp.Application.Services
 {
@@ -14,17 +15,23 @@ namespace EcommerceApp.Application.Services
         private readonly IProductService _productService;
         private readonly IEmployeeService _employeeService;
         private readonly ICustomerService _customerService;
+        private readonly IPaginatorService<EmployeeForListVM> _employeePaginatorService;
+        private readonly IPaginatorService<CustomerForListVM> _customerPaginatorService;
 
         public SearchService(
             ICategoryService categoryService,
             IProductService productService,
             IEmployeeService employeeService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IPaginatorService<EmployeeForListVM> employeePaginatorService,
+            IPaginatorService<CustomerForListVM> customerPaginatorService)
         {
             _categoryService = categoryService;
             _productService = productService;
             _employeeService = employeeService;
             _customerService = customerService;
+            _employeePaginatorService = employeePaginatorService;
+            _customerPaginatorService = customerPaginatorService;
         }
 
         public async Task<CategoryListVM> CategorySearchAsync(string selectedValue, string searchString)
@@ -58,7 +65,7 @@ namespace EcommerceApp.Application.Services
             return model;
         }
 
-        public async Task<EmployeeListVM> EmployeeSearchAsync(string selectedValue, string searchString)
+        public async Task<EmployeeListVM> SearchPaginatedEmployeesAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
         {
             var model = new EmployeeListVM();
             var idParse = int.TryParse(searchString, out int id);
@@ -71,10 +78,14 @@ namespace EcommerceApp.Application.Services
                 "Position" => (await _employeeService.GetEmployeesAsync()).Employees.Where(x => x.Position.Contains(searchString)).ToList(),
                 _ => model.Employees
             };
+            var paginatedVM = await _employeePaginatorService.CreateAsync(model.Employees.AsQueryable(), pageNumber, pageSize);
+            model.Employees = paginatedVM.Items;
+            model.CurrentPage = paginatedVM.CurrentPage;
+            model.TotalPages = paginatedVM.TotalPages;
             return model;
         }
 
-        public async Task<CustomerListVM> CustomerSearchAsync(string selectedValue, string searchString)
+        public async Task<CustomerListVM> SearchPaginatedCustomersAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
         {
             var model = new CustomerListVM();
             var idParse = int.TryParse(searchString, out int id);
@@ -90,6 +101,10 @@ namespace EcommerceApp.Application.Services
                 "PhoneNumber" => (await _customerService.GetCustomersAsync()).Customers.Where(x => x.PhoneNumber == searchString).ToList(),
                 _ => model.Customers
             };
+            var paginatedVM = await _customerPaginatorService.CreateAsync(model.Customers.AsQueryable(), pageNumber, pageSize);
+            model.Customers = paginatedVM.Items;
+            model.CurrentPage = paginatedVM.CurrentPage;
+            model.TotalPages = paginatedVM.TotalPages;
             return model;
         }
     }

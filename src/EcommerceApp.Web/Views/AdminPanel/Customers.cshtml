@@ -10,6 +10,7 @@
     <form method="get" asp-action="Customers">
         <select asp-items="SearchSelectList.CustomerSelectList" name="SelectedValue"></select>
         <input text="text" name="SearchString" />
+        <select asp-items="SearchSelectList.PageSizeSelectList" name="PageSize"></select>
         <input type="submit" value="Filter" />
     </form>
     </p>
@@ -56,11 +57,12 @@
                         @Html.DisplayFor(modelItem => item.PhoneNumber)
                     </td>
                     <td>
-                    <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel" asp-action="DeleteCustomer"
+                        <a class="btn btn-danger" asp-area="" asp-controller="AdminPanel" asp-action="DeleteCustomer"
                         asp-route-id="@item.Id">Remove</a>
-                </td>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+    <partial name="_PaginationPartial" />
 </div>

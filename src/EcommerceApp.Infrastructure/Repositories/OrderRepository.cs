@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Infrastructure.Repositories
 {
@@ -26,9 +25,9 @@ namespace EcommerceApp.Infrastructure.Repositories
             return await _context.Orders.FindAsync(id);
         }
 
-        public async Task<IQueryable<Order>> GetOrdersAsync()
+        public IQueryable<Order> GetOrders()
         {
-            return (await _context.Orders.ToListAsync()).AsQueryable();
+            return _context.Orders.AsQueryable();
         }
 
         public async Task UpdateOrderAsync(Order order)

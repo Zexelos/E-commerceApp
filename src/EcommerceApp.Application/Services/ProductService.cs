@@ -9,6 +9,7 @@ using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Application.ViewModels.Product;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Application.Services
 {
@@ -54,7 +55,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<ProductListVM> GetProductsAsync()
         {
-            var products = (await _productRepository.GetProductsAsync()).ToList();
+            var products = await _productRepository.GetProducts().ToListAsync();
             var productForListVM = _mapper.Map<List<ProductForListVM>>(products);
             return new ProductListVM
             {
@@ -64,7 +65,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<ListProductDetailsForUserVM> GetProductsWithImageAsync()
         {
-            var products = (await _productRepository.GetProductsAsync()).ToList();
+            var products = await _productRepository.GetProducts().ToListAsync();
             var productDetailsForUserVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
             for (int i = 0; i < productDetailsForUserVMs.Count; i++)
             {
@@ -78,7 +79,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<List<ProductVM>> GetProductsByCategoryNameAsync(string name)
         {
-            var products = (await _productRepository.GetProductsAsync()).Where(x => x.CategoryName == name).ToList();
+            var products = await _productRepository.GetProducts().Where(x => x.CategoryName == name).ToListAsync();
             var productVMs = _mapper.Map<List<ProductVM>>(products);
             for (int i = 0; i < productVMs.Count; i++)
             {
@@ -89,7 +90,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<ListProductDetailsForUserVM> GetListProductDetailsForUserVMByCategoryNameAsync(string name)
         {
-            var products = (await _productRepository.GetProductsAsync()).Where(x => x.CategoryName == name).ToList();
+            var products = await _productRepository.GetProducts().Where(x => x.CategoryName == name).ToListAsync();
             var productVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
             for (int i = 0; i < productVMs.Count; i++)
             {

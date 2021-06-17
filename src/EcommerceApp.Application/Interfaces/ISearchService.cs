@@ -9,7 +9,7 @@ namespace EcommerceApp.Application.Interfaces
     {
         Task<CategoryListVM> CategorySearchAsync(string selectedValue, string searchString);
         Task<ProductListVM> ProductSearchAsync(string selectedValue, string searchString);
-        Task<EmployeeListVM> EmployeeSearchAsync(string selectedValue, string searchString);
-        Task<CustomerListVM> CustomerSearchAsync(string selectedValue, string searchString);
+        Task<EmployeeListVM> SearchPaginatedEmployeesAsync(string selectedValue, string searchString, int pageSize, int pageNumber);
+        Task<CustomerListVM> SearchPaginatedCustomersAsync(string selectedValue, string searchString, int pageSize, int pageNumber);
     }
 }

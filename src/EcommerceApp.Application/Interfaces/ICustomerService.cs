@@ -7,6 +7,7 @@ namespace EcommerceApp.Application.Interfaces
     {
         Task<CustomerForListVM> GetCustomerAsync(int id);
         Task<CustomerListVM> GetCustomersAsync();
+        Task<CustomerListVM> GetPaginatedCustomersAsync(int pageSize, int pageNumber);
         Task DeleteCustomerAsync(int id);
     }
 }

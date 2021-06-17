@@ -6,6 +6,7 @@ using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Application.Services
 {
@@ -39,7 +40,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<CategoryListVM> GetCategoriesAsync()
         {
-            var categories = (await _repository.GetCategoriesAsync()).ToList();
+            var categories = await _repository.GetAllCategories().ToListAsync();
             var categoryForListVM = _mapper.Map<List<CategoryForListVM>>(categories);
             return new CategoryListVM
             {

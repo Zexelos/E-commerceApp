@@ -10,7 +10,7 @@ namespace EcommerceApp.Domain.Interfaces
         Task AddCustomerAsync(Customer customer);
         Task<Customer> GetCustomerAsync(int id);
         Task<int> GetCustomerIdAsync(string AppUserId);
-        Task<IQueryable<Customer>> GetCustomersAsync();
+        IQueryable<Customer> GetCustomers();
         Task UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(int id);
     }
