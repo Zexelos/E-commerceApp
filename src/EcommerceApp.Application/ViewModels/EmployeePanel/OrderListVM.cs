@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace EcommerceApp.Application.ViewModels.EmployeePanel
 {
-    public class CategoryListVM
+    public class OrderListVM
     {
-        public List<CategoryForListVM> Categories { get; set; }
+        public List<OrderForListVM> Orders { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
     }

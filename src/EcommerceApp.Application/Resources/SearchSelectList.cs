@@ -16,16 +16,16 @@ namespace EcommerceApp.Application.Resources
         {
             new SelectListItem { Value = "Id", Text = "Id" },
             new SelectListItem { Value = "Name", Text = "Name" },
-            new SelectListItem { Value = "UnitPrice", Text = "Unit Price" },
-            new SelectListItem { Value = "UnitsInStock", Text = "Units In Stock" },
-            new SelectListItem { Value = "CategoryName", Text = "Category Name" }
+            new SelectListItem { Value = "UnitPrice", Text = "Unit price" },
+            new SelectListItem { Value = "UnitsInStock", Text = "Units in stock" },
+            new SelectListItem { Value = "CategoryName", Text = "Category name" }
         };
 
         public List<SelectListItem> EmployeeSelectList { get; } = new()
         {
             new SelectListItem { Value = "Id", Text = "Id" },
-            new SelectListItem { Value = "FirstName", Text = "First Name" },
-            new SelectListItem { Value = "LastName", Text = "LastName" },
+            new SelectListItem { Value = "FirstName", Text = "First name" },
+            new SelectListItem { Value = "LastName", Text = "Last name" },
             new SelectListItem { Value = "Email", Text = "Email" },
             new SelectListItem { Value = "Position", Text = "Position" }
         };
@@ -33,13 +33,26 @@ namespace EcommerceApp.Application.Resources
         public List<SelectListItem> CustomerSelectList { get; } = new()
         {
             new SelectListItem { Value = "Id", Text = "Id" },
-            new SelectListItem { Value = "FirstName", Text = "First Name" },
-            new SelectListItem { Value = "LastName", Text = "LastName" },
+            new SelectListItem { Value = "FirstName", Text = "First name" },
+            new SelectListItem { Value = "LastName", Text = "Last name" },
             new SelectListItem { Value = "Email", Text = "Email" },
             new SelectListItem { Value = "City", Text = "City" },
-            new SelectListItem { Value = "PostalCode", Text = "PostalCode" },
+            new SelectListItem { Value = "PostalCode", Text = "Postal code" },
             new SelectListItem { Value = "Address", Text = "Address" },
-            new SelectListItem { Value = "PhoneNumber", Text = "PhoneNumber" }
+            new SelectListItem { Value = "PhoneNumber", Text = "Phone number" }
+        };
+
+        public List<SelectListItem> OrdersSelectList { get; } = new()
+        {
+            new SelectListItem { Value = "Id", Text = "Id" },
+            new SelectListItem { Value = "Price", Text = "Price" },
+            new SelectListItem { Value = "ShipFirstName", Text = "First name" },
+            new SelectListItem { Value = "ShipLastName", Text = "Last name" },
+            new SelectListItem { Value = "ShipCity", Text = "City" },
+            new SelectListItem { Value = "ShipPostalCode", Text = "Postal code" },
+            new SelectListItem { Value = "ShipAddress", Text = "Address" },
+            new SelectListItem { Value = "ContactEmail", Text = "Email" },
+            new SelectListItem { Value = "ContactPhoneNumber", Text = "Phone number" }
         };
 
         public List<SelectListItem> PageSizeSelectList { get; } = new()

@@ -19,13 +19,20 @@ namespace EcommerceApp.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IImageConverterService _imageConverterService;
+        private readonly IPaginatorService<ProductForListVM> _paginatorService;
 
-        public ProductService(IMapper mapper, IProductRepository repository, ICategoryRepository categoryRepository, IImageConverterService imageConverterService)
+        public ProductService(
+            IMapper mapper,
+            IProductRepository repository,
+            ICategoryRepository categoryRepository,
+            IImageConverterService imageConverterService,
+            IPaginatorService<ProductForListVM> paginatorService)
         {
             _mapper = mapper;
             _productRepository = repository;
             _categoryRepository = categoryRepository;
             _imageConverterService = imageConverterService;
+            _paginatorService = paginatorService;
         }
 
         public async Task AddProductAsync(ProductVM productVM)
@@ -60,6 +67,18 @@ namespace EcommerceApp.Application.Services
             return new ProductListVM
             {
                 Products = productForListVM
+            };
+        }
+
+        public async Task<ProductListVM> GetPaginatedProductsAsync(int pageSize, int pageNumber)
+        {
+            var products = _productRepository.GetProducts().ProjectTo<ProductForListVM>(_mapper.ConfigurationProvider);
+            var paginatedVM = await _paginatorService.CreateAsync(products, pageNumber, pageSize);
+            return new ProductListVM
+            {
+                Products = paginatedVM.Items,
+                CurrentPage = paginatedVM.CurrentPage,
+                TotalPages = paginatedVM.TotalPages
             };
         }
 

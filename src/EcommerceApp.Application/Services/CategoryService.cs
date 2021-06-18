@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
 using EcommerceApp.Domain.Interfaces;
@@ -15,12 +16,14 @@ namespace EcommerceApp.Application.Services
         private readonly ICategoryRepository _repository;
         private readonly IMapper _mapper;
         private readonly IImageConverterService _imageConverterService;
+        private readonly IPaginatorService<CategoryForListVM> _paginatorService;
 
-        public CategoryService(IMapper mapper, ICategoryRepository repository, IImageConverterService imageConverterService)
+        public CategoryService(IMapper mapper, ICategoryRepository repository, IImageConverterService imageConverterService, IPaginatorService<CategoryForListVM> paginatorService)
         {
             _mapper = mapper;
             _repository = repository;
             _imageConverterService = imageConverterService;
+            _paginatorService = paginatorService;
         }
 
         public async Task AddCategoryAsync(CategoryVM categoryVM)
@@ -45,6 +48,18 @@ namespace EcommerceApp.Application.Services
             return new CategoryListVM
             {
                 Categories = categoryForListVM
+            };
+        }
+
+        public async Task<CategoryListVM> GetPaginatedCategoriesAsync(int pageSize, int pageNumber)
+        {
+            var categories = _repository.GetAllCategories().ProjectTo<CategoryForListVM>(_mapper.ConfigurationProvider);
+            var paginatedVM = await _paginatorService.CreateAsync(categories, pageNumber, pageSize);
+            return new CategoryListVM
+            {
+                Categories = paginatedVM.Items,
+                CurrentPage = paginatedVM.CurrentPage,
+                TotalPages = paginatedVM.TotalPages
             };
         }
 

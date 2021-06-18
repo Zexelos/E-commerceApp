@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BenchmarkDotNet.Attributes;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.AdminPanel;
 using EcommerceApp.Domain.Interfaces;
@@ -56,6 +57,7 @@ namespace EcommerceApp.Application.Services
             };
         }
 
+        [Benchmark]
         public async Task<CustomerListVM> GetPaginatedCustomersAsync(int pageSize, int pageNumber)
         {
             var customers = await _customerRepository.GetCustomers().ToListAsync();

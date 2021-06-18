@@ -10,6 +10,7 @@ using EcommerceApp.Application.ViewModels.EmployeePanel;
 using System.Linq;
 using EcommerceApp.Web.Models;
 using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 
 namespace EcommerceApp.Web.Controllers
 {
@@ -20,13 +21,23 @@ namespace EcommerceApp.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly ISearchService _searchService;
+        private readonly IConfiguration _configuration;
+        private readonly IOrderService _orderService;
 
-        public EmployeePanelController(ILogger<EmployeePanelController> logger, ICategoryService categoryService, IProductService productService, ISearchService searchService)
+        public EmployeePanelController(
+            ILogger<EmployeePanelController> logger,
+            ICategoryService categoryService,
+            IProductService productService,
+            ISearchService searchService,
+            IConfiguration configuration,
+            IOrderService orderService)
         {
             _logger = logger;
             _categoryService = categoryService;
             _productService = productService;
             _searchService = searchService;
+            _configuration = configuration;
+            _orderService = orderService;
         }
 
         public IActionResult Index()
@@ -34,22 +45,64 @@ namespace EcommerceApp.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Categories(string selectedValue, string searchString)
+        public async Task<IActionResult> Categories(string selectedValue, string searchString, string pageSize, int? pageNumber)
         {
+            if (!int.TryParse(pageSize, out int intPageSize))
+            {
+                intPageSize = _configuration.GetValue("DefaultPageSize", 10);
+            }
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
             if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
             {
-                return View(await _searchService.CategorySearchAsync(selectedValue, searchString));
+                return View(await _searchService.SearchPaginatedCategoriesAsync(selectedValue, searchString, intPageSize, pageNumber.Value));
             }
-            return View(await _categoryService.GetCategoriesAsync());
+            return View(await _categoryService.GetPaginatedCategoriesAsync(intPageSize, pageNumber.Value));
         }
 
-        public async Task<IActionResult> Products(string selectedValue, string searchString)
+        public async Task<IActionResult> Products(string selectedValue, string searchString, string pageSize, int? pageNumber)
         {
+            if (!int.TryParse(pageSize, out int intPageSize))
+            {
+                intPageSize = _configuration.GetValue("DefaultPageSize", 10);
+            }
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
             if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
             {
-                return View(await _searchService.ProductSearchAsync(selectedValue, searchString));
+                return View(await _searchService.SearchPaginatedProductsAsync(selectedValue, searchString, intPageSize, pageNumber.Value));
             }
-            return View(await _productService.GetProductsAsync());
+            return View(await _productService.GetPaginatedProductsAsync(intPageSize, pageNumber.Value));
+        }
+
+        public async Task<IActionResult> Orders(string selectedValue, string searchString, string pageSize, int? pageNumber)
+        {
+            if (!int.TryParse(pageSize, out int intPageSize))
+            {
+                intPageSize = _configuration.GetValue("DefaultPageSize", 10);
+            }
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
+            if (!string.IsNullOrEmpty(selectedValue) && !string.IsNullOrEmpty(searchString))
+            {
+                return View(await _searchService.SearchPaginatedOrdersAsync(selectedValue, searchString, intPageSize, pageNumber.Value));
+            }
+            return View(await _orderService.GetPaginatedOrdersAsync(intPageSize, pageNumber.Value));
+        }
+
+        public async Task<IActionResult> OrderDetails(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            return View(await _orderService.GetOrderDetailsAsync(id.Value));
         }
 
         [HttpGet]

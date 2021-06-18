@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Reflection.Emit;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,9 @@ using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using EcommerceApp.Application.ViewModels.EmployeePanel;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace EcommerceApp.Application.Services
 {
@@ -23,6 +27,8 @@ namespace EcommerceApp.Application.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
         private readonly IImageConverterService _imageConverterService;
+        private readonly IMapper _mapper;
+        private readonly IPaginatorService<OrderForListVM> _paginatorService;
 
         public OrderService(ICartItemRepository cartItemRepository,
             ICartRepository cartRepository,
@@ -31,7 +37,9 @@ namespace EcommerceApp.Application.Services
             IOrderItemRepository orderItemRepository,
             IOrderRepository orderRepository,
             IProductRepository productRepository,
-            IImageConverterService imageConverterService)
+            IImageConverterService imageConverterService,
+            IMapper mapper,
+            IPaginatorService<OrderForListVM> paginatorService)
         {
             _cartItemRepository = cartItemRepository;
             _cartRepository = cartRepository;
@@ -41,6 +49,8 @@ namespace EcommerceApp.Application.Services
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _imageConverterService = imageConverterService;
+            _mapper = mapper;
+            _paginatorService = paginatorService;
         }
 
         public async Task AddOrderAsync(OrderCheckoutVM orderCheckoutVM)
@@ -109,6 +119,31 @@ namespace EcommerceApp.Application.Services
                 Address = customer.Address,
                 PhoneNumber = appUser.PhoneNumber
             };
+        }
+
+        public async Task<OrderListVM> GetPaginatedOrdersAsync(int pageSize, int pageNumber)
+        {
+            var orders = _orderRepository.GetOrders().ProjectTo<OrderForListVM>(_mapper.ConfigurationProvider);
+            var paginatedVM = await _paginatorService.CreateAsync(orders, pageNumber, pageSize);
+            return new OrderListVM
+            {
+                Orders = paginatedVM.Items,
+                CurrentPage = paginatedVM.CurrentPage,
+                TotalPages = paginatedVM.TotalPages
+            };
+        }
+
+        public async Task<OrderDetailsVM> GetOrderDetailsAsync(int id)
+        {
+            var result = await _orderRepository.GetOrders()
+                .Where(x => x.Id == id)
+                    .Include(x => x.OrderItems)
+                        .ThenInclude(y => y.Product)
+                .FirstOrDefaultAsync();
+            var orderItemForDetailsVM = _mapper.Map<List<OrderItemForDetailsVM>>(result.OrderItems);
+            var orderDetailsVM = _mapper.Map<OrderDetailsVM>(result);
+            orderDetailsVM.OrderItems = orderItemForDetailsVM;
+            return orderDetailsVM;
         }
     }
 }

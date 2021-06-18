@@ -1,0 +1,74 @@
+@using EcommerceApp.Application.Interfaces
+@model EcommerceApp.Application.ViewModels.EmployeePanel.OrderListVM
+@inject ISearchSelectList SearchSelectList
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p>
+    <form method="get" asp-action="Orders">
+        <select asp-items="SearchSelectList.OrdersSelectList" name="SelectedValue"></select>
+        <input text="text" name="SearchString" />
+        <select asp-items="SearchSelectList.PageSizeSelectList" name="PageSize"></select>
+        <input type="submit" value="Filter" />
+    </form>
+    </p>
+    <div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Price</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>City</th>
+                <th>Postal code</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone number</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipFirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipLastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipCity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipPostalCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactPhoneNumber)
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-area="" asp-controller="EmployeePanel" asp-action="OrderDetails"
+                        asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    <partial name="_PaginationPartial" />
+</div>
