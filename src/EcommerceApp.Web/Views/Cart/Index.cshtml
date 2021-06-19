@@ -34,17 +34,17 @@
                     </td>
                     <td>
                         <a class="btn btn-primary" asp-area="" asp-controller="Cart"
-                        asp-action="DecreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id">-</a>
+                        asp-action="DecreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id"><i class="fas fa-plus"></i></a>
                         @Html.DisplayFor(modelItem => item.Quantity)
                         <a class="btn btn-primary" asp-area="" asp-controller="Cart"
-                        asp-action="IncreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id">+</a>
+                        asp-action="IncreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id"><i class="fas fa-minus"></i></a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TotalPrice)
                     </td>
                     <td>
                         <a class="btn btn-danger" asp-area="" asp-controller="Cart" asp-action="DeleteCartItem"
-                        asp-route-cartItemId="@item.Id">Remove</a>
+                        asp-route-cartItemId="@item.Id"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
             }
@@ -55,5 +55,5 @@
         </tbody>
     </table>
     <a class="btn btn-primary" asp-area="" asp-controller="Order" asp-action="Checkout"
-        asp-route-cartId="@Model.CartId">To checkout</a>
+        asp-route-customerId="@Model.CustomerId">To checkout</a>
 </center>

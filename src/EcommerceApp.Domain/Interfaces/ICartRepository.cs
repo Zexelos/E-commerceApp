@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Models;
 
@@ -8,5 +9,6 @@ namespace EcommerceApp.Domain.Interfaces
         Task AddCartAsync(Cart cart);
         Task<Cart> GetCartAsync(int id);
         Task<int> GetCartIdAsync(int customerId);
+        IQueryable<Cart> GetCarts();
     }
 }

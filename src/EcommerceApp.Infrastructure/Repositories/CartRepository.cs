@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
@@ -28,6 +29,11 @@ namespace EcommerceApp.Infrastructure.Repositories
         public async Task<int> GetCartIdAsync(int customerId)
         {
             return (await _context.Carts.FirstOrDefaultAsync(x => x.CustomerId == customerId)).Id;
+        }
+
+        public IQueryable<Cart> GetCarts()
+        {
+            return _context.Carts.AsQueryable();
         }
     }
 }

@@ -41,6 +41,11 @@ namespace EcommerceApp.Application.Services
             return customerVM;
         }
 
+        public async Task<int> GetCustomerIdByAppUserIdAsync(string appUserId)
+        {
+            return await _customerRepository.GetCustomerIdAsync(appUserId);
+        }
+
         public async Task<CustomerListVM> GetCustomersAsync()
         {
             var customers = await _customerRepository.GetCustomers().ToListAsync();

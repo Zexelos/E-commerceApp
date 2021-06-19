@@ -10,5 +10,6 @@ namespace EcommerceApp.Application.Interfaces
         Task<OrderCheckoutVM> GetOrderCheckoutVMAsync(int cartId);
         Task<OrderListVM> GetPaginatedOrdersAsync(int pageSize, int pageNumber);
         Task<OrderDetailsVM> GetOrderDetailsAsync(int id);
+        Task DeleteOrderAsync(int id);
     }
 }

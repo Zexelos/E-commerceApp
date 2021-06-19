@@ -75,6 +75,7 @@ namespace EcommerceApp.Application.Services
             return new ListCartItemForListVM
             {
                 CartId = cartId,
+                CustomerId = customerId,
                 CartItems = cartItemForListVMs
             };
         }

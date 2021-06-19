@@ -203,6 +203,16 @@ namespace EcommerceApp.Web.Controllers
             return RedirectToAction(nameof(Products));
         }
 
+        public async Task<IActionResult> DeleteOrder(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            await _orderService.DeleteOrderAsync(id.Value);
+            return RedirectToAction(nameof(Orders));
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

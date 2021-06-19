@@ -7,6 +7,8 @@ namespace EcommerceApp.Application.ViewModels.Cart
     {
         public int CartId { get; set; }
 
+        public int CustomerId { get; set; }
+
         public List<CartItemForListVM> CartItems { get; set; }
 
         [Display(Name = "Total Price")]
