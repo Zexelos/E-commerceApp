@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -36,5 +36,6 @@ namespace EcommerceApp.Domain.Models
         public virtual AppUser AppUser { get; set; }
 
         public virtual Cart Cart { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

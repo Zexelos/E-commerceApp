@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,8 @@ namespace EcommerceApp.Domain.Models
     {
         [Key]
         public int Id { get; set; }
+
+        public DateTime CreateDate { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2")]

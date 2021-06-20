@@ -18,7 +18,11 @@ namespace EcommerceApp.Application.Services
         private readonly IImageConverterService _imageConverterService;
         private readonly IPaginatorService<CategoryForListVM> _paginatorService;
 
-        public CategoryService(IMapper mapper, ICategoryRepository repository, IImageConverterService imageConverterService, IPaginatorService<CategoryForListVM> paginatorService)
+        public CategoryService(
+            IMapper mapper,
+            ICategoryRepository repository,
+            IImageConverterService imageConverterService,
+            IPaginatorService<CategoryForListVM> paginatorService)
         {
             _mapper = mapper;
             _repository = repository;
@@ -41,14 +45,9 @@ namespace EcommerceApp.Application.Services
             return categoryVM;
         }
 
-        public async Task<CategoryListVM> GetCategoriesAsync()
+        public async Task<List<string>> GetCategoriesNamesAsync()
         {
-            var categories = await _repository.GetAllCategories().ToListAsync();
-            var categoryForListVM = _mapper.Map<List<CategoryForListVM>>(categories);
-            return new CategoryListVM
-            {
-                Categories = categoryForListVM
-            };
+            return await _repository.GetAllCategories().Select(x => x.Name).ToListAsync();
         }
 
         public async Task<CategoryListVM> GetPaginatedCategoriesAsync(int pageSize, int pageNumber)

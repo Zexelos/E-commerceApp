@@ -74,6 +74,15 @@ namespace EcommerceApp.Web.Controllers
             return View(await _customerService.GetPaginatedCustomersAsync(intPageSize, pageNumber.Value));
         }
 
+        public async Task<IActionResult> CustomerDetails(int? id)
+        {
+            if(!id.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            return View(await _customerService.GetCustomerDetailsVMAsync(id.Value));
+        }
+
         [HttpGet]
         public IActionResult AddEmployee()
         {

@@ -37,7 +37,8 @@ namespace EcommerceApp.Application.ViewModels.EmployeePanel
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Order, OrderDetailsVM>().ForMember(x => x.OrderItems, y => y.MapFrom(src => src.OrderItems));
+            profile.CreateMap<Domain.Models.Order, OrderDetailsVM>()
+            .ForMember(x => x.OrderItems, y => y.MapFrom(src => src.OrderItems));
         }
     }
 }

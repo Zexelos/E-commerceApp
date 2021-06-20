@@ -1,0 +1,102 @@
+@model EcommerceApp.Application.ViewModels.AdminPanel.CustomerDetailsVM
+@{
+    ViewData["Title"] = "Order details";
+}
+<center>
+    <h2>@ViewData["Title"]</h2>
+</center>
+<hr />
+<div>
+    <span style="float:left">
+        <h4 class="text-center">Customer info</h4>
+        <dl class="dl-horizontal">
+            <dt><label asp-for="@Model.Id"></label></dt>
+            <dd>@Model.Id</dd>
+            <dt><label asp-for="@Model.FirstName"></label></dt>
+            <dd>@Model.FirstName</dd>
+            <dt><label asp-for="@Model.LastName"></label></dt>
+            <dd>@Model.LastName</dd>
+            <dt><label asp-for="@Model.Email"></label></dt>
+            <dd>@Model.Email</dd>
+            <dt><label asp-for="@Model.PhoneNumber"></label></dt>
+            <dd>@Model.PhoneNumber</dd>
+            <dt><label asp-for="@Model.City"></label></dt>
+            <dd>@Model.City</dd>
+            <dt><label asp-for="@Model.PostalCode"></label></dt>
+            <dd>@Model.PostalCode</dd>
+            <dt><label asp-for="@Model.Address"></label></dt>
+            <dd>@Model.Address</dd>
+        </dl>
+    </span>
+</div>
+<div>
+    <span style="float:right">
+        <h4 class="text-center">Orders</h4>
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th>Order Id</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(x => item.Id)</td>
+                        <td>@Html.DisplayFor(x => item.CreateDate)</td>
+                        <td>@Html.DisplayFor(x => item.Price)</td>
+                        <td>
+                            <a class="btn btn-primary" asp-area="" asp-controller="EmployeePanel" asp-action="OrderDetails"
+                            asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </span>
+</div>
+<div>
+    <h4 class="text-center">Cart</h4>
+    <table class="table-striped table-dark table-sm text-center">
+        <thead>
+            <tr>
+                <th>ProductId</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <img src="@item.ImageToDisplay" width="128" height="128" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

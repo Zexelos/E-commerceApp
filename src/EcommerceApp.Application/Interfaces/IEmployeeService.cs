@@ -7,7 +7,6 @@ namespace EcommerceApp.Application.Interfaces
     {
         Task AddEmployeeAsync(EmployeeVM employeeVM);
         Task<EmployeeVM> GetEmployeeAsync(int id);
-        Task<EmployeeListVM> GetEmployeesAsync();
         Task<EmployeeListVM> GetPaginatedEmployeesAsync(int pageSize, int pageNumber);
         Task UpdateEmployeeAsync(EmployeeVM employeeVM);
         Task DeleteEmployeeAsync(int id);

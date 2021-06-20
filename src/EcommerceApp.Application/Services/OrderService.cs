@@ -58,6 +58,7 @@ namespace EcommerceApp.Application.Services
             var cart = await _cartRepository.GetCartAsync(orderCheckoutVM.CartId);
             var order = new Order
             {
+                CreateDate = DateTime.Now,
                 Price = orderCheckoutVM.TotalPrice,
                 CustomerId = cart.CustomerId,
                 ShipFirstName = orderCheckoutVM.FirstName,
@@ -86,7 +87,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<OrderCheckoutVM> GetOrderCheckoutVMAsync(int customerId)
         {
-            return await _customerRepository.GetCustomers()
+            var order = await _customerRepository.GetCustomers()
                 .Where(c => c.Id == customerId)
                     .Include(a => a.AppUser)
                     .Include(c => c.Cart)
@@ -94,6 +95,12 @@ namespace EcommerceApp.Application.Services
                             .ThenInclude(p => p.Product)
                 .ProjectTo<OrderCheckoutVM>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+            for (int i = 0; i < order.CartItems.Count; i++)
+            {
+                order.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(order.CartItems[i].ImageByteArray);
+                order.TotalPrice += order.CartItems[i].TotalPrice;
+            }
+            return order;
         }
 
         public async Task<OrderListVM> GetPaginatedOrdersAsync(int pageSize, int pageNumber)

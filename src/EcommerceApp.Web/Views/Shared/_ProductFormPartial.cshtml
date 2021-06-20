@@ -1,10 +1,9 @@
 @using EcommerceApp.Application.Interfaces
-@using EcommerceApp.Application.ViewModels.EmployeePanel
 @model EcommerceApp.Application.ViewModels.EmployeePanel.ProductVM
 @inject ICategoryService CategoryService
 @{
     ViewData["Title"] = "Add Product";
-    CategoryListVM list = await CategoryService.GetCategoriesAsync();
+    var categories = await CategoryService.GetCategoriesNamesAsync();
 }
 <div class="form-group">
     <label asp-for="@Model.Name"></label>
@@ -28,7 +27,7 @@
 </div>
 <div class="form-group">
     <label asp-for="@Model.CategoryName"></label>
-    @Html.DropDownListFor(x => x.CategoryName, new SelectList(list.Categories.Select(x => x.Name)), "SelectList Category", new {
+    @Html.DropDownListFor(x => x.CategoryName, new SelectList(categories), "SelectList Category", new {
     @class =
     "form-control" })
 </div>
