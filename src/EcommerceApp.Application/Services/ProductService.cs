@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,26 +59,11 @@ namespace EcommerceApp.Application.Services
             return productVM;
         }
 
-        public async Task<ProductListVM> GetProductsAsync()
-        {
-            var products = await _productRepository.GetProducts().ToListAsync();
-            var productForListVM = _mapper.Map<List<ProductForListVM>>(products);
-            return new ProductListVM
-            {
-                Products = productForListVM
-            };
-        }
-
         public async Task<ProductListVM> GetPaginatedProductsAsync(int pageSize, int pageNumber)
         {
             var products = _productRepository.GetProducts().ProjectTo<ProductForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _paginatorService.CreateAsync(products, pageNumber, pageSize);
-            return new ProductListVM
-            {
-                Products = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<ProductListVM>(paginatedVM);
         }
 
         public async Task<ListProductDetailsForUserVM> GetProductsWithImageAsync()

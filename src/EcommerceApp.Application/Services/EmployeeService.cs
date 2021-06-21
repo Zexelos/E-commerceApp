@@ -60,12 +60,7 @@ namespace EcommerceApp.Application.Services
                 .Include(a => a.AppUser)
                 .ProjectTo<EmployeeForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _paginatorService.CreateAsync(employeesQuery, pageNumber, pageSize);
-            return new EmployeeListVM
-            {
-                Employees = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<EmployeeListVM>(paginatedVM);
         }
 
         public async Task UpdateEmployeeAsync(EmployeeVM employeeVM)

@@ -1,6 +1,3 @@
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using System;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Domain.Models;
@@ -50,12 +47,6 @@ namespace EcommerceApp.Application.Services
                 CartId = cartId,
             };
             await _cartItemRepository.AddCartItemAsync(cartItem);
-        }
-
-        public async Task<int> GetCartIdByAppUserIdAsync(string appUserId)
-        {
-            var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);
-            return await _cartRepository.GetCartIdAsync(customerId);
         }
 
         public async Task<CartItemListVM> GetCartItemListAsync(string appUserId)

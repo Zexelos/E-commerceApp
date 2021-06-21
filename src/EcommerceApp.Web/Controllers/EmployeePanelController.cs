@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using System.Reflection.Metadata;
-using System;
 using EcommerceApp.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
-using System.Linq;
 using EcommerceApp.Web.Models;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;

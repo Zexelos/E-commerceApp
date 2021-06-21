@@ -31,7 +31,7 @@ namespace EcommerceApp.Infrastructure.Repositories
             return await _context.Categories.FirstOrDefaultAsync(x => x.Name == name);
         }
 
-        public IQueryable<Category> GetAllCategories()
+        public IQueryable<Category> GetCategories()
         {
             return _context.Categories.AsQueryable();
         }

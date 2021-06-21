@@ -45,7 +45,7 @@ namespace EcommerceApp.Application.Services
             return await _customerRepository.GetCustomerIdAsync(appUserId);
         }
 
-        public async Task<CustomerDetailsVM> GetCustomerDetailsVMAsync(int id)
+        public async Task<CustomerDetailsVM> GetCustomerDetailsAsync(int id)
         {
             var customerDetailsVM = await _customerRepository.GetCustomers()
                 .Where(x => x.Id == id)
@@ -76,12 +76,7 @@ namespace EcommerceApp.Application.Services
                 .Include(a => a.AppUser)
                 .ProjectTo<CustomerForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _paginatorService.CreateAsync(customersQuery, pageNumber, pageSize);
-            return new CustomerListVM
-            {
-                Customers = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<CustomerListVM>(paginatedVM);
         }
 
         public async Task DeleteCustomerAsync(int id)

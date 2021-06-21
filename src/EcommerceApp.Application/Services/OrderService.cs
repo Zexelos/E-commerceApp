@@ -102,12 +102,7 @@ namespace EcommerceApp.Application.Services
         {
             var orders = _orderRepository.GetOrders().ProjectTo<OrderForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _orderPaginatorService.CreateAsync(orders, pageNumber, pageSize);
-            return new OrderListVM
-            {
-                Orders = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<OrderListVM>(paginatedVM);
         }
 
         public async Task<CustomerOrderListVM> GetPaginatedCustomerOrdersAsync(string appUserId, int pageSize, int pageNumber)
@@ -141,8 +136,8 @@ namespace EcommerceApp.Application.Services
                 .Where(x => x.Id == id)
                     .Include(x => x.OrderItems)
                         .ThenInclude(y => y.Product)
-                        .ProjectTo<OrderDetailsVM>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+                .ProjectTo<OrderDetailsVM>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
         }
 
         public async Task DeleteOrderAsync(int id)

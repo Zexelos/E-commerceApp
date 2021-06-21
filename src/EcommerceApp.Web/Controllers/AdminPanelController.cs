@@ -80,7 +80,7 @@ namespace EcommerceApp.Web.Controllers
             {
                 return NotFound("You must pass a valid ID in the route");
             }
-            return View(await _customerService.GetCustomerDetailsVMAsync(id.Value));
+            return View(await _customerService.GetCustomerDetailsAsync(id.Value));
         }
 
         [HttpGet]

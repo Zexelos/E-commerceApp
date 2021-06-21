@@ -56,7 +56,7 @@ namespace EcommerceApp.Application.Services
         {
             var parse = int.TryParse(searchString, out int id);
             var emptyQuery = Enumerable.Empty<CategoryForListVM>().AsQueryable();
-            var baseQuery = _categoryRepository.GetAllCategories().ProjectTo<CategoryForListVM>(_mapper.ConfigurationProvider);
+            var baseQuery = _categoryRepository.GetCategories().ProjectTo<CategoryForListVM>(_mapper.ConfigurationProvider);
             IQueryable<CategoryForListVM> query = selectedValue switch
             {
                 "Id" => parse ? baseQuery.Where(x => x.Id == id) : emptyQuery,
@@ -64,12 +64,7 @@ namespace EcommerceApp.Application.Services
                 _ => emptyQuery
             };
             var paginatedVM = await _categoryPaginatorService.CreateAsync(query, pageNumber, pageSize);
-            return new CategoryListVM
-            {
-                Categories = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<CategoryListVM>(paginatedVM);
         }
 
         public async Task<ProductListVM> SearchPaginatedProductsAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
@@ -89,12 +84,7 @@ namespace EcommerceApp.Application.Services
                 _ => emptyQuery
             };
             var paginatedVM = await _productPaginatorService.CreateAsync(query, pageNumber, pageSize);
-            return new ProductListVM
-            {
-                Products = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<ProductListVM>(paginatedVM);
         }
 
         public async Task<EmployeeListVM> SearchPaginatedEmployeesAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
@@ -112,12 +102,7 @@ namespace EcommerceApp.Application.Services
                 _ => emptyQuery
             };
             var paginatedVM = await _employeePaginatorService.CreateAsync(query, pageNumber, pageSize);
-            return new EmployeeListVM
-            {
-                Employees = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<EmployeeListVM>(paginatedVM);
         }
 
         public async Task<CustomerListVM> SearchPaginatedCustomersAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
@@ -138,12 +123,7 @@ namespace EcommerceApp.Application.Services
                 _ => emptyQuery
             };
             var paginatedVM = await _customerPaginatorService.CreateAsync(query, pageNumber, pageSize);
-            return new CustomerListVM
-            {
-                Customers = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<CustomerListVM>(paginatedVM);
         }
 
         public async Task<OrderListVM> SearchPaginatedOrdersAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
@@ -168,12 +148,7 @@ namespace EcommerceApp.Application.Services
                 _ => emptyQuery
             };
             var paginatedVM = await _orderPaginatorService.CreateAsync(query, pageNumber, pageSize);
-            return new OrderListVM
-            {
-                Orders = paginatedVM.Items,
-                CurrentPage = paginatedVM.CurrentPage,
-                TotalPages = paginatedVM.TotalPages
-            };
+            return _mapper.Map<OrderListVM>(paginatedVM);
         }
     }
 }
