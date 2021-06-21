@@ -1,0 +1,46 @@
+@using EcommerceApp.Application.Interfaces
+@model EcommerceApp.Application.ViewModels.Order.CustomerOrderListVM
+@inject ISearchSelectList SearchSelectList
+@{
+    ViewData["Title"] = "Orders";
+}
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p>
+    <form method="get" asp-action="CustomerOrders">
+        <select asp-items="SearchSelectList.PageSizeSelectList" name="PageSize"></select>
+        <input type="submit" value="Filter" />
+    </form>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order Id</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Order" asp-action="CustomerOrderDetails"
+                        asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="_PaginationPartial" />
+</div>

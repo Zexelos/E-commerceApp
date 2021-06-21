@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;
 
-namespace EcommerceApp.Application.ViewModels.AdminPanel
+namespace EcommerceApp.Application.ViewModels.Order
 {
-    public class OrderForCustomerDetailsVM : IMapFrom<Domain.Models.Order>
+    public class CustomerOrderForListVM : IMapFrom<Domain.Models.Order>
     {
         public int Id { get; set; }
 
@@ -18,7 +18,7 @@ namespace EcommerceApp.Application.ViewModels.AdminPanel
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Order, OrderForCustomerDetailsVM>();
+            profile.CreateMap<Domain.Models.Order, CustomerOrderForListVM>();
         }
     }
 }

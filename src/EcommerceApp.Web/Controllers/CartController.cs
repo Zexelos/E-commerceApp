@@ -24,7 +24,7 @@ namespace EcommerceApp.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await _cartItemService.GetListCartItemForListVMAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var model = await _cartItemService.GetCartItemListAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
             return View(model);
         }
 

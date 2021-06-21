@@ -19,19 +19,25 @@ namespace EcommerceApp.Application.Services
         private readonly IMapper _mapper;
         private readonly IPaginatorService<CustomerForListVM> _paginatorService;
         private readonly IImageConverterService _imageConverterService;
+        private readonly ICartItemRepository _cartItemRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public CustomerService(
             ICustomerRepository customerRepository,
             UserManager<AppUser> userManager,
             IMapper mapper,
             IPaginatorService<CustomerForListVM> paginatorService,
-            IImageConverterService imageConverterService)
+            IImageConverterService imageConverterService,
+            ICartItemRepository cartItemRepository,
+            IOrderRepository orderRepository)
         {
             _customerRepository = customerRepository;
             _userManager = userManager;
             _mapper = mapper;
             _paginatorService = paginatorService;
             _imageConverterService = imageConverterService;
+            _cartItemRepository = cartItemRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<int> GetCustomerIdByAppUserIdAsync(string appUserId)
@@ -41,33 +47,26 @@ namespace EcommerceApp.Application.Services
 
         public async Task<CustomerDetailsVM> GetCustomerDetailsVMAsync(int id)
         {
-            var qTest = _customerRepository.GetCustomers()
-                .Where(x => x.Id == id)
-                    .Include(o => o.Orders.OrderByDescending(x => x.Id).Take(2)).ToQueryString();
-            Console.WriteLine(qTest);
-            var test = await _customerRepository.GetCustomers()
-                .Where(x => x.Id == id)
-                    .Include(o => o.Orders.OrderByDescending(x => x.Id).Take(2)).FirstOrDefaultAsync();
-            Console.WriteLine(test.Orders.Count);
-            var qString = _customerRepository.GetCustomers()
-                .Where(x => x.Id == id)
-                    .Include(o => o.Orders.OrderByDescending(x => x.Id).Take(2))
-                    .Include(c => c.Cart)
-                        .ThenInclude(ci => ci.CartItems)
-                            .ThenInclude(p => p.Product).ToQueryString();
             var customerDetailsVM = await _customerRepository.GetCustomers()
                 .Where(x => x.Id == id)
-                    .Include(o => o.Orders.OrderByDescending(x => x.Id).Take(2))
-                    .Include(c => c.Cart)
-                        .ThenInclude(ci => ci.CartItems)
-                            .ThenInclude(p => p.Product)
+                    .Include(a => a.AppUser)
                 .ProjectTo<CustomerDetailsVM>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync();
+            var cartItemsForCustomerDetailsVM = await _cartItemRepository.GetCartItems()
+                .Where(x => x.Cart.CustomerId == id)
+                .ProjectTo<CartItemForCustomerDetailsVM>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+            var ordersForCustomerDetailsVM = await _orderRepository.GetOrders()
+                .Where(x => x.CustomerId == id)
+                    .OrderByDescending(o => o.Id).Take(5)
+                .ProjectTo<OrderForCustomerDetailsVM>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+            customerDetailsVM.CartItems = cartItemsForCustomerDetailsVM;
+            customerDetailsVM.Orders = ordersForCustomerDetailsVM;
             for (int i = 0; i < customerDetailsVM.CartItems.Count; i++)
             {
                 customerDetailsVM.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(customerDetailsVM.CartItems[i].ImageByteArray);
             }
-            //Console.WriteLine(qString);
             return customerDetailsVM;
         }
 

@@ -149,12 +149,14 @@ namespace EcommerceApp.Application.Services
         public async Task<OrderListVM> SearchPaginatedOrdersAsync(string selectedValue, string searchString, int pageSize, int pageNumber)
         {
             var idParse = int.TryParse(searchString, out int id);
+            var customerIdParse = int.TryParse(searchString, out int customerId);
             var priceParse = decimal.TryParse(searchString, out decimal price);
             var emptyQuery = Enumerable.Empty<OrderForListVM>().AsQueryable();
             var baseQuery = _orderRepository.GetOrders().ProjectTo<OrderForListVM>(_mapper.ConfigurationProvider);
             IQueryable<OrderForListVM> query = selectedValue switch
             {
                 "Id" => idParse ? baseQuery.Where(x => x.Id == id) : emptyQuery,
+                "CustomerId" => customerIdParse ? baseQuery.Where(x => x.CustomerId == customerId) : emptyQuery,
                 "Price" => priceParse ? baseQuery.Where(x => x.Price == price) : emptyQuery,
                 "ShipFirstName" => baseQuery.Where(x => x.ShipFirstName.Contains(searchString)),
                 "ShipLastName" => baseQuery.Where(x => x.ShipLastName.Contains(searchString)),

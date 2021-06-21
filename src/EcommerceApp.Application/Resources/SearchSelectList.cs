@@ -46,6 +46,7 @@ namespace EcommerceApp.Application.Resources
         public List<SelectListItem> OrdersSelectList { get; } = new()
         {
             new SelectListItem { Value = "Id", Text = "Id" },
+            new SelectListItem { Value = "CustomerId", Text = "Customer Id" },
             new SelectListItem { Value = "Price", Text = "Price" },
             new SelectListItem { Value = "ShipFirstName", Text = "First name" },
             new SelectListItem { Value = "ShipLastName", Text = "Last name" },

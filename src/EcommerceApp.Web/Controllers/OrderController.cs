@@ -1,21 +1,26 @@
-using System;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.Order;
 using EcommerceApp.Web.Filters;
 using EcommerceApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace EcommerceApp.Web.Controllers
 {
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IConfiguration _configuration;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(
+            IOrderService orderService,
+            IConfiguration configuration)
         {
             _orderService = orderService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -40,6 +45,30 @@ namespace EcommerceApp.Web.Controllers
             }
             await _orderService.AddOrderAsync(orderCheckoutVM);
             return RedirectToAction(nameof(CheckoutSuccessful));
+        }
+
+        public async Task<IActionResult> CustomerOrders(string pageSize, int? pageNumber)
+        {
+            if (!int.TryParse(pageSize, out int intPageSize))
+            {
+                intPageSize = _configuration.GetValue("DefaultPageSize", 10);
+            }
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(await _orderService.GetPaginatedCustomerOrdersAsync(appUserId, intPageSize, pageNumber.Value));
+        }
+
+        public async Task<IActionResult> CustomerOrderDetails(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(await _orderService.GetCustomerOrderDetailsAsync(appUserId, id.Value));
         }
 
         public IActionResult CheckoutSuccessful()

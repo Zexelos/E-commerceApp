@@ -1,6 +1,6 @@
 @model EcommerceApp.Application.ViewModels.AdminPanel.CustomerDetailsVM
 @{
-    ViewData["Title"] = "Order details";
+    ViewData["Title"] = "Customer details";
 }
 <center>
     <h2>@ViewData["Title"]</h2>
@@ -56,6 +56,8 @@
                 }
             </tbody>
         </table>
+        <a class="btn btn-primary" asp-area="" asp-controller="EmployeePanel" asp-action="Orders"
+            asp-route-selectedValue="CustomerId" asp-route-searchString="@Model.Id.ToString()">More orders</a>
     </span>
 </div>
 <div>

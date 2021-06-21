@@ -1,4 +1,4 @@
-@model EcommerceApp.Application.ViewModels.Cart.ListCartItemForListVM
+@model EcommerceApp.Application.ViewModels.Cart.CartItemListVM
 @{
     ViewData["Title"] = "Cart";
 }
@@ -34,10 +34,10 @@
                     </td>
                     <td>
                         <a class="btn btn-primary" asp-area="" asp-controller="Cart"
-                        asp-action="DecreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id"><i class="fas fa-plus"></i></a>
+                        asp-action="DecreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id"><i class="fas fa-minus"></i></a>
                         @Html.DisplayFor(modelItem => item.Quantity)
                         <a class="btn btn-primary" asp-area="" asp-controller="Cart"
-                        asp-action="IncreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id"><i class="fas fa-minus"></i></a>
+                        asp-action="IncreaseCartItemQuantityByOne" asp-route-cartItemId="@item.Id"><i class="fas fa-plus"></i></a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TotalPrice)

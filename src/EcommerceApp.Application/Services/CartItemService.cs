@@ -6,9 +6,10 @@ using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Application.ViewModels.Cart;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace EcommerceApp.Application.Services
 {
@@ -19,19 +20,22 @@ namespace EcommerceApp.Application.Services
         private readonly ICartRepository _cartRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IImageConverterService _imageConverterService;
+        private readonly IMapper _mapper;
 
         public CartItemService(
             ICartItemRepository cartItemRepository,
             IProductRepository productRepository,
             ICartRepository cartRepository,
             ICustomerRepository customerRepository,
-            IImageConverterService imageConverterService)
+            IImageConverterService imageConverterService,
+            IMapper mapper)
         {
             _cartItemRepository = cartItemRepository;
             _productRepository = productRepository;
             _cartRepository = cartRepository;
             _customerRepository = customerRepository;
             _imageConverterService = imageConverterService;
+            _mapper = mapper;
         }
 
         public async Task AddCartItem(int productId, int quantity, string appUserId)
@@ -54,30 +58,20 @@ namespace EcommerceApp.Application.Services
             return await _cartRepository.GetCartIdAsync(customerId);
         }
 
-        public async Task<ListCartItemForListVM> GetListCartItemForListVMAsync(string appUserId)
+        public async Task<CartItemListVM> GetCartItemListAsync(string appUserId)
         {
-            var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);
-            var cartId = await _cartRepository.GetCartIdAsync(customerId);
-            var cartItems = await _cartItemRepository.GetCartItemsByCartId(cartId).ToListAsync();
-            var cartItemForListVMs = new List<CartItemForListVM>();
-            for (int i = 0; i < cartItems.Count; i++)
+            var cartItemListVM = await _cartRepository.GetCarts()
+                .Where(x => x.Customer.AppUserId == appUserId)
+                    .Include(ci => ci.CartItems)
+                        .ThenInclude(p => p.Product)
+                .ProjectTo<CartItemListVM>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+            for (int i = 0; i < cartItemListVM.CartItems.Count; i++)
             {
-                var product = await _productRepository.GetProductAsync(cartItems[i].ProductId);
-                cartItemForListVMs.Add(new CartItemForListVM
-                {
-                    Id = cartItems[i].Id,
-                    Name = product.Name,
-                    Price = product.UnitPrice,
-                    Quantity = cartItems[i].Quantity,
-                    ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(product.Image)
-                });
+                cartItemListVM.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(cartItemListVM.CartItems[i].ImageByteArray);
+                cartItemListVM.TotalPrice += cartItemListVM.CartItems[i].Price;
             }
-            return new ListCartItemForListVM
-            {
-                CartId = cartId,
-                CustomerId = customerId,
-                CartItems = cartItemForListVMs
-            };
+            return cartItemListVM;
         }
 
         public async Task IncreaseCartItemQuantityByOneAsync(int cartItemId)
