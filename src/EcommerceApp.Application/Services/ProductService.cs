@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,13 +67,23 @@ namespace EcommerceApp.Application.Services
             return _mapper.Map<ProductListVM>(paginatedVM);
         }
 
-        public async Task<ListProductDetailsForUserVM> GetProductsWithImageAsync()
+        public async Task<ListProductDetailsForUserVM> GetRandomProductsWithImageAsync(int number)
         {
-            var products = await _productRepository.GetProducts().ToListAsync();
-            var productDetailsForUserVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
+            var random = new Random();
+            var products = _productRepository.GetProducts();
+            products = products.OrderBy(x => x.Id);
+            var count = await products.CountAsync();
+            if (count > number)
+            {
+                var randomNumber = random.Next(count - number + 1);
+                products = products.Skip(randomNumber);
+            }
+            products = products.Take(number);
+            var randomProducts = await products.ToListAsync();
+            var productDetailsForUserVMs = _mapper.Map<List<ProductDetailsForUserVM>>(randomProducts);
             for (int i = 0; i < productDetailsForUserVMs.Count; i++)
             {
-                productDetailsForUserVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(products[i].Image);
+                productDetailsForUserVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(randomProducts[i].Image);
             }
             return new ListProductDetailsForUserVM
             {

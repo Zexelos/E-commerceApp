@@ -21,29 +21,9 @@ namespace EcommerceApp.Application.Services
         {
             return new HomeVM
             {
-                Products = GetRandomAmountOfProductVMsFromList(await _productService.GetProductsWithImageAsync(), 8)
+                Products = await _productService.GetRandomProductsWithImageAsync(8)
             };
         }
 
-        private static ListProductDetailsForUserVM GetRandomAmountOfProductVMsFromList(ListProductDetailsForUserVM list, int itemAmount)
-        {
-            var random = new Random();
-            var result = new ListProductDetailsForUserVM();
-            var checkList = new List<int>();
-            if (list.Products.Count <= itemAmount)
-            {
-                return list;
-            }
-            while (result.Products.Count <= itemAmount)
-            {
-                var currentRandom = random.Next(list.Products.Count);
-                if (!checkList.Contains(currentRandom))
-                {
-                    result.Products.Add(list.Products[currentRandom]);
-                    checkList.Add(currentRandom);
-                }
-            }
-            return result;
-        }
     }
 }
