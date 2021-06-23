@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
+using EcommerceApp.Application.ViewModels.Home;
 using EcommerceApp.Application.ViewModels.Product;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
@@ -67,7 +68,7 @@ namespace EcommerceApp.Application.Services
             return _mapper.Map<ProductListVM>(paginatedVM);
         }
 
-        public async Task<ListProductDetailsForUserVM> GetRandomProductsWithImageAsync(int number)
+        public async Task<HomeVM> GetRandomProductsWithImageAsync(int number)
         {
             var random = new Random();
             var products = _productRepository.GetProducts();
@@ -79,15 +80,14 @@ namespace EcommerceApp.Application.Services
                 products = products.Skip(randomNumber);
             }
             products = products.Take(number);
-            var randomProducts = await products.ToListAsync();
-            var productDetailsForUserVMs = _mapper.Map<List<ProductDetailsForUserVM>>(randomProducts);
-            for (int i = 0; i < productDetailsForUserVMs.Count; i++)
+            var productDetailsForHomeVMs = await products.ProjectTo<ProductDetailsForHomeVM>(_mapper.ConfigurationProvider).ToListAsync();
+            for (int i = 0; i < productDetailsForHomeVMs.Count; i++)
             {
-                productDetailsForUserVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(randomProducts[i].Image);
+                productDetailsForHomeVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(productDetailsForHomeVMs[i].Image);
             }
-            return new ListProductDetailsForUserVM
+            return new HomeVM
             {
-                Products = productDetailsForUserVMs
+                Products = productDetailsForHomeVMs
             };
         }
 
