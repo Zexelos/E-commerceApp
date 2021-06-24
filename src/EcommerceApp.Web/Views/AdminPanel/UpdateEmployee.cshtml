@@ -2,37 +2,45 @@
 @{
     ViewData["Title"] = "Update Employee";
 }
-<center>
-    <h1>@ViewData["Title"]</h1>
-</center>
-<span style="float: left;">
-    <p>Current employee</p>
-    <div>
-        <dl class="dl-horizontal">
-            <dt>First Name</dt>
-            <dd>@Model.FirstName</dd>
-            <dt>Last Name</dt>
-            <dd>@Model.LastName</dd>
-            <dt>Position</dt>
-            <dd>@Model.Position</dd>
-            <dt>Email</dt>
-            <dd>@Model.Email</dd>
-        </dl>
+<div class="row">
+    <div class="col text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
     </div>
-</span>
-<center>
-    <span style="float: center;">
-        <p>Fill in the fields to update current employee</p>
-        <div class="col-md-6">
-            <form asp-action="UpdateEmployee">
-                <partial name="_EmployeeFormPartial" />
-                <button type="submit" class="btn btn-primary">Update</button>
-            </form>
+</div>
+<div class="row py-2">
+    <div class="col text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Current employee</p>
+            </div>
+            <div class="card-body bg-light">
+                <dl class="dl-horizontal">
+                    <dt>First Name</dt>
+                    <dd>@Model.FirstName</dd>
+                    <dt>Last Name</dt>
+                    <dd>@Model.LastName</dd>
+                    <dt>Position</dt>
+                    <dd>@Model.Position</dd>
+                    <dt>Email</dt>
+                    <dd>@Model.Email</dd>
+                </dl>
+            </div>
         </div>
-    </span>
-</center>
-
-
+    </div>
+    <div class="col-md-8 text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Fill in the fields to update current employee</p>
+            </div>
+            <div class="card-body bg-light">
+                <form asp-action="UpdateEmployee">
+                    <partial name="_EmployeeFormPartial" />
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
 }

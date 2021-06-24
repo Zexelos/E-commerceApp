@@ -2,41 +2,50 @@
 @{
     ViewData["Title"] = "Update Category";
 }
-<center>
-    <h1>@ViewData["Title"]</h1>
-</center>
-<span style="float: left">
-    <p>Current category</p>
-    <div>
-        <dl class="dl-horizontal">
-            <dt>Name</dt>
-            <dd>@Model.Name</dd>
-            <dt>Description</dt>
-            <dd>@Model.Description</dd>
-            <dt>Image</dt>
-            @if (Model.ImageToDisplay == "No photo available")
-            {
-                <dd>@Model.ImageToDisplay</dd>
-            }
-            else
-            {
-                <dd><img src="@Model.ImageToDisplay" width="256" height="256" /></dd>
-            }
-        </dl>
+<div class="row">
+    <div class="col text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
     </div>
-</span>
-<center>
-    <span style="float: center">
-        <div class="col-md-6">
-            <p>Fill in the fields to update current category</p>
-            <form asp-action="UpdateCategory" enctype="multipart/form-data">
-                <partial name="_CategoryFormPartial" />
-                <button type="submit" class="btn btn-primary">Update Category</button>
-            </form>
+</div>
+<div class="row py-2">
+    <div class="col text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Current category</p>
+            </div>
+            <div class="card-body bg-light">
+                <dl class="dl-horizontal">
+                    <dt>Name</dt>
+                    <dd>@Model.Name</dd>
+                    <dt>Description</dt>
+                    <dd>@Model.Description</dd>
+                    <dt>Image</dt>
+                    @if (Model.ImageToDisplay == "No photo available")
+                    {
+                        <dd>@Model.ImageToDisplay</dd>
+                    }
+                    else
+                    {
+                        <dd><img src="@Model.ImageToDisplay" width="256" height="256" /></dd>
+                    }
+                </dl>
+            </div>
         </div>
-    </span>
-</center>
-
+    </div>
+    <div class="col-md-8 text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Fill in the fields to update current category</p>
+            </div>
+            <div class="card-body bg-light">
+                <form asp-action="UpdateCategory" enctype="multipart/form-data">
+                    <partial name="_CategoryFormPartial" />
+                    <button type="submit" class="btn btn-primary">Update Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
 }

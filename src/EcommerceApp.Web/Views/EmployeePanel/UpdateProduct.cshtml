@@ -2,47 +2,56 @@
 @{
     ViewData["Title"] = "Update Product";
 }
-<center>
-    <h1>@ViewData["Title"]</h1>
-</center>
-<p>Current category</p>
-<span style="float: left">
-    <div>
-        <dl class="dl-horizontal">
-            <dt>Name</dt>
-            <dd>@Model.Name</dd>
-            <dt>Description</dt>
-            <dd>@Model.Description</dd>
-            <dt>Price</dt>
-            <dd>@Model.UnitPrice</dd>
-            <dt>Units In Stock</dt>
-            <dd>@Model.UnitsInStock</dd>
-            <dt>Category Name</dt>
-            <dd>@Model.CategoryName</dd>
-            <dt>Image</dt>
-            @if (Model.ImageToDisplay == "No photo available")
-            {
-                <dd>@Model.ImageToDisplay</dd>
-            }
-            else
-            {
-                <dd><img src="@Model.ImageToDisplay" width="256" height="256" /></dd>
-            }
-        </dl>
+<div class="row">
+    <div class="col text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
     </div>
-</span>
-<center>
-    <span style="float: center">
-        <div class="col-md-6">
-            <p>Fill in the fields to update current product</p>
-            <form asp-action="UpdateProduct" enctype="multipart/form-data">
-                <partial name="_ProductFormPartial" />
-                <button type="submit" class="btn btn-primary">Update product</button>
-            </form>
+</div>
+<div class="row py-2">
+    <div class="col text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Current category</p>
+            </div>
+            <div class="card-body bg-light">
+                <dl class="dl-horizontal">
+                    <dt>Name</dt>
+                    <dd>@Model.Name</dd>
+                    <dt>Description</dt>
+                    <dd>@Model.Description</dd>
+                    <dt>Price</dt>
+                    <dd>@Model.UnitPrice</dd>
+                    <dt>Units In Stock</dt>
+                    <dd>@Model.UnitsInStock</dd>
+                    <dt>Category Name</dt>
+                    <dd>@Model.CategoryName</dd>
+                    <dt>Image</dt>
+                    @if (Model.ImageToDisplay == "No photo available")
+                    {
+                        <dd>@Model.ImageToDisplay</dd>
+                    }
+                    else
+                    {
+                        <dd><img src="@Model.ImageToDisplay" width="256" height="256" /></dd>
+                    }
+                </dl>
+            </div>
         </div>
-    </span>
-</center>
-
+    </div>
+    <div class="col-md-8 text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Fill in the fields to update current product</p>
+            </div>
+            <div class="card-body bg-light">
+                <form asp-action="UpdateProduct" enctype="multipart/form-data">
+                    <partial name="_ProductFormPartial" />
+                    <button type="submit" class="btn btn-primary">Update product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 <partial name="_ValidationScriptsPartial" />
 }

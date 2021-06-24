@@ -25,9 +25,7 @@ namespace EcommerceApp.Application.ViewModels.AdminPanel
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Employee, EmployeeVM>()
-            .ForMember(x => x.Email, y => y.MapFrom(src => src.AppUser.Email))
-            .ReverseMap();
+            profile.CreateMap<Domain.Models.Employee, EmployeeVM>().ReverseMap();
         }
     }
 }

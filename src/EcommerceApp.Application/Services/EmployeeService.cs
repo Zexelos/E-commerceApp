@@ -45,11 +45,11 @@ namespace EcommerceApp.Application.Services
 
         public async Task<EmployeeVM> GetEmployeeAsync(int id)
         {
-            return await _repository.GetEmployees()
-                .Where(x => x.Id == id)
-                .Include(a => a.AppUser)
-                .ProjectTo<EmployeeVM>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            var employee = await _repository.GetEmployeeAsync(id);
+            var employeeVM = _mapper.Map<EmployeeVM>(employee);
+            var user = await _userManager.FindByIdAsync(employee.AppUserId);
+            employeeVM.Email = user.Email;
+            return employeeVM;
         }
 
         public async Task<EmployeeListVM> GetPaginatedEmployeesAsync(int pageSize, int pageNumber)
@@ -63,6 +63,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task UpdateEmployeeAsync(EmployeeVM employeeVM)
         {
+            /*
             var employee = await _repository.GetEmployeeAsync(employeeVM.Id);
             var user = await _userManager.FindByIdAsync(employee.AppUserId);
             await _userManager.SetEmailAsync(user, employeeVM.Email);
@@ -76,6 +77,26 @@ namespace EcommerceApp.Application.Services
             var employeeMap = _mapper.Map<Employee>(employeeVM);
             employeeMap.AppUserId = employee.AppUserId;
             await _repository.UpdateEmployeeAsync(employeeMap);
+            */
+
+            var employeeToEdit = await _repository.GetEmployeeAsync(employeeVM.Id);
+            var user = await _userManager.FindByIdAsync(employeeToEdit.AppUserId);
+
+            if (employeeVM.Password != null)
+            {
+                var tokenPassword = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await _userManager.ResetPasswordAsync(user, tokenPassword, employeeVM.Password);
+            }
+
+            await _userManager.SetEmailAsync(user, employeeVM.Email);
+            await _userManager.UpdateNormalizedEmailAsync(user);
+
+            await _userManager.SetUserNameAsync(user, employeeVM.Email);
+            await _userManager.UpdateNormalizedUserNameAsync(user);
+
+            var employee = _mapper.Map<Employee>(employeeVM);
+            employee.AppUserId = employeeToEdit.AppUserId;
+            await _repository.UpdateEmployeeAsync(employee);
         }
 
         public async Task DeleteEmployeeAsync(int id)

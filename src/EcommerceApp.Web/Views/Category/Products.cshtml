@@ -3,14 +3,19 @@
     ViewData["Title"] = "Products";
 }
 <div class="row">
+    <div class="col text-center">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+</div>
+<div class="row">
     @foreach (var item in Model.Products)
     {
         <div class="col-md-3">
-            <div class="card">
+            <div class="card my-3 p-2 text-center">
+                <img class="card-img-top" src=@item.ImageToDisplay width="254" height="256" />
                 <h2>@item.Name</h2>
-                <dd><img src=@item.ImageToDisplay width="254" height="256" /></dd>
-                <p>@item.Description</p>
-                <p>@item.UnitPrice</p>
+                <p>@Html.DisplayFor(modelItem => item.UnitPrice)</p>
+                <a asp-controller="Product" asp-action="Product" asp-route-id="@item.Id" class="stretched-link"></a>
             </div>
         </div>
     }
