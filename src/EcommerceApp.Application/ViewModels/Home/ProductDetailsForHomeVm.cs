@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using EcommerceApp.Application.Mapping;
 
-namespace EcommerceApp.Application.ViewModels.Product
+namespace EcommerceApp.Application.ViewModels.Home
 {
-    public class ProductDetailsForUserVM : IMapFrom<Domain.Models.Product>
+    public class ProductDetailsForHomeVM : IMapFrom<Domain.Models.Product>
     {
         public int Id { get; set; }
 
@@ -19,9 +19,11 @@ namespace EcommerceApp.Application.ViewModels.Product
         [Display(Name = "Image")]
         public string ImageToDisplay { get; set; }
 
+        public byte[] Image { get; set; }
+
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Product, ProductDetailsForUserVM>().ReverseMap();
+            profile.CreateMap<Domain.Models.Product, ProductDetailsForHomeVM>();
         }
     }
 }

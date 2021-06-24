@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EcommerceApp.Application.ViewModels.EmployeePanel;
+using EcommerceApp.Application.ViewModels.Home;
 using EcommerceApp.Application.ViewModels.Product;
 
 namespace EcommerceApp.Application.Interfaces
@@ -11,7 +12,7 @@ namespace EcommerceApp.Application.Interfaces
         Task<ProductVM> GetProductAsync(int id);
         Task<ProductDetailsForUserVM> GetProductDetailsForUserAsync(int id);
         Task<ProductListVM> GetPaginatedProductsAsync(int pageSize, int pageNumber);
-        Task<ListProductDetailsForUserVM> GetRandomProductsWithImageAsync(int number);
+        Task<HomeVM> GetRandomProductsWithImageAsync(int number);
         Task<List<ProductVM>> GetProductsByCategoryNameAsync(string name);
         Task<ListProductDetailsForUserVM> GetListProductDetailsForUserVMByCategoryNameAsync(string name);
         Task UpdateProductAsync(ProductVM product);
