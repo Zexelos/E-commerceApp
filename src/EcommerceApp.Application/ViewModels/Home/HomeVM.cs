@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+using EcommerceApp.Application.ViewModels.Product;
 
 namespace EcommerceApp.Application.ViewModels.Home
 {
     public class HomeVM
     {
-        public List<ProductDetailsForHomeVM> Products { get; set; }
+        public ListProductDetailsForUserVM Products { get; set; }
     }
 }

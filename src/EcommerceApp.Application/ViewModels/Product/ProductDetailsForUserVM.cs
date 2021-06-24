@@ -6,13 +6,16 @@ namespace EcommerceApp.Application.ViewModels.Product
 {
     public class ProductDetailsForUserVM : IMapFrom<Domain.Models.Product>
     {
+        [Display(Name = "Id")]
         public int Id { get; set; }
 
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Display(Name = "Price")]
+        [Display(Name = "Unit Price")]
         [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal UnitPrice { get; set; }
 
