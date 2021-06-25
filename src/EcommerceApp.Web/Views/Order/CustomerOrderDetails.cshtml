@@ -2,36 +2,42 @@
 @{
     ViewData["Title"] = "Order details";
 }
-<div class="row">
+<div class="row adjust-content-center">
     <div class="col text-center">
         <h1>@ViewData["Title"]</h1>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 text-center">
-        <h4>Order details</h4>
-        <dl class="dl-horizontal">
-            <dt><label asp-for="@Model.Id"></label></dt>
-            <dd>@Model.Id</dd>
-            <dt><label asp-for="@Model.CreateDate"></label></dt>
-            <dd>@Html.DisplayFor(x => Model.CreateDate)</dd>
-            <dt><label asp-for="@Model.Price"></label></dt>
-            <dd>@Html.DisplayFor(x => Model.Price)</dd>
-            <dt><label asp-for="@Model.ShipFirstName"></label></dt>
-            <dd>@Model.ShipFirstName</dd>
-            <dt><label asp-for="@Model.ShipLastName"></label></dt>
-            <dd>@Model.ShipLastName</dd>
-            <dt><label asp-for="@Model.ContactEmail"></label></dt>
-            <dd>@Model.ContactEmail</dd>
-            <dt><label asp-for="@Model.ContactPhoneNumber"></label></dt>
-            <dd>@Model.ContactPhoneNumber</dd>
-            <dt><label asp-for="@Model.ShipCity"></label></dt>
-            <dd>@Model.ShipCity</dd>
-            <dt><label asp-for="@Model.ShipPostalCode"></label></dt>
-            <dd>@Model.ShipPostalCode</dd>
-            <dt><label asp-for="@Model.ShipAddress"></label></dt>
-            <dd>@Model.ShipAddress</dd>
-        </dl>
+    <div class="col text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <h4>Order details</h4>
+            </div>
+            <div class="card-body bg-light">
+                <dl class="dl-horizontal">
+                    <dt><label asp-for="@Model.Id"></label></dt>
+                    <dd>@Model.Id</dd>
+                    <dt><label asp-for="@Model.CreateDate"></label></dt>
+                    <dd>@Html.DisplayFor(x => Model.CreateDate)</dd>
+                    <dt><label asp-for="@Model.Price"></label></dt>
+                    <dd>@Html.DisplayFor(x => Model.Price)</dd>
+                    <dt><label asp-for="@Model.ShipFirstName"></label></dt>
+                    <dd>@Model.ShipFirstName</dd>
+                    <dt><label asp-for="@Model.ShipLastName"></label></dt>
+                    <dd>@Model.ShipLastName</dd>
+                    <dt><label asp-for="@Model.ContactEmail"></label></dt>
+                    <dd>@Model.ContactEmail</dd>
+                    <dt><label asp-for="@Model.ContactPhoneNumber"></label></dt>
+                    <dd>@Model.ContactPhoneNumber</dd>
+                    <dt><label asp-for="@Model.ShipCity"></label></dt>
+                    <dd>@Model.ShipCity</dd>
+                    <dt><label asp-for="@Model.ShipPostalCode"></label></dt>
+                    <dd>@Model.ShipPostalCode</dd>
+                    <dt><label asp-for="@Model.ShipAddress"></label></dt>
+                    <dd>@Model.ShipAddress</dd>
+                </dl>
+            </div>
+        </div>
     </div>
     <div class="col text-center">
         <h4>Products</h4>
