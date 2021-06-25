@@ -15,6 +15,7 @@ namespace EcommerceApp.Application.ViewModels.Order
 
         [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Price { get; set; }
+        public int ProductsInStock { get; set; }
 
         public int Quantity { get; set; }
 
@@ -32,6 +33,7 @@ namespace EcommerceApp.Application.ViewModels.Order
             profile.CreateMap<Domain.Models.CartItem, CartItemForOrderCheckoutVM>()
             .ForMember(x => x.Name, y => y.MapFrom(src => src.Product.Name))
             .ForMember(x => x.Price, y => y.MapFrom(src => src.Product.UnitPrice))
+            .ForMember(x => x.ProductsInStock, y => y.MapFrom(src => src.Product.UnitsInStock))
             .ForMember(x => x.ImageByteArray, y => y.MapFrom(src => src.Product.Image));
         }
     }

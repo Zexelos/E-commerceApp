@@ -38,15 +38,18 @@ namespace EcommerceApp.Application.Services
         public async Task AddCartItem(int productId, int quantity, string appUserId)
         {
             var product = await _productRepository.GetProductAsync(productId);
-            var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);
-            var cartId = await _cartRepository.GetCartIdAsync(customerId);
-            var cartItem = new CartItem
+            if (product.UnitsInStock > 0)
             {
-                Product = product,
-                Quantity = quantity,
-                CartId = cartId,
-            };
-            await _cartItemRepository.AddCartItemAsync(cartItem);
+                var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);
+                var cartId = await _cartRepository.GetCartIdAsync(customerId);
+                var cartItem = new CartItem
+                {
+                    Product = product,
+                    Quantity = quantity,
+                    CartId = cartId,
+                };
+                await _cartItemRepository.AddCartItemAsync(cartItem);
+            }
         }
 
         public async Task<CartItemListVM> GetCartItemListAsync(string appUserId)
@@ -60,26 +63,37 @@ namespace EcommerceApp.Application.Services
             for (int i = 0; i < cartItemListVM.CartItems.Count; i++)
             {
                 cartItemListVM.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(cartItemListVM.CartItems[i].ImageByteArray);
-                cartItemListVM.TotalPrice += cartItemListVM.CartItems[i].Price;
+                cartItemListVM.TotalPrice += cartItemListVM.CartItems[i].TotalPrice;
             }
             return cartItemListVM;
         }
 
         public async Task IncreaseCartItemQuantityByOneAsync(int cartItemId)
         {
-            var cartItem = await _cartItemRepository.GetCartItemAsync(cartItemId);
-            cartItem.Quantity++;
+            var cartItem = await _cartItemRepository.GetCartItems().Where(x => x.Id == cartItemId).Include(p => p.Product).FirstOrDefaultAsync();
+            if (cartItem.Quantity >= cartItem.Product.UnitsInStock)
+            {
+                cartItem.Quantity = cartItem.Product.UnitsInStock;
+            }
+            else
+            {
+                cartItem.Quantity++;
+            }
             await _cartItemRepository.UpdateCartItemAsync(cartItem);
         }
 
         public async Task DecreaseCartItemQuantityByOneAsync(int cartItemId)
         {
             var cartItem = await _cartItemRepository.GetCartItemAsync(cartItemId);
-            if (cartItem.Quantity > 1)
+            if (cartItem.Quantity <= 1)
+            {
+                cartItem.Quantity = 1;
+            }
+            else
             {
                 cartItem.Quantity--;
-                await _cartItemRepository.UpdateCartItemAsync(cartItem);
             }
+            await _cartItemRepository.UpdateCartItemAsync(cartItem);
         }
 
         public async Task DeleteCartItemAsync(int cartItemId)

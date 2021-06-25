@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Infrastructure.Repositories
 {
@@ -18,6 +18,12 @@ namespace EcommerceApp.Infrastructure.Repositories
         public async Task AddOrderItemAsync(OrderItem orderItem)
         {
             await _context.OrderItems.AddAsync(orderItem);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddOrderItemsAsync(List<OrderItem> orderItems)
+        {
+            await _context.OrderItems.AddRangeAsync(orderItems);
             await _context.SaveChangesAsync();
         }
 

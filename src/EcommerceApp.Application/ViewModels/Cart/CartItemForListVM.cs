@@ -11,6 +11,8 @@ namespace EcommerceApp.Application.ViewModels.Cart
         [Display(Name = "Product Id")]
         public int ProductId { get; set; }
 
+        public int ProductsInStock { get; set; }
+
         public string Name { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C}")]
@@ -23,14 +25,16 @@ namespace EcommerceApp.Application.ViewModels.Cart
 
         public byte[] ImageByteArray { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [Display(Name = "Total Price")]
-        public decimal TotalPrice { get { return Price * Quantity; } }
+        public decimal TotalPrice { get { return ProductsInStock >= Quantity ? Price * Quantity : 0; } }
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Domain.Models.CartItem, CartItemForListVM>()
             .ForMember(x => x.Name, y => y.MapFrom(src => src.Product.Name))
             .ForMember(x => x.Price, y => y.MapFrom(src => src.Product.UnitPrice))
+            .ForMember(x => x.ProductsInStock, y => y.MapFrom(src => src.Product.UnitsInStock))
             .ForMember(x => x.ImageByteArray, y => y.MapFrom(src => src.Product.Image));
         }
     }

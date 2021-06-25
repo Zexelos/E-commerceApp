@@ -61,12 +61,12 @@
                             asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
 
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal@(item.Id)">
                                 <i class="fas fa-trash"></i>
                             </button>
 
                             <!-- Modal -->
-                            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                            <div class="modal fade" id="deleteModal@(item.Id)" tabindex="-1" aria-labelledby="deleteModalLabel"
                                 aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">

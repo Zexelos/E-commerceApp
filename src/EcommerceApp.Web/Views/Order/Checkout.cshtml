@@ -8,64 +8,61 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 text-center">
-        <p class="font-weight-bold">Your contact information</p>
-        <div>
-            <p>@Model.FirstName @Model.LastName</p>
-            <p>@Model.Email</p>
-            </br>
-            <p>@Model.Address</p>
-            <p>@Model.PostalCode @Model.City</p>
-            <p>@Model.PhoneNumber</p>
-            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index">Change info</a>
+    <div class="col text-center">
+        <div class="card rounded">
+            <div class="card-header bg-dark text-white">
+                <p>Your contact information</p>
+            </div>
+            <div class="card-body bg-light">
+                <p>@Model.FirstName @Model.LastName</p>
+                <p>@Model.Email</p>
+                </br>
+                <p>@Model.Address</p>
+                <p>@Model.PostalCode @Model.City</p>
+                <p>@Model.PhoneNumber</p>
+                <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Manage/Index">Change info</a>
+            </div>
         </div>
     </div>
-    <div class="col">
-        <table class="table-striped table-dark table-sm text-center">
-            <thead>
+    <div class="col-md-8 text-center">
+        <table class="table table-striped table-bordered text-center">
+            <thead class="thead-dark">
                 <tr>
-                    <th>ProductId</th>
-                    <th>Name</th>
-                    <th>Image</th>
-                    <th>Unit Price</th>
-                    <th>Quantity</th>
-                    <th>Total Price</th>
+                    <th class="align-middle">ProductId</th>
+                    <th class="align-middle">Name</th>
+                    <th class="align-middle">Image</th>
+                    <th class="align-middle">Unit Price</th>
+                    <th class="align-middle">Quantity</th>
+                    <th class="align-middle">Total Price</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.CartItems)
                 {
                     <tr>
-                        <td>
+                        <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.Id)
                         </td>
-                        <td>
+                        <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
-                        <td>
+                        <td class="align-middle">
                             <img src="@item.ImageToDisplay" width="128" height="128" />
                         </td>
-                        <td>
+                        <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.Price)
                         </td>
-                        <td>
+                        <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.Quantity)
                         </td>
-                        <td>
+                        <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.TotalPrice)
                         </td>
                     </tr>
                 }
-                <th>Final Price</th>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.TotalPrice)
-                </td>
             </tbody>
         </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col text-center">
+        <h4>Final price: @Html.DisplayFor(modelItem => modelItem.TotalPrice)</h4>
         <form asp-controller="Order" asp-action="Checkout">
             <input asp-for="@Model.CartId" type="hidden" />
             <input asp-for="@Model.CustomerId" type="hidden" />

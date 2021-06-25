@@ -28,6 +28,7 @@ namespace EcommerceApp.Application.Services
         private readonly IMapper _mapper;
         private readonly IPaginatorService<OrderForListVM> _orderPaginatorService;
         private readonly IPaginatorService<CustomerOrderForListVM> _customerOrderService;
+        private readonly IProductRepository _productRepository;
 
         public OrderService(ICartItemRepository cartItemRepository,
             ICartRepository cartRepository,
@@ -37,7 +38,8 @@ namespace EcommerceApp.Application.Services
             IImageConverterService imageConverterService,
             IMapper mapper,
             IPaginatorService<OrderForListVM> paginatorService,
-            IPaginatorService<CustomerOrderForListVM> customerOrderService)
+            IPaginatorService<CustomerOrderForListVM> customerOrderService,
+            IProductRepository productRepository)
         {
             _cartItemRepository = cartItemRepository;
             _cartRepository = cartRepository;
@@ -48,10 +50,12 @@ namespace EcommerceApp.Application.Services
             _mapper = mapper;
             _orderPaginatorService = paginatorService;
             _customerOrderService = customerOrderService;
+            _productRepository = productRepository;
         }
 
         public async Task AddOrderAsync(OrderCheckoutVM orderCheckoutVM)
         {
+            orderCheckoutVM.CartItems = orderCheckoutVM.CartItems.OrderBy(x => x.ProductId).ToList();
             var cart = await _cartRepository.GetCartAsync(orderCheckoutVM.CartId);
             var order = new Order
             {
@@ -67,16 +71,26 @@ namespace EcommerceApp.Application.Services
                 ContactPhoneNumber = orderCheckoutVM.PhoneNumber
             };
             await _orderRepository.AddOrderAsync(order);
-            foreach (var cartItem in orderCheckoutVM.CartItems)
+
+            List<int> productIdList = new();
+            foreach (var item in orderCheckoutVM.CartItems)
             {
-                var orderItem = new OrderItem
-                {
-                    ProductId = cartItem.ProductId,
-                    Quantity = cartItem.Quantity,
-                    OrderId = order.Id,
-                };
-                await _orderItemRepository.AddOrderItemAsync(orderItem);
+                productIdList.Add(item.ProductId);
             }
+            var orderItemList = new List<OrderItem>();
+            var productList = await _productRepository.GetProducts().Where(x => productIdList.Contains(x.Id)).AsNoTracking().ToListAsync();
+            for (int i = 0; i < orderCheckoutVM.CartItems.Count; i++)
+            {
+                orderItemList.Add(new OrderItem
+                {
+                    ProductId = orderCheckoutVM.CartItems[i].ProductId,
+                    Quantity = orderCheckoutVM.CartItems[i].Quantity,
+                    OrderId = order.Id,
+                });
+                productList[i].UnitsInStock -= orderCheckoutVM.CartItems[i].Quantity;
+            }
+            await _productRepository.UpdateProductsAsync(productList);
+            await _orderItemRepository.AddOrderItemsAsync(orderItemList);
             await _cartItemRepository.DeleteCartItemsByCartIdAsync(orderCheckoutVM.CartId);
         }
 
@@ -90,10 +104,23 @@ namespace EcommerceApp.Application.Services
                             .ThenInclude(p => p.Product)
                 .ProjectTo<OrderCheckoutVM>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-            for (int i = 0; i < order.CartItems.Count; i++)
+            for (int i = order.CartItems.Count - 1; i >= 0; i--)
             {
-                order.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(order.CartItems[i].ImageByteArray);
-                order.TotalPrice += order.CartItems[i].TotalPrice;
+                if (order.CartItems[i].ProductsInStock <= 0)
+                {
+                    order.CartItems.RemoveAt(i);
+                }
+                else if (order.CartItems[i].Quantity > order.CartItems[i].ProductsInStock)
+                {
+                    order.CartItems[i].Quantity = order.CartItems[i].ProductsInStock;
+                    order.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(order.CartItems[i].ImageByteArray);
+                    order.TotalPrice += order.CartItems[i].TotalPrice;
+                }
+                else
+                {
+                    order.CartItems[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(order.CartItems[i].ImageByteArray);
+                    order.TotalPrice += order.CartItems[i].TotalPrice;
+                }
             }
             return order;
         }
