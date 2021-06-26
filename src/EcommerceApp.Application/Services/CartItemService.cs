@@ -15,7 +15,6 @@ namespace EcommerceApp.Application.Services
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IProductRepository _productRepository;
         private readonly ICartRepository _cartRepository;
-        private readonly ICustomerRepository _customerRepository;
         private readonly IImageConverterService _imageConverterService;
         private readonly IMapper _mapper;
 
@@ -23,14 +22,12 @@ namespace EcommerceApp.Application.Services
             ICartItemRepository cartItemRepository,
             IProductRepository productRepository,
             ICartRepository cartRepository,
-            ICustomerRepository customerRepository,
             IImageConverterService imageConverterService,
             IMapper mapper)
         {
             _cartItemRepository = cartItemRepository;
             _productRepository = productRepository;
             _cartRepository = cartRepository;
-            _customerRepository = customerRepository;
             _imageConverterService = imageConverterService;
             _mapper = mapper;
         }
@@ -38,15 +35,14 @@ namespace EcommerceApp.Application.Services
         public async Task AddCartItem(int productId, int quantity, string appUserId)
         {
             var product = await _productRepository.GetProductAsync(productId);
-            if (product.UnitsInStock > 0)
+            if (product.UnitsInStock > 0 && product.UnitsInStock >= quantity)
             {
-                var customerId = await _customerRepository.GetCustomerIdAsync(appUserId);
-                var cartId = await _cartRepository.GetCartIdAsync(customerId);
+                var cart = await _cartRepository.GetCarts().Where(x => x.Customer.AppUserId == appUserId).FirstOrDefaultAsync();
                 var cartItem = new CartItem
                 {
                     Product = product,
                     Quantity = quantity,
-                    CartId = cartId,
+                    CartId = cart.Id,
                 };
                 await _cartItemRepository.AddCartItemAsync(cartItem);
             }
