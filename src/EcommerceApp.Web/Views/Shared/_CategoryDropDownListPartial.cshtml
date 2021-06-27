@@ -11,7 +11,7 @@
         @foreach (var category in categories)
         {
             <a class="dropdown-item" asp-controller="Category" asp-action="Products"
-            asp-route-categoryName="@category">@Html.DisplayFor(x => category)
+            asp-route-categoryId="@category.Key">@Html.DisplayFor(x => category.Value)
             </a>
         }
     </div>

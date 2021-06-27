@@ -24,7 +24,7 @@ namespace EcommerceApp.Application.ViewModels.Product
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Product, ProductDetailsForUserVM>().ReverseMap();
+            profile.CreateMap<Domain.Models.Product, ProductDetailsForUserVM>();
         }
     }
 }

@@ -18,20 +18,17 @@ namespace EcommerceApp.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IProductRepository _productRepository;
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IImageConverterService _imageConverterService;
         private readonly IPaginatorService<ProductForListVM> _paginatorService;
 
         public ProductService(
             IMapper mapper,
             IProductRepository repository,
-            ICategoryRepository categoryRepository,
             IImageConverterService imageConverterService,
             IPaginatorService<ProductForListVM> paginatorService)
         {
             _mapper = mapper;
             _productRepository = repository;
-            _categoryRepository = categoryRepository;
             _imageConverterService = imageConverterService;
             _paginatorService = paginatorService;
         }
@@ -91,20 +88,9 @@ namespace EcommerceApp.Application.Services
             };
         }
 
-        public async Task<List<ProductVM>> GetProductsByCategoryNameAsync(string name)
+        public async Task<ListProductDetailsForUserVM> GetProductsByCategoryIdAsync(int id)
         {
-            var products = await _productRepository.GetProducts().Where(x => x.Category.Name == name).ToListAsync();
-            var productVMs = _mapper.Map<List<ProductVM>>(products);
-            for (int i = 0; i < productVMs.Count; i++)
-            {
-                productVMs[i].ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(products[i].Image);
-            }
-            return productVMs;
-        }
-
-        public async Task<ListProductDetailsForUserVM> GetListProductDetailsForUserVMByCategoryNameAsync(string name)
-        {
-            var products = await _productRepository.GetProducts().Where(x => x.Category.Name == name).ToListAsync();
+            var products = await _productRepository.GetProducts().Where(x => x.Category.Id == id).ToListAsync();
             var productVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
             for (int i = 0; i < productVMs.Count; i++)
             {

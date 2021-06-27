@@ -48,19 +48,15 @@ namespace EcommerceApp.Application.Services
         {
             return await _repository.GetEmployees()
                 .Where(x => x.Id == id)
-                    .Include(a => a.AppUser)
+                    //.Include(a => a.AppUser)
                 .ProjectTo<EmployeeVM>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
-            //var employeeVM = _mapper.Map<EmployeeVM>(employee);
-            //var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            //employeeVM.Email = employee.AppUser.Email;
-            //return employeeVM;
         }
 
         public async Task<EmployeeListVM> GetPaginatedEmployeesAsync(int pageSize, int pageNumber)
         {
             var employeesQuery = _repository.GetEmployees()
-                .Include(a => a.AppUser)
+                //.Include(a => a.AppUser)
                 .ProjectTo<EmployeeForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _paginatorService.CreateAsync(employeesQuery, pageNumber, pageSize);
             return _mapper.Map<EmployeeListVM>(paginatedVM);

@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using System.IO;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
