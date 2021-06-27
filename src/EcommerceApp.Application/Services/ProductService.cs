@@ -38,16 +38,24 @@ namespace EcommerceApp.Application.Services
 
         public async Task AddProductAsync(ProductVM productVM)
         {
-            var product = _mapper.Map<Product>(productVM);
-            var category = await _categoryRepository.GetCategoryAsync(product.CategoryName);
-            product.CategoryId = category.Id;
-            product.Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage);
+            //var product = _mapper.Map<Product>(productVM);
+            var product = new Product
+            {
+                CategoryId = productVM.CategoryId,
+                Name = productVM.Name,
+                Description = productVM.Description,
+                UnitPrice = productVM.UnitPrice,
+                UnitsInStock = productVM.UnitsInStock,
+                Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage)
+            };
             await _productRepository.AddProductAsync(product);
         }
 
         public async Task<ProductVM> GetProductAsync(int id)
         {
-            var product = await _productRepository.GetProductAsync(id);
+            var product = await _productRepository.GetProducts()
+                .Include(c => c.Category)
+            .FirstOrDefaultAsync(x => x.Id == id);
             var productVM = _mapper.Map<ProductVM>(product);
             productVM.ImageToDisplay = _imageConverterService.GetImageStringFromByteArray(product.Image);
             return productVM;
@@ -93,7 +101,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<List<ProductVM>> GetProductsByCategoryNameAsync(string name)
         {
-            var products = await _productRepository.GetProducts().Where(x => x.CategoryName == name).ToListAsync();
+            var products = await _productRepository.GetProducts().Where(x => x.Category.Name == name).ToListAsync();
             var productVMs = _mapper.Map<List<ProductVM>>(products);
             for (int i = 0; i < productVMs.Count; i++)
             {
@@ -104,7 +112,7 @@ namespace EcommerceApp.Application.Services
 
         public async Task<ListProductDetailsForUserVM> GetListProductDetailsForUserVMByCategoryNameAsync(string name)
         {
-            var products = await _productRepository.GetProducts().Where(x => x.CategoryName == name).ToListAsync();
+            var products = await _productRepository.GetProducts().Where(x => x.Category.Name == name).ToListAsync();
             var productVMs = _mapper.Map<List<ProductDetailsForUserVM>>(products);
             for (int i = 0; i < productVMs.Count; i++)
             {
@@ -119,8 +127,6 @@ namespace EcommerceApp.Application.Services
         public async Task UpdateProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);
-            var category = await _categoryRepository.GetCategoryAsync(product.CategoryName);
-            product.CategoryId = category.Id;
             product.Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage);
             await _productRepository.UpdateProductAsync(product);
         }

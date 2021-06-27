@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -69,23 +68,21 @@ namespace EcommerceApp.Application.Services
 
         public async Task UpdateEmployeeAsync(EmployeeVM employeeVM)
         {
-
-            var test = await _repository.GetEmployees()
-                .Where(x => x.Id == employeeVM.Id)
+            var employee = await _repository.GetEmployees()
                     .Include(a => a.AppUser)
-            .FirstOrDefaultAsync();
-            test.FirstName = employeeVM.FirstName;
-            test.LastName = employeeVM.LastName;
-            test.Position = employeeVM.Position;
-            test.AppUser.UserName = employeeVM.Email;
-            test.AppUser.NormalizedUserName = employeeVM.Email.ToUpper();
-            test.AppUser.Email = employeeVM.Email;
-            test.AppUser.NormalizedEmail = employeeVM.Email.ToUpper();
+            .FirstOrDefaultAsync(x => x.Id == employeeVM.Id);
+            employee.FirstName = employeeVM.FirstName;
+            employee.LastName = employeeVM.LastName;
+            employee.Position = employeeVM.Position;
+            employee.AppUser.UserName = employeeVM.Email;
+            employee.AppUser.NormalizedUserName = employeeVM.Email.ToUpper();
+            employee.AppUser.Email = employeeVM.Email;
+            employee.AppUser.NormalizedEmail = employeeVM.Email.ToUpper();
             if (employeeVM.Password != null)
             {
-                test.AppUser.PasswordHash = _passwordHasher.HashPassword(test.AppUser, employeeVM.Password);
+                employee.AppUser.PasswordHash = _passwordHasher.HashPassword(employee.AppUser, employeeVM.Password);
             }
-            await _repository.UpdateEmployeeAsync(test);
+            await _repository.UpdateEmployeeAsync(employee);
             /*
             var employee = await _repository.GetEmployeeAsync(employeeVM.Id);
             var user = await _userManager.FindByIdAsync(employee.AppUserId);
@@ -106,10 +103,10 @@ namespace EcommerceApp.Application.Services
 
         public async Task DeleteEmployeeAsync(int id)
         {
-            var test = await _repository.GetEmployees().Where(x => x.Id == id).Include(a => a.AppUser).FirstOrDefaultAsync();
-            //var employee = await _repository.GetEmployeeAsync(id);
-            //var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            await _userManager.DeleteAsync(test.AppUser);
+            var employee = await _repository.GetEmployees()
+                .Include(a => a.AppUser)
+            .FirstOrDefaultAsync(x => x.Id == id);
+            await _userManager.DeleteAsync(employee.AppUser);
         }
     }
 }

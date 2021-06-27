@@ -10,6 +10,8 @@ namespace EcommerceApp.Application.ViewModels.EmployeePanel
         [Display(Name = "Id")]
         public int Id { get; set; }
 
+        public int CategoryId { get; set; }
+
         [Display(Name = "Name")]
         public string Name { get; set; }
 
@@ -34,7 +36,10 @@ namespace EcommerceApp.Application.ViewModels.EmployeePanel
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Domain.Models.Product, ProductVM>().ReverseMap();
+            profile.CreateMap<Domain.Models.Product, ProductVM>()
+            .ForMember(x => x.CategoryId, y => y.MapFrom(src => src.Category.Id));
+            //.ReverseMap()
+            //.ForPath(x => x.Category.Id, y => y.Ignore());
         }
     }
 }

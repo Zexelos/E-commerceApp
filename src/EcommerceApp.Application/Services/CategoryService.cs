@@ -45,9 +45,9 @@ namespace EcommerceApp.Application.Services
             return categoryVM;
         }
 
-        public async Task<List<string>> GetCategoriesNamesAsync()
+        public async Task<Dictionary<int, string>> GetCategoriesNamesAsync()
         {
-            return await _repository.GetCategories().Select(x => x.Name).ToListAsync();
+            return await _repository.GetCategories().ToDictionaryAsync(x => x.Id, x => x.Name);
         }
 
         public async Task<CategoryListVM> GetPaginatedCategoriesAsync(int pageSize, int pageNumber)

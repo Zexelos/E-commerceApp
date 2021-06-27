@@ -37,7 +37,7 @@ namespace EcommerceApp.Application.Services
             var product = await _productRepository.GetProductAsync(productId);
             if (product.UnitsInStock > 0 && product.UnitsInStock >= quantity)
             {
-                var cart = await _cartRepository.GetCarts().Where(x => x.Customer.AppUserId == appUserId).FirstOrDefaultAsync();
+                var cart = await _cartRepository.GetCarts().FirstOrDefaultAsync(x => x.Customer.AppUserId == appUserId);
                 var cartItem = new CartItem
                 {
                     Product = product,

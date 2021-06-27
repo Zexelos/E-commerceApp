@@ -93,7 +93,7 @@ namespace EcommerceApp.Application.Services
             await _orderItemRepository.AddOrderItemsAsync(orderItemList);
             await _cartItemRepository.DeleteCartItemsByCartIdAsync(orderCheckoutVM.CartId);
         }
-
+        
         public async Task<OrderCheckoutVM> GetOrderCheckoutVMAsync(int customerId)
         {
             var order = await _customerRepository.GetCustomers()
@@ -103,7 +103,7 @@ namespace EcommerceApp.Application.Services
                         .ThenInclude(ci => ci.CartItems)
                             .ThenInclude(p => p.Product)
                 .ProjectTo<OrderCheckoutVM>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync();
             for (int i = order.CartItems.Count - 1; i >= 0; i--)
             {
                 if (order.CartItems[i].ProductsInStock <= 0)
