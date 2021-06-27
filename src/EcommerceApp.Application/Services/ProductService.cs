@@ -38,16 +38,8 @@ namespace EcommerceApp.Application.Services
 
         public async Task AddProductAsync(ProductVM productVM)
         {
-            //var product = _mapper.Map<Product>(productVM);
-            var product = new Product
-            {
-                CategoryId = productVM.CategoryId,
-                Name = productVM.Name,
-                Description = productVM.Description,
-                UnitPrice = productVM.UnitPrice,
-                UnitsInStock = productVM.UnitsInStock,
-                Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage)
-            };
+            var product = _mapper.Map<Product>(productVM);
+            product.Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage);
             await _productRepository.AddProductAsync(product);
         }
 

@@ -37,9 +37,11 @@ namespace EcommerceApp.Application.ViewModels.EmployeePanel
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Domain.Models.Product, ProductVM>()
-            .ForMember(x => x.CategoryId, y => y.MapFrom(src => src.Category.Id));
-            //.ReverseMap()
-            //.ForPath(x => x.Category.Id, y => y.Ignore());
+            .ForMember(x => x.CategoryId, y => y.MapFrom(src => src.Category.Id))
+            .ForMember(x => x.CategoryName, y => y.MapFrom(src => src.Category.Name))
+            .ReverseMap()
+            .ForPath(x => x.Category.Id, y => y.Ignore())
+            .ForPath(x => x.Category.Name, y => y.Ignore());
         }
     }
 }
