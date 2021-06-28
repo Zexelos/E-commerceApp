@@ -1,9 +1,11 @@
 @using Microsoft.AspNetCore.Identity
 @using EcommerceApp.Domain.Models
+@using Microsoft.AspNetCore.Authorization
 @inject SignInManager<AppUser> SignInManager
+@inject IAuthorizationService AuthorizationService
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User) && !AuthorizationService.AuthorizeAsync(User, "CanAccessEmployeePanel").IsCompletedSuccessfully)
     {
         <li class="nav-item">
             <a class="nav-link" asp-area="" asp-controller="Order" asp-action="CustomerOrders">Orders</a>

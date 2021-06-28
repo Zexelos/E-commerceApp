@@ -61,10 +61,6 @@ namespace EcommerceApp.Application.Services
             };
 
             var productIdList = orderCheckoutVM.CartItems.Select(x => x.ProductId).ToList();
-            //foreach (var item in orderCheckoutVM.CartItems)
-            //{
-            //    productIdList.Add(item.ProductId);
-            //}
             var orderItemList = new List<OrderItem>();
             var productList = await _productRepository.GetProducts().Where(x => productIdList.Contains(x.Id)).ToListAsync();
             for (int i = 0; i < orderCheckoutVM.CartItems.Count; i++)
@@ -73,14 +69,12 @@ namespace EcommerceApp.Application.Services
                 {
                     ProductId = orderCheckoutVM.CartItems[i].ProductId,
                     Quantity = orderCheckoutVM.CartItems[i].Quantity,
-                    //OrderId = order.Id
                 });
                 productList[i].UnitsInStock -= orderCheckoutVM.CartItems[i].Quantity;
             }
             order.OrderItems = orderItemList;
             await _productRepository.UpdateProductsAsync(productList);
             await _orderRepository.AddOrderAsync(order);
-            //await _orderItemRepository.AddOrderItemsAsync(orderItemList);
             await _cartItemRepository.DeleteCartItemsByCartIdAsync(orderCheckoutVM.CartId);
         }
         
@@ -136,8 +130,6 @@ namespace EcommerceApp.Application.Services
         {
             var order = await _orderRepository.GetOrders()
                 .Where(x => x.Id == orderId && x.Customer.AppUserId == appUserId)
-                    //.Include(oi => oi.OrderItems)
-                        //.ThenInclude(p => p.Product)
                 .ProjectTo<CustomerOrderDetailsVM>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
             for (int i = 0; i < order.OrderItems.Count; i++)
@@ -152,8 +144,6 @@ namespace EcommerceApp.Application.Services
         {
             return await _orderRepository.GetOrders()
                 .Where(x => x.Id == id)
-                    //.Include(x => x.OrderItems)
-                        //.ThenInclude(y => y.Product)
                 .ProjectTo<OrderDetailsVM>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
         }

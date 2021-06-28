@@ -49,7 +49,6 @@ namespace EcommerceApp.Application.Services
         {
             var customerDetailsVM = await _customerRepository.GetCustomers()
                 .Where(x => x.Id == id)
-                    //.Include(a => a.AppUser)
                 .ProjectTo<CustomerDetailsVM>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
             var cartItemsForCustomerDetailsVM = await _cartItemRepository.GetCartItems()
@@ -73,7 +72,6 @@ namespace EcommerceApp.Application.Services
         public async Task<CustomerListVM> GetPaginatedCustomersAsync(int pageSize, int pageNumber)
         {
             var customersQuery = _customerRepository.GetCustomers()
-                //.Include(a => a.AppUser)
                 .ProjectTo<CustomerForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _paginatorService.CreateAsync(customersQuery, pageNumber, pageSize);
             return _mapper.Map<CustomerListVM>(paginatedVM);

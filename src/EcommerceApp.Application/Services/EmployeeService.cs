@@ -48,7 +48,6 @@ namespace EcommerceApp.Application.Services
         {
             return await _repository.GetEmployees()
                 .Where(x => x.Id == id)
-                    //.Include(a => a.AppUser)
                 .ProjectTo<EmployeeVM>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
         }
@@ -56,7 +55,6 @@ namespace EcommerceApp.Application.Services
         public async Task<EmployeeListVM> GetPaginatedEmployeesAsync(int pageSize, int pageNumber)
         {
             var employeesQuery = _repository.GetEmployees()
-                //.Include(a => a.AppUser)
                 .ProjectTo<EmployeeForListVM>(_mapper.ConfigurationProvider);
             var paginatedVM = await _paginatorService.CreateAsync(employeesQuery, pageNumber, pageSize);
             return _mapper.Map<EmployeeListVM>(paginatedVM);
@@ -79,22 +77,6 @@ namespace EcommerceApp.Application.Services
                 employee.AppUser.PasswordHash = _passwordHasher.HashPassword(employee.AppUser, employeeVM.Password);
             }
             await _repository.UpdateEmployeeAsync(employee);
-            /*
-            var employee = await _repository.GetEmployeeAsync(employeeVM.Id);
-            var user = await _userManager.FindByIdAsync(employee.AppUserId);
-            await _userManager.SetEmailAsync(user, employeeVM.Email);
-            await _userManager.UpdateNormalizedEmailAsync(user);
-            await _userManager.SetUserNameAsync(user, employeeVM.Email);
-            await _userManager.UpdateNormalizedUserNameAsync(user);
-            if (employeeVM.Password != null)
-            {
-                var tokenPassword = await _userManager.GeneratePasswordResetTokenAsync(user);
-                await _userManager.ResetPasswordAsync(user, tokenPassword, employeeVM.Password);
-            }
-            var employeeMap = _mapper.Map<Employee>(employeeVM);
-            employeeMap.AppUserId = employee.AppUserId;
-            await _repository.UpdateEmployeeAsync(employeeMap);
-            */
         }
 
         public async Task DeleteEmployeeAsync(int id)
