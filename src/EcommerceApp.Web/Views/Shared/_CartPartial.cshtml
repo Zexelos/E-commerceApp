@@ -5,7 +5,7 @@
 @inject IAuthorizationService AuthorizationService
 
 <ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User) && !AuthorizationService.AuthorizeAsync(User, "CanAccessEmployeePanel").IsCompletedSuccessfully)
+    @if (SignInManager.IsSignedIn(User) && !AuthorizationService.AuthorizeAsync(User, "CanAccessEmployeePanel").Result.Succeeded)
     {
         <li class="nav-item">
             <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index"><i class="fas fa-shopping-cart fa-lg"></i></a>

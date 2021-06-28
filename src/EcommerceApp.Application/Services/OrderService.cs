@@ -60,7 +60,7 @@ namespace EcommerceApp.Application.Services
                 ContactPhoneNumber = orderCheckoutVM.PhoneNumber
             };
 
-            var productIdList = orderCheckoutVM.CartItems.Select(x => x.ProductId).ToList();
+            var productIdList = orderCheckoutVM.CartItems.ConvertAll(x => x.ProductId);
             var orderItemList = new List<OrderItem>();
             var productList = await _productRepository.GetProducts().Where(x => productIdList.Contains(x.Id)).ToListAsync();
             for (int i = 0; i < orderCheckoutVM.CartItems.Count; i++)
@@ -82,10 +82,6 @@ namespace EcommerceApp.Application.Services
         {
             var order = await _customerRepository.GetCustomers()
                 .Where(c => c.Id == customerId)
-                    //.Include(a => a.AppUser)
-                    //.Include(c => c.Cart)
-                        //.ThenInclude(ci => ci.CartItems)
-                            //.ThenInclude(p => p.Product)
                 .ProjectTo<OrderCheckoutVM>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
             for (int i = order.CartItems.Count - 1; i >= 0; i--)

@@ -1,7 +1,6 @@
 @using EcommerceApp.Application.Interfaces
 @inject ICategoryService CategoryService
 @{
-    ViewData["Title"] = "Add Product";
     var categories = await CategoryService.GetCategoriesNamesAsync();
 }
 <li class="nav-item dropdown">

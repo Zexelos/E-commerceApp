@@ -20,22 +20,28 @@ namespace EcommerceApp.Application.Tests
         private readonly Mock<ICategoryRepository> _repository = new();
         private readonly Mock<IImageConverterService> _imageConverterService = new();
         private readonly Mock<IFormFile> _formFile = new();
+        private readonly Mock<IPaginatorService<CategoryForListVM>> _paginatorService = new();
 
         public CategoryServiceUnitTests()
         {
-            _sut = new CategoryService(_mapper.Object, _repository.Object, _imageConverterService.Object);
+            _sut = new CategoryService(
+                _mapper.Object,
+                _repository.Object,
+                _imageConverterService.Object,
+                _paginatorService.Object);
         }
 
         [Fact]
         public async Task AddCategoryAsync_MethodsRunOnce()
         {
             // Arrange
-            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
+            var image = new byte[] { 2, 12, 4 };
+            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
             _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
 
-            _imageConverterService.Setup(s => s.GetByteArrayFromImage(_formFile.Object)).ReturnsAsync(categoryVM.Image);
+            _imageConverterService.Setup(s => s.GetByteArrayFromFormFile(_formFile.Object)).ReturnsAsync(image);
 
             // Act
             await _sut.AddCategoryAsync(categoryVM);
@@ -45,22 +51,23 @@ namespace EcommerceApp.Application.Tests
         }
 
         [Fact]
-        public async Task GetCategoryAsync_ReturnCategoryVM()
+        public async Task GetCategoryAsync_ReturnsCategoryVM()
         {
             // Arrange
-            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
-            Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
+            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", ImageToDisplay = "adsfgewgegsw" };
+            Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
 
             _repository.Setup(s => s.GetCategoryAsync(categoryVM.Id)).ReturnsAsync(category);
 
             _mapper.Setup(s => s.Map<CategoryVM>(category)).Returns(categoryVM);
 
-            _imageConverterService.Setup(s => s.GetImageStringFromByteArray(categoryVM.Image));
+            _imageConverterService.Setup(s => s.GetImageStringFromByteArray(category.Image)).Returns(categoryVM.ImageToDisplay);
 
             // Act
             var result = await _sut.GetCategoryAsync(categoryVM.Id);
 
             // Assert
+            Assert.NotNull(result)
             Assert.Equal(categoryVM, result);
         }
 
