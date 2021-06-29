@@ -33,7 +33,7 @@ namespace EcommerceApp.Application.Services
         public async Task AddCategoryAsync(CategoryVM categoryVM)
         {
             var category = _mapper.Map<Category>(categoryVM);
-            category.Image = await _imageConverterService.GetByteArrayFromFormFile(categoryVM.FormFileImage);
+            category.Image = await _imageConverterService.GetByteArrayFromFormFileAsync(categoryVM.FormFileImage);
             await _repository.AddCategoryAsync(category);
         }
 
@@ -60,7 +60,7 @@ namespace EcommerceApp.Application.Services
         public async Task UpdateCategoryAsync(CategoryVM categoryVM)
         {
             var category = _mapper.Map<Category>(categoryVM);
-            category.Image = await _imageConverterService.GetByteArrayFromFormFile(categoryVM.FormFileImage);
+            category.Image = await _imageConverterService.GetByteArrayFromFormFileAsync(categoryVM.FormFileImage);
             await _repository.UpdateCategoryAsync(category);
         }
 

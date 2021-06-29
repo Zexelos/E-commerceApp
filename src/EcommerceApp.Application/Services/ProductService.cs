@@ -36,7 +36,7 @@ namespace EcommerceApp.Application.Services
         public async Task AddProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);
-            product.Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage);
+            product.Image = await _imageConverterService.GetByteArrayFromFormFileAsync(productVM.FormFileImage);
             await _productRepository.AddProductAsync(product);
         }
 
@@ -105,7 +105,7 @@ namespace EcommerceApp.Application.Services
         public async Task UpdateProductAsync(ProductVM productVM)
         {
             var product = _mapper.Map<Product>(productVM);
-            product.Image = await _imageConverterService.GetByteArrayFromFormFile(productVM.FormFileImage);
+            product.Image = await _imageConverterService.GetByteArrayFromFormFileAsync(productVM.FormFileImage);
             await _productRepository.UpdateProductAsync(product);
         }
 

@@ -10,13 +10,15 @@ using Xunit;
 using System.Collections.Generic;
 using EcommerceApp.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
+using AutoMapper.QueryableExtensions;
+using EcommerceApp.Application.ViewModels;
 
 namespace EcommerceApp.Application.Tests
 {
     public class CategoryServiceUnitTests
     {
         private readonly CategoryService _sut;
-        private readonly Mock<IMapper> _mapper = new();
+        private readonly Mock<IMapper> _mapperMock = new();
         private readonly Mock<ICategoryRepository> _repository = new();
         private readonly Mock<IImageConverterService> _imageConverterService = new();
         private readonly Mock<IFormFile> _formFile = new();
@@ -25,7 +27,7 @@ namespace EcommerceApp.Application.Tests
         public CategoryServiceUnitTests()
         {
             _sut = new CategoryService(
-                _mapper.Object,
+                _mapperMock.Object,
                 _repository.Object,
                 _imageConverterService.Object,
                 _paginatorService.Object);
@@ -39,9 +41,9 @@ namespace EcommerceApp.Application.Tests
             CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
-            _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
+            _mapperMock.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
 
-            _imageConverterService.Setup(s => s.GetByteArrayFromFormFile(_formFile.Object)).ReturnsAsync(image);
+            _imageConverterService.Setup(s => s.GetByteArrayFromFormFileAsync(_formFile.Object)).ReturnsAsync(image);
 
             // Act
             await _sut.AddCategoryAsync(categoryVM);
@@ -59,7 +61,7 @@ namespace EcommerceApp.Application.Tests
 
             _repository.Setup(s => s.GetCategoryAsync(categoryVM.Id)).ReturnsAsync(category);
 
-            _mapper.Setup(s => s.Map<CategoryVM>(category)).Returns(categoryVM);
+            _mapperMock.Setup(s => s.Map<CategoryVM>(category)).Returns(categoryVM);
 
             _imageConverterService.Setup(s => s.GetImageStringFromByteArray(category.Image)).Returns(categoryVM.ImageToDisplay);
 
@@ -67,48 +69,67 @@ namespace EcommerceApp.Application.Tests
             var result = await _sut.GetCategoryAsync(categoryVM.Id);
 
             // Assert
-            Assert.NotNull(result)
+            Assert.NotNull(result);
             Assert.Equal(categoryVM, result);
         }
 
         [Fact]
-        public async Task GetCategoriesAsync_ReturnListOfCategories()
+        public async Task GetPaginatedCategoriesAsync_ReturnsCategoryListVM()
         {
             // Arrange
             List<Category> categories = new()
             {
                 new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" },
                 new() { Id = 150, Name = "we43tx34", Description = "3q4xtgf2qx4" },
-                new() { Id = 200, Name = "rce6h756bj", Description = "67ib64vjh46" },
+                new() { Id = 200, Name = "rce6h756bj", Description = "67ib64vjh46" }
             };
+            var categoriesQ = categories.AsQueryable();
 
-            List<CategoryVM> categoryVMs = new()
+            List<CategoryForListVM> categoryForListVMs = new()
             {
-                new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" },
-                new() { Id = 150, Name = "we43tx34", Description = "3q4xtgf2qx4" },
-                new() { Id = 200, Name = "rce6h756bj", Description = "67ib64vjh46" },
+                new() { Id = 100, Name = "asfewg" },
+                new() { Id = 150, Name = "we43tx34" },
+                new() { Id = 200, Name = "rce6h756bj" }
+            };
+            var categoryForListVMsQ = categoryForListVMs.AsQueryable();
+
+            PaginatedVM<CategoryForListVM> paginatedVM = new()
+            {
+                Items = categoryForListVMs,
+                CurrentPage = 1,
+                TotalPages = 1
             };
 
-            _repository.Setup(s => s.GetCategoriesAsync()).ReturnsAsync(categories.AsQueryable());
-            _mapper.Setup(s => s.Map<List<CategoryVM>>(categories)).Returns(categoryVMs);
+            CategoryListVM categoryListVM = new()
+            {
+                Categories = categoryForListVMs,
+                CurrentPage = 1,
+                TotalPages = 1,
+            };
+
+            _repository.Setup(s => s.GetCategories().ProjectTo<CategoryForListVM>(_mapperMock.Object.ConfigurationProvider)).Returns(categoryForListVMsQ);
+            _paginatorService.Setup(x => x.CreateAsync(categoryForListVMsQ, 1, 10)).ReturnsAsync(paginatedVM);
+            _mapperMock.Setup(x => x.Map<CategoryListVM>(paginatedVM)).Returns(categoryListVM);
 
             // Act
-            var result = await _sut.GetCategoriesAsync();
+            var result = await _sut.GetPaginatedCategoriesAsync(10, 1);
 
             // Assert
-            Assert.Equal(categoryVMs, result);
+            Assert.NotNull(result);
+            Assert.Equal(categoryListVM, result);
         }
 
         [Fact]
         public async Task UpdateCategoryAsync_RunsMethodsOnce()
         {
             // Arrange
-            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh", Image = new byte[] { 2, 12, 4 } };
+            var imageByteArray = new byte[] { 2, 12, 4 };
+            CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
-            _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
+            _mapperMock.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
 
-            _imageConverterService.Setup(s => s.GetImageStringFromByteArray(categoryVM.Image));
+            _imageConverterService.Setup(s => s.GetByteArrayFromFormFileAsync(_formFile.Object)).ReturnsAsync(imageByteArray);
 
             // Act
             await _sut.UpdateCategoryAsync(categoryVM);

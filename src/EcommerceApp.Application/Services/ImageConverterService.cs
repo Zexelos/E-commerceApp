@@ -8,7 +8,7 @@ namespace EcommerceApp.Application.Services
 {
     public class ImageConverterService : IImageConverterService
     {
-        public async Task<byte[]> GetByteArrayFromFormFile(IFormFile formFile)
+        public async Task<byte[]> GetByteArrayFromFormFileAsync(IFormFile formFile)
         {
             using var stream = new MemoryStream();
             if (formFile != null)
