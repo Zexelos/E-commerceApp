@@ -8,7 +8,7 @@
     @if (SignInManager.IsSignedIn(User) && !AuthorizationService.AuthorizeAsync(User, "CanAccessEmployeePanel").Result.Succeeded)
     {
         <li class="nav-item">
-            <a class="nav-link" asp-area="" asp-controller="Order" asp-action="CustomerOrders">Orders</a>
+            <a class="nav-link" asp-area="" asp-controller="Order" asp-action="CustomerOrders"><i class="far fa-list-alt fa-lg"></i> Orders</a>
         </li>
     }
 </ul>

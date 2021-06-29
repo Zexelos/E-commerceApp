@@ -1,19 +1,17 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
-@using EcommerceApp.Application.Policies
 @using EcommerceApp.Domain.Models
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject IAuthorizationService AuthorizationService
 @{
-    //var requirement = new CanAccessEmployeePanelRequirement();
     var authorizationResult = await AuthorizationService.AuthorizeAsync(User, "CanAccessEmployeePanel");
 }
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User) && authorizationResult.Succeeded)
     {
         <li class="nav-item">
-            <a class="nav-link" asp-area="" asp-controller="EmployeePanel" asp-action="Index">Employee Panel</a>
+            <a class="nav-link" asp-area="" asp-controller="EmployeePanel" asp-action="Index"><i class="fas fa-bars fa-lg"></i> Employee Panel</a>
         </li>
     }
 </ul>
