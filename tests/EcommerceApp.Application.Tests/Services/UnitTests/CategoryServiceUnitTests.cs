@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,6 +13,8 @@ using EcommerceApp.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using EcommerceApp.Application.Mapping;
 
 namespace EcommerceApp.Application.Tests
 {
@@ -23,9 +26,16 @@ namespace EcommerceApp.Application.Tests
         private readonly Mock<IImageConverterService> _imageConverterService = new();
         private readonly Mock<IFormFile> _formFile = new();
         private readonly Mock<IPaginatorService<CategoryForListVM>> _paginatorService = new();
+        private readonly MapperConfiguration _mapperConfig;
+        private readonly IMapper _mapper;
 
         public CategoryServiceUnitTests()
         {
+            _mapperConfig = new(c =>
+            {
+                c.AddProfile(new MappingProfile());
+            });
+            _mapper = _mapperConfig.CreateMapper();
             _sut = new CategoryService(
                 _mapperMock.Object,
                 _repository.Object,
@@ -107,9 +117,11 @@ namespace EcommerceApp.Application.Tests
                 TotalPages = 1,
             };
 
-            _repository.Setup(s => s.GetCategories().ProjectTo<CategoryForListVM>(_mapperMock.Object.ConfigurationProvider)).Returns(categoryForListVMsQ);
-            _paginatorService.Setup(x => x.CreateAsync(categoryForListVMsQ, 1, 10)).ReturnsAsync(paginatedVM);
-            _mapperMock.Setup(x => x.Map<CategoryListVM>(paginatedVM)).Returns(categoryListVM);
+            _mapperMock.Setup(x => x.ConfigurationProvider).Returns(
+                () => new MapperConfiguration(cfg => { cfg.CreateMap<Category, CategoryForListVM>(); }));
+            _repository.Setup(s => s.GetCategories()).Returns(categoriesQ);
+            _paginatorService.Setup(x => x.CreateAsync(It.IsAny<IQueryable<CategoryForListVM>>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paginatedVM);
+            _mapperMock.Setup(x => x.Map<CategoryListVM>(It.IsAny<PaginatedVM<CategoryForListVM>>())).Returns(categoryListVM);
 
             // Act
             var result = await _sut.GetPaginatedCategoriesAsync(10, 1);
