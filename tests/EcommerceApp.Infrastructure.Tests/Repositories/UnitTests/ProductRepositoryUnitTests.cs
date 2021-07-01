@@ -98,6 +98,34 @@ namespace EcommerceApp.Infrastructure.Tests.Repositories.UnitTests
         }
 
         [Fact]
+        public async Task UpdateProductsAsync_UpdatesProducts()
+        {
+            var product1 = new Product { Id = 100, Name = "sagwer", Description = "esragberg", UnitPrice = 12.32m, UnitsInStock = 2, Image = new byte[] { 1, 2, 3 } };
+            var product2 = new Product { Id = 150, Name = "ew4t", Description = "awx23", UnitPrice = 5.32m, UnitsInStock = 5, Image = new byte[] { 3, 2, 1 } };
+            var products1 = new List<Product> { product1, product2 };
+            var product3 = new Product { Id = 100, Name = "567bj", Description = "3c2y", UnitPrice = 3.32m, UnitsInStock = 1, Image = new byte[] { 1, 1, 1 } };
+            var product4 = new Product { Id = 150, Name = "4vw3u6", Description = "687bo4", UnitPrice = 2.32m, UnitsInStock = 1, Image = new byte[] { 2, 2, 2 } };
+            var products2 = new List<Product> { product3, product4 };
+
+            using (var context = new AppDbContext(_options))
+            {
+                await context.Database.EnsureCreatedAsync();
+                await context.Products.AddRangeAsync(products1);
+                await context.SaveChangesAsync();
+            }
+
+            using (var context = new AppDbContext(_options))
+            {
+                await context.Database.EnsureCreatedAsync();
+                var sut = new ProductRepository(context);
+                await sut.UpdateProductsAsync(products2);
+                var result = await context.Products.ToListAsync();
+                Assert.NotNull(result);
+                Assert.Equal(products2, result);
+            }
+        }
+
+        [Fact]
         public async Task DeleteProductAsync_DeletesProduct()
         {
             var product = new Product { Id = 100, Name = "sagwer", Description = "esragberg", UnitPrice = 12.32m, UnitsInStock = 2 };
