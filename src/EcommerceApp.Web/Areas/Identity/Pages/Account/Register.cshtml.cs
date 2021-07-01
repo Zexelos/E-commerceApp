@@ -25,23 +25,17 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly ICustomerRepository _customerRepository;
-        private readonly ICartRepository _cartRepository;
 
         public RegisterModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            ICustomerRepository customerRepository,
-            ICartRepository cartRepository)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _customerRepository = customerRepository;
-            _cartRepository = cartRepository;
         }
 
         [BindProperty]
@@ -115,29 +109,24 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber };
-                var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
+                var user = new AppUser
                 {
-                    var customer = new Customer
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    PhoneNumber = Input.PhoneNumber,
+                    Customer = new Customer
                     {
                         FirstName = Input.FirstName,
                         LastName = Input.LastName,
                         City = Input.City,
                         PostalCode = Input.PostalCode,
                         Address = Input.Address,
-                        AppUserId = user.Id
-                    };
-
-                    await _customerRepository.AddCustomerAsync(customer);
-
-                    var cart = new Cart
-                    {
-                        CustomerId = customer.Id
-                    };
-
-                    await _cartRepository.AddCartAsync(cart);
-
+                        Cart = new Cart()
+                    }
+                };
+                var result = await _userManager.CreateAsync(user, Input.Password);
+                if (result.Succeeded)
+                {
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -20,22 +20,6 @@ namespace EcommerceApp.Infrastructure.Tests.Repositories.UnitTests
         }
 
         [Fact]
-        public async Task AddCartAsync_AddsCart()
-        {
-            var cart = new Cart { Id = 100 };
-
-            using (var context = new AppDbContext(_options))
-            {
-                await context.Database.EnsureCreatedAsync();
-                var sut = new CartRepository(context);
-                await sut.AddCartAsync(cart);
-                var result = await context.Carts.FindAsync(cart.Id);
-                Assert.NotNull(result);
-                Assert.Equal(cart, result);
-            }
-        }
-
-        [Fact]
         public async Task GetCarts_ReturnsIQueryableOfCarts()
         {
             var cart1 = new Cart { Id = 100 };

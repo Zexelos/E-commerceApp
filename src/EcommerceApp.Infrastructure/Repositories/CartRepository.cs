@@ -14,12 +14,6 @@ namespace EcommerceApp.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddCartAsync(Cart cart)
-        {
-            await _context.Carts.AddAsync(cart);
-            await _context.SaveChangesAsync();
-        }
-
         public IQueryable<Cart> GetCarts()
         {
             return _context.Carts.AsQueryable();

@@ -6,10 +6,7 @@ namespace EcommerceApp.Domain.Interfaces
 {
     public interface IOrderRepository
     {
-        Task AddOrderAsync(Order order);
-        Task<Order> GetOrderAsync(int id);
         IQueryable<Order> GetOrders();
-        Task UpdateOrderAsync(Order order);
         Task DeleteOrderAsync(int id);
     }
 }

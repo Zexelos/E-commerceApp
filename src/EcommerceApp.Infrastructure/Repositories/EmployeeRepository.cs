@@ -15,17 +15,6 @@ namespace EcommerceApp.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddEmplyeeAsync(Employee employee)
-        {
-            await _context.Employees.AddAsync(employee);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<Employee> GetEmployeeAsync(int id)
-        {
-            return await _context.Employees.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-        }
-
         public IQueryable<Employee> GetEmployees()
         {
             return _context.Employees.AsQueryable();
@@ -35,16 +24,6 @@ namespace EcommerceApp.Infrastructure.Repositories
         {
             _context.Employees.Update(employee);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteEmployeeAsync(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee != null)
-            {
-                _context.Employees.Remove(employee);
-                await _context.SaveChangesAsync();
-            }
         }
     }
 }

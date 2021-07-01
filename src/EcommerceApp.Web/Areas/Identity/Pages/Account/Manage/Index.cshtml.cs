@@ -8,6 +8,7 @@ using EcommerceApp.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -64,12 +65,9 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(AppUser user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var customerId = await _customerRepository.GetCustomerIdAsync(user.Id);
-            var customer = await _customerRepository.GetCustomerAsync(customerId);
+            var customer = await _customerRepository.GetCustomers().FirstOrDefaultAsync(x => x.AppUserId == user.Id);
 
-            Username = userName;
+            Username = user.UserName;
 
             Input = new InputModel
             {
@@ -78,7 +76,7 @@ namespace EcommerceApp.Web.Areas.Identity.Pages.Account.Manage
                 City = customer.City,
                 PostalCode = customer.PostalCode,
                 Address = customer.Address,
-                PhoneNumber = phoneNumber
+                PhoneNumber = user.PhoneNumber
             };
         }
 

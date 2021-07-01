@@ -21,20 +21,9 @@ namespace EcommerceApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Order> GetOrderAsync(int id)
-        {
-            return await _context.Orders.FindAsync(id);
-        }
-
         public IQueryable<Order> GetOrders()
         {
             return _context.Orders.AsQueryable();
-        }
-
-        public async Task UpdateOrderAsync(Order order)
-        {
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteOrderAsync(int id)
