@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,33 +10,23 @@ using Xunit;
 using System.Collections.Generic;
 using EcommerceApp.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
-using AutoMapper.QueryableExtensions;
 using EcommerceApp.Application.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using EcommerceApp.Application.Mapping;
 
 namespace EcommerceApp.Application.Tests
 {
     public class CategoryServiceUnitTests
     {
         private readonly CategoryService _sut;
-        private readonly Mock<IMapper> _mapperMock = new();
+        private readonly Mock<IMapper> _mapper = new();
         private readonly Mock<ICategoryRepository> _repository = new();
         private readonly Mock<IImageConverterService> _imageConverterService = new();
         private readonly Mock<IFormFile> _formFile = new();
         private readonly Mock<IPaginatorService<CategoryForListVM>> _paginatorService = new();
-        private readonly MapperConfiguration _mapperConfig;
-        private readonly IMapper _mapper;
 
         public CategoryServiceUnitTests()
         {
-            _mapperConfig = new(c =>
-            {
-                c.AddProfile(new MappingProfile());
-            });
-            _mapper = _mapperConfig.CreateMapper();
             _sut = new CategoryService(
-                _mapperMock.Object,
+                _mapper.Object,
                 _repository.Object,
                 _imageConverterService.Object,
                 _paginatorService.Object);
@@ -51,7 +40,7 @@ namespace EcommerceApp.Application.Tests
             CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
-            _mapperMock.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
+            _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
 
             _imageConverterService.Setup(s => s.GetByteArrayFromFormFileAsync(_formFile.Object)).ReturnsAsync(image);
 
@@ -71,7 +60,7 @@ namespace EcommerceApp.Application.Tests
 
             _repository.Setup(s => s.GetCategoryAsync(categoryVM.Id)).ReturnsAsync(category);
 
-            _mapperMock.Setup(s => s.Map<CategoryVM>(category)).Returns(categoryVM);
+            _mapper.Setup(s => s.Map<CategoryVM>(category)).Returns(categoryVM);
 
             _imageConverterService.Setup(s => s.GetImageStringFromByteArray(category.Image)).Returns(categoryVM.ImageToDisplay);
 
@@ -117,11 +106,11 @@ namespace EcommerceApp.Application.Tests
                 TotalPages = 1,
             };
 
-            _mapperMock.Setup(x => x.ConfigurationProvider).Returns(
+            _mapper.Setup(x => x.ConfigurationProvider).Returns(
                 () => new MapperConfiguration(cfg => { cfg.CreateMap<Category, CategoryForListVM>(); }));
             _repository.Setup(s => s.GetCategories()).Returns(categoriesQ);
             _paginatorService.Setup(x => x.CreateAsync(It.IsAny<IQueryable<CategoryForListVM>>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(paginatedVM);
-            _mapperMock.Setup(x => x.Map<CategoryListVM>(It.IsAny<PaginatedVM<CategoryForListVM>>())).Returns(categoryListVM);
+            _mapper.Setup(x => x.Map<CategoryListVM>(It.IsAny<PaginatedVM<CategoryForListVM>>())).Returns(categoryListVM);
 
             // Act
             var result = await _sut.GetPaginatedCategoriesAsync(10, 1);
@@ -139,7 +128,7 @@ namespace EcommerceApp.Application.Tests
             CategoryVM categoryVM = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
             Category category = new() { Id = 100, Name = "asfewg", Description = "segsegrgerdhreh" };
 
-            _mapperMock.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
+            _mapper.Setup(s => s.Map<Category>(categoryVM)).Returns(category);
 
             _imageConverterService.Setup(s => s.GetByteArrayFromFormFileAsync(_formFile.Object)).ReturnsAsync(imageByteArray);
 
