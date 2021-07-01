@@ -1,9 +1,7 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Infrastructure.Repositories
 {
@@ -30,11 +28,6 @@ namespace EcommerceApp.Infrastructure.Repositories
         public IQueryable<CartItem> GetCartItems()
         {
             return _context.CartItems.AsQueryable();
-        }
-
-        public IQueryable<CartItem> GetCartItemsByCartId(int cartId)
-        {
-            return _context.CartItems.Where(x => x.CartId == cartId).AsQueryable();
         }
 
         public async Task UpdateCartItemAsync(CartItem cartItem)

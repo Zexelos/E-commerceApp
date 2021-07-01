@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EcommerceApp.Domain.Interfaces;
 using EcommerceApp.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Infrastructure.Repositories
 {
@@ -25,11 +23,6 @@ namespace EcommerceApp.Infrastructure.Repositories
         public async Task<Category> GetCategoryAsync(int id)
         {
             return await _context.Categories.FindAsync(id);
-        }
-        
-        public async Task<Category> GetCategoryAsync(string name)
-        {
-            return await _context.Categories.FirstOrDefaultAsync(x => x.Name == name);
         }
 
         public IQueryable<Category> GetCategories()
