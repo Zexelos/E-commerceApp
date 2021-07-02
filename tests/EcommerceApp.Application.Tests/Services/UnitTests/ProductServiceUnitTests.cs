@@ -230,6 +230,7 @@ namespace EcommerceApp.Application
             // Assert
             Assert.NotNull(result);
             Assert.Equal(listProductDetailsForUserVM.Products[0].Name, result.Products[0].Name);
+            Assert.Equal(listProductDetailsForUserVM.Products[2].ImageToDisplay, result.Products[2].ImageToDisplay);
         }
 
         [Fact]
