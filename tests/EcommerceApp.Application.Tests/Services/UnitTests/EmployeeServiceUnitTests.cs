@@ -18,7 +18,7 @@ using EcommerceApp.Application.Interfaces;
 using MockQueryable.Moq;
 using EcommerceApp.Application.ViewModels;
 
-namespace EcommerceApp.Application.Tests
+namespace EcommerceApp.Application.Tests.Services.UnitTests
 {
     public class EmployeeServiceUnitTests
     {

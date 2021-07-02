@@ -15,7 +15,7 @@ using EcommerceApp.Application.ViewModels.Product;
 using EcommerceApp.Application.ViewModels;
 using EcommerceApp.Application.ViewModels.Home;
 
-namespace EcommerceApp.Application
+namespace EcommerceApp.Application.Tests.Services.UnitTests
 {
     public class ProductServiceUnitTests
     {

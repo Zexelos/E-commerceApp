@@ -11,7 +11,7 @@ using MockQueryable.Moq;
 using Moq;
 using Xunit;
 
-namespace EcommerceApp.Application.Tests
+namespace EcommerceApp.Application.Tests.Services.UnitTests
 {
     public class CartItemServiceUnitTests
     {

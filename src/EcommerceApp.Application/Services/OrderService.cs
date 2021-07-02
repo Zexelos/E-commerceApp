@@ -77,7 +77,7 @@ namespace EcommerceApp.Application.Services
             await _orderRepository.AddOrderAsync(order);
             await _cartItemRepository.DeleteCartItemsByCartIdAsync(orderCheckoutVM.CartId);
         }
-        
+
         public async Task<OrderCheckoutVM> GetOrderCheckoutVMAsync(int customerId)
         {
             var order = await _customerRepository.GetCustomers()

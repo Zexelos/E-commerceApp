@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using EcommerceApp.Application.ViewModels;
 using MockQueryable.Moq;
 
-namespace EcommerceApp.Application.Tests
+namespace EcommerceApp.Application.Tests.Services.UnitTests
 {
     public class CategoryServiceUnitTests
     {
