@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using EcommerceApp.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using EcommerceApp.Application.ViewModels;
+using MockQueryable.Moq;
 
 namespace EcommerceApp.Application.Tests
 {
@@ -70,6 +71,29 @@ namespace EcommerceApp.Application.Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal(categoryVM, result);
+        }
+
+        [Fact]
+        public async Task GetCategoriesNamesAsync_ReturnsDictionary()
+        {
+            // Arrange
+            var categories = new List<Category>
+            {
+                new Category { Id = 10, Name ="gw4egrw4"},
+                new Category { Id = 12, Name ="j567j67g"}
+            };
+            var categoriesQ = categories.AsQueryable().BuildMock();
+
+            var categoryNames = categories.ToDictionary(x => x.Id, x => x.Name);
+
+            _repository.Setup(x => x.GetCategories()).Returns(categoriesQ.Object);
+
+            // Act 
+            var result = await _sut.GetCategoriesNamesAsync();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(categoryNames, result);
         }
 
         [Fact]
