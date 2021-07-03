@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -24,7 +23,8 @@ namespace EcommerceApp.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await _cartItemService.GetCartItemListAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = await _cartItemService.GetCartItemListAsync(appUserId);
             return View(model);
         }
 
