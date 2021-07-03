@@ -9,10 +9,11 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace EcommerceApp.Web.Tests
+namespace EcommerceApp.Web.Tests.Controllers.UnitTests
 {
     public class EmployeePanelControllerUnitTests
     {
+        /*
         private readonly EmployeePanelController _sut;
         private readonly Mock<ILogger<EmployeePanelController>> _logger = new();
         private readonly Mock<ICategoryService> _categoryService = new();
@@ -211,5 +212,6 @@ namespace EcommerceApp.Web.Tests
 
             return new List<ProductVM> { productVM1, productVM2, productVM3 };
         }
+        */
     }
 }
