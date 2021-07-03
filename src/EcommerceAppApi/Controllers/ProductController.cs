@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;

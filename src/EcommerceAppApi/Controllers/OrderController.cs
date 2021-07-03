@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EcommerceApp.Application.Interfaces;
@@ -46,7 +47,7 @@ namespace EcommerceAppApi.Controllers
             return Ok();
         }
 
-        [HttpPost("CustomerOrders")]
+        [HttpGet("CustomerOrders")]
         public async Task<IActionResult> CustomerOrders(string pageSize, int? pageNumber)
         {
             if (!int.TryParse(pageSize, out int intPageSize))
@@ -57,18 +58,18 @@ namespace EcommerceAppApi.Controllers
             {
                 pageNumber = 1;
             }
-            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var appUserId = User.Claims.First(x => x.Type == "UserId").Value;
             return Ok(await _orderService.GetPaginatedCustomerOrdersAsync(appUserId, intPageSize, pageNumber.Value));
         }
 
-        [HttpPost("CustomerOrderDetails")]
+        [HttpGet("CustomerOrderDetails")]
         public async Task<IActionResult> CustomerOrderDetails(int? id)
         {
             if (!id.HasValue)
             {
                 return NotFound("You must pass a valid ID in the route");
             }
-            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var appUserId = User.Claims.First(x => x.Type == "UserId").Value;
             return Ok(await _orderService.GetCustomerOrderDetailsAsync(appUserId, id.Value));
         }
     }

@@ -35,21 +35,21 @@ namespace EcommerceAppApi.Controllers
             return Ok();
         }
 
-        [HttpPost("IncreaseCartItemQuantityByOne")]
+        [HttpPut("IncreaseCartItemQuantityByOne")]
         public async Task<IActionResult> IncreaseCartItemQuantityByOne(int cartItemId)
         {
             await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId);
             return Ok();
         }
 
-        [HttpPost("DecreaseCartItemQuantityByOne")]
+        [HttpPut("DecreaseCartItemQuantityByOne")]
         public async Task<IActionResult> DecreaseCartItemQuantityByOne(int cartItemId)
         {
             await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId);
             return Ok();
         }
 
-        [HttpPost("DeleteCartItem")]
+        [HttpDelete("DeleteCartItem")]
         public async Task<IActionResult> DeleteCartItem(int cartItemId)
         {
             await _cartItemService.DeleteCartItemAsync(cartItemId);
