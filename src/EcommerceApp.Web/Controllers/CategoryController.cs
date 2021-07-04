@@ -18,10 +18,13 @@ namespace EcommerceApp.Web.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Products(int categoryId)
+        public async Task<IActionResult> Products(int? categoryId)
         {
-            var model = await _productService.GetProductsByCategoryIdAsync(categoryId);
-            return View(model);
+            if (!categoryId.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            return View(await _productService.GetProductsByCategoryIdAsync(categoryId.Value));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
