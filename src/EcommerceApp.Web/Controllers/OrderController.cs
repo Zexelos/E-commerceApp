@@ -31,8 +31,7 @@ namespace EcommerceApp.Web.Controllers
             {
                 return NotFound("You must pass a valid ID in the route");
             }
-            var model = await _orderService.GetOrderCheckoutVMAsync(customerId.Value);
-            return View(model);
+            return View(await _orderService.GetOrderCheckoutVMAsync(customerId.Value));
         }
 
         [HttpPost]
