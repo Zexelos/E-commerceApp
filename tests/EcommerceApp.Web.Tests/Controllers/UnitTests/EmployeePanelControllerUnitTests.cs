@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -46,7 +45,6 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
         }
 
         #region Categories
-
         [Fact]
         public async Task Categories_ReturnsViewResultWithAllCategories()
         {
@@ -279,6 +277,7 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
         }
         #endregion
 
+        #region AddCategory, AddProduct _GET
         [Fact]
         public void AddCategory_GET_ReturnsViewResult()
         {
@@ -300,13 +299,15 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
         }
+        #endregion
 
         #region AddCategory_POST
         [Fact]
-        public async Task AddCategory_POST_ReturnBadRequestResultWhenModelStateIsNotValid()
+        public async Task AddCategory_POST_ReturnsBadRequestResultWhenModelStateIsNotValid()
         {
             // Arrange
             var categoryVM = new CategoryVM();
+
             _sut.ModelState.AddModelError("error", "idk");
 
             // Act
@@ -318,7 +319,7 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
         }
 
         [Fact]
-        public async Task AddCategory_POST_ReturnRedirectToActionWhenModelStateIsValid()
+        public async Task AddCategory_POST_ReturnsRedirectToActionWhenModelStateIsValid()
         {
             // Arrange
             var categoryVM = new CategoryVM { Id = 100, Name = "argrarg", Description = "sadwegwe" };
@@ -327,7 +328,7 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
             var result = await _sut.AddCategory(categoryVM);
 
             // Assert
-            _categoryService.Verify(v => v.AddCategoryAsync(categoryVM), Times.Once);
+            _categoryService.Verify(v => v.AddCategoryAsync(It.IsAny<CategoryVM>()), Times.Once);
             Assert.NotNull(result);
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal(nameof(_sut.Categories), redirectToActionResult.ActionName);
@@ -360,7 +361,7 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
             var result = await _sut.AddProduct(productVM);
 
             // Assert
-            _productService.Verify(v => v.AddProductAsync(productVM), Times.Once);
+            _productService.Verify(v => v.AddProductAsync(It.IsAny<ProductVM>()), Times.Once);
             Assert.NotNull(result);
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal(nameof(_sut.Products), redirectToActionResult.ActionName);
@@ -404,23 +405,190 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
         }
         #endregion
 
-        // Helper methods
-        private static List<CategoryVM> GetCategoryVMs()
+        #region UpdateProduct_GET
+        [Fact]
+        public async Task UpdateProduct_GET_ReturnsNotFoundResultWhenIdHasNoValue()
         {
-            var categoryVM1 = new CategoryVM { Id = 100, Name = "Maciek", Description = "sadwegwe" };
-            var categoryVM2 = new CategoryVM { Id = 150, Name = "aciek", Description = "xwafx" };
-            var categoryVM3 = new CategoryVM { Id = 200, Name = "asdfaciekasge", Description = "2xt42xy" };
+            // Act
+            var result = await _sut.UpdateProduct(id: null);
 
-            return new List<CategoryVM> { categoryVM1, categoryVM2, categoryVM3 };
+            // Assert
+            Assert.NotNull(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
         }
 
-        private static List<ProductVM> GetProductVMs()
+        [Fact]
+        public async Task UpdateProduct_GET_ReturnsViewResultWhenIdHasValue()
         {
-            var productVM1 = new ProductVM { Id = 100, Name = "Maciek", Description = "sadwegwe" };
-            var productVM2 = new ProductVM { Id = 150, Name = "aciek", Description = "xwafx" };
-            var productVM3 = new ProductVM { Id = 200, Name = "asdfaciekasge", Description = "2xt42xy" };
+            // Arrange
+            var productVM = new ProductVM
+            {
+                Name = "nabial",
+                Description = "dobnte"
+            };
 
-            return new List<ProductVM> { productVM1, productVM2, productVM3 };
+            _productService.Setup(s => s.GetProductAsync(It.IsAny<int>())).ReturnsAsync(productVM);
+
+            // Act
+            var result = await _sut.UpdateProduct(1);
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<ProductVM>(viewResult.Model);
+            Assert.Equal(productVM.Name, model.Name);
+            Assert.Equal(productVM.Description, model.Description);
         }
+        #endregion
+
+        #region UpdateCategory_POST
+        [Fact]
+        public async Task UpdateCategory_POST_ReturnsBadRequestResultWhenModelStateIsNotValid()
+        {
+            // Arrange
+            var categoryVM = new CategoryVM();
+
+            _sut.ModelState.AddModelError("error", "idk");
+
+            // Act
+            var result = await _sut.UpdateCategory(categoryVM);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateCategory_POST_ReturnsRedirectToActionWhenModelStateIsValid()
+        {
+            // Arrange
+            var categoryVM = new CategoryVM { Id = 100, Name = "argrarg", Description = "sadwegwe" };
+
+            // Act
+            var result = await _sut.UpdateCategory(categoryVM);
+
+            // Assert
+            _categoryService.Verify(v => v.UpdateCategoryAsync(It.IsAny<CategoryVM>()), Times.Once);
+            Assert.NotNull(result);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_sut.Categories), redirectToActionResult.ActionName);
+        }
+        #endregion
+
+        #region UpdateProduct_POST
+        [Fact]
+        public async Task UpdateProduct_POST_ReturnsBadRequestResultWhenModelStateIsNotValid()
+        {
+            // Arrange
+            var productVM = new ProductVM { Name = "nabial", Description = "dobnte" };
+
+            _sut.ModelState.AddModelError("error", "idk");
+
+            // Act
+            var result = await _sut.UpdateProduct(productVM);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
+        public async Task UpdateProduct_POST_ReturnsRedirectToActionWhenModelStateIsValid()
+        {
+            // Arrange
+            var productVM = new ProductVM { Name = "nabial", Description = "dobnte" };
+
+            // Act
+            var result = await _sut.UpdateProduct(productVM);
+
+            // Assert
+            _productService.Verify(v => v.UpdateProductAsync(It.IsAny<ProductVM>()), Times.Once);
+            Assert.NotNull(result);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_sut.Products), redirectToActionResult.ActionName);
+        }
+        #endregion
+
+        #region DeleteCategory
+        [Fact]
+        public async Task DeleteCategory_ReturnsNotFoundResultWhenIdHasNoValue()
+        {
+            // Act
+            var result = await _sut.DeleteCategory(id: null);
+
+            // Assert
+            Assert.NotNull(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteCategory_ReturnsViewResultWhenIdHasValue()
+        {
+            // Act
+            var result = await _sut.DeleteCategory(1);
+
+            // Assert
+            _categoryService.Verify(s => s.DeleteCategoryAsync(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_sut.Categories), redirectToActionResult.ActionName);
+        }
+        #endregion
+
+        #region DeleteProduct
+        [Fact]
+        public async Task DeleteProduct_ReturnsNotFoundResultWhenIdHasNoValue()
+        {
+            // Act
+            var result = await _sut.DeleteProduct(id: null);
+
+            // Assert
+            Assert.NotNull(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteProduct_ReturnsViewResultWhenIdHasValue()
+        {
+            // Act
+            var result = await _sut.DeleteProduct(1);
+
+            // Assert
+            _productService.Verify(s => s.DeleteProductAsync(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_sut.Products), redirectToActionResult.ActionName);
+        }
+        #endregion
+
+        #region DeleteOrder
+        [Fact]
+        public async Task DeleteOrder_ReturnsNotFoundResultWhenIdHasNoValue()
+        {
+            // Act
+            var result = await _sut.DeleteProduct(id: null);
+
+            // Assert
+            Assert.NotNull(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, notFoundResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteOrder_ReturnsViewResultWhenIdHasValue()
+        {
+            // Act
+            var result = await _sut.DeleteOrder(1);
+
+            // Assert
+            _orderService.Verify(s => s.DeleteOrderAsync(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(_sut.Orders), redirectToActionResult.ActionName);
+        }
+        #endregion
     }
 }
