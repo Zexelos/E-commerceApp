@@ -24,10 +24,9 @@ namespace EcommerceApp.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await _homeService.GetHomeVMAsync();
-            return View(model);
+            return View(await _homeService.GetHomeVMAsync());
         }
-        
+
         public IActionResult Privacy()
         {
             return View();
