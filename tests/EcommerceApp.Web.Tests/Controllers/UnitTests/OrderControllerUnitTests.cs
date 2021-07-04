@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Reflection.Metadata;
 using System.Collections.Generic;
 using System.Net;
@@ -19,6 +20,7 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
         private readonly OrderController _sut;
         private readonly Mock<IOrderService> _orderService = new();
         private readonly Mock<IConfiguration> _configuration = new();
+
 
         public OrderControllerUnitTests()
         {
@@ -114,6 +116,41 @@ namespace EcommerceApp.Web.Tests.Controllers.UnitTests
             Assert.NotNull(result);
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal(nameof(_sut.CheckoutSuccessful), redirectToActionResult.ActionName);
+        }
+
+        [Fact]
+        public async Task CustomerOrders_ReturnsViewResultWithAllOrders()
+        {
+            // Arrange
+            var customerOrderListVM = new CustomerOrderListVM
+            {
+                Orders = new List<CustomerOrderForListVM>
+                {
+                    new CustomerOrderForListVM
+                    {
+                        Price = 10m
+                    }
+                },
+                CurrentPage = 1
+            };
+
+            var mockSection = new Mock<IConfigurationSection>();
+            mockSection.Setup(s => s.Value).Returns("10");
+            _configuration.Setup(x=>x.GetSection(It.Is<string>(k=>k=="ConfigKey"))).Returns(mockSection.Object);
+
+            _orderService.Setup(s =>
+                s.GetPaginatedCustomerOrdersAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(customerOrderListVM);
+
+            // Act
+            var result = await _sut.CustomerOrders("10", 1);
+
+            // Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<CustomerOrderListVM>(viewResult.ViewData.Model);
+            Assert.Single(model.Orders);
+            Assert.Equal(customerOrderListVM.CurrentPage, model.CurrentPage);
+            Assert.Equal(customerOrderListVM.Orders[0].Price, model.Orders[0].Price);
         }
 
         [Fact]
