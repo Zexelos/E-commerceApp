@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -6,11 +5,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace EcommerceApp.Web.Tests
+namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests.TestAuthHandlers
 {
-    public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class CustomerAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
+        public CustomerAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
             UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
@@ -20,8 +19,7 @@ namespace EcommerceApp.Web.Tests
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, "Test user"),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim("IsAdmin", "True")
+                new Claim(ClaimTypes.NameIdentifier, "Test user"),
             };
             var identity = new ClaimsIdentity(claims, "Test");
             var principal = new ClaimsPrincipal(identity);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Infrastructure;
+using EcommerceApp.Web.Tests.Controllers.IntegrationTests.TestAuthHandlers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -14,13 +15,67 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 {
     public static class WebHostBuilderSetups
     {
+        public static HttpClient GetGuestHttpClient(this WebApplicationFactory<Startup> webApplicationFactory)
+        {
+            return webApplicationFactory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<AppDbContext>));
+
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
+
+                    var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+
+                    services.AddDbContext<AppDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryGuestTest");
+                        options.UseInternalServiceProvider(serviceProvider);
+                    });
+
+                    var sp = services.BuildServiceProvider();
+
+                    using var scope = sp.CreateScope();
+                    using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    try
+                    {
+                        context.Database.EnsureCreated();
+                        context.Categories.Add(
+                            new Category
+                            {
+                                Id = 1,
+                                Products = new List<Product>
+                                {
+                                    new Product
+                                    {
+                                        Image = new byte[] { 1, 2, 3 }
+                                    }
+                                }
+                            }
+                        );
+                        context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new(ex.Message);
+                    }
+                });
+            }).CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+        }
+
         public static HttpClient GetAdminPanelHttpClient(this WebApplicationFactory<Startup> webApplicationFactory)
         {
             return webApplicationFactory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddAuthentication("Test").AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                    services.AddAuthentication("Test").AddScheme<AuthenticationSchemeOptions, AdminTestAuthHandler>("Test", options => { });
 
                     var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<AppDbContext>));
 
@@ -84,6 +139,79 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
                                 }
                             }
                         );
+                        context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new(ex.Message);
+                    }
+                });
+            }).CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+        }
+
+        public static HttpClient GetCustomerHttpClient(this WebApplicationFactory<Startup> webApplicationFactory)
+        {
+            return webApplicationFactory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddAuthentication("Test").AddScheme<AuthenticationSchemeOptions, CustomerAuthHandler>("Test", options => { });
+
+                    var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<AppDbContext>));
+
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
+
+                    var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+
+                    services.AddDbContext<AppDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryCustomerTest");
+                        options.UseInternalServiceProvider(serviceProvider);
+                    });
+
+                    var sp = services.BuildServiceProvider();
+
+                    using var scope = sp.CreateScope();
+                    using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    try
+                    {
+                        context.Database.EnsureCreated();
+                        context.Add(new AppUser
+                        {
+                            Id = "Test user",
+                            Email = "test@example.com",
+                            Customer = new Customer
+                            {
+                                AppUserId = "Test user",
+                                FirstName = "test",
+                                LastName = "integration",
+                                Cart = new Cart
+                                {
+                                    Id = 1,
+                                    CartItems = new List<CartItem>
+                                    {
+                                        new CartItem
+                                        {
+                                            Quantity = 5,
+                                            Product = new Product
+                                            {
+                                                Id = 1,
+                                                Name = "test",
+                                                UnitPrice = 1,
+                                                Image = new byte[]{1,2},
+                                                UnitsInStock = 10,
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
                         context.SaveChanges();
                     }
                     catch (Exception ex)

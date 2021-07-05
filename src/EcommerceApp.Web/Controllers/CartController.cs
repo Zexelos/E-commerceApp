@@ -5,9 +5,11 @@ using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EcommerceApp.Web.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ILogger<CartController> _logger;
@@ -35,21 +37,33 @@ namespace EcommerceApp.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> IncreaseCartItemQuantityByOne(int cartItemId)
+        public async Task<IActionResult> IncreaseCartItemQuantityByOne(int? cartItemId)
         {
-            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId);
+            if(!cartItemId.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId.Value);
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> DecreaseCartItemQuantityByOne(int cartItemId)
+        public async Task<IActionResult> DecreaseCartItemQuantityByOne(int? cartItemId)
         {
-            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId);
+            if(!cartItemId.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId.Value);
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> DeleteCartItem(int cartItemId)
+        public async Task<IActionResult> DeleteCartItem(int? cartItemId)
         {
-            await _cartItemService.DeleteCartItemAsync(cartItemId);
+            if(!cartItemId.HasValue)
+            {
+                return NotFound("You must pass a valid ID in the route");
+            }
+            await _cartItemService.DeleteCartItemAsync(cartItemId.Value);
             return RedirectToAction(nameof(Index));
         }
 
