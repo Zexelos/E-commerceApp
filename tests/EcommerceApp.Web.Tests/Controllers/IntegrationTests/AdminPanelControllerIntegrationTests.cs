@@ -25,61 +25,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
         {
             // Arrange
             _sut = sut;
-            _clinetAuth = _sut.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddAuthentication("Test").AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
-
-                    var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<AppDbContext>));
-
-                    if (descriptor != null)
-                    {
-                        services.Remove(descriptor);
-                    }
-
-                    var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
-
-                    services.AddDbContext<AppDbContext>(options =>
-                    {
-                        options.UseInMemoryDatabase("InMemoryAdminPanelTest");
-                        options.UseInternalServiceProvider(serviceProvider);
-                    });
-
-                    var sp = services.BuildServiceProvider();
-
-                    using var scope = sp.CreateScope();
-                    using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    try
-                    {
-                        context.Database.EnsureCreated();
-                        context.Employees.Add(
-                        new Employee
-                        {
-                            Id = 1,
-                            FirstName = "Test",
-                            LastName = "Last",
-                            Position = "Position",
-                            AppUserId = "123test"
-                        });
-                        context.Users.Add(
-                            new AppUser
-                            {
-                                Id = "123test"
-                            }
-                        );
-                        context.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new(ex.Message);
-                    }
-                });
-            }).CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
-            //_clinetAuth.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
+            _clinetAuth = _sut.GetAdminPanelHttpClient();
 
             _clientUnauth = _sut.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -89,9 +35,13 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 
         [Theory]
         [InlineData("AdminPanel/Index")]
+        [InlineData("AdminPanel/Employees")]
+        [InlineData("AdminPanel/Customers")]
+        [InlineData("AdminPanel/CustomerDetails")]
         [InlineData("AdminPanel/AddEmployee")]
         [InlineData("AdminPanel/UpdateEmployee")]
         [InlineData("AdminPanel/DeleteEmployee")]
+        [InlineData("AdminPanel/DeleteCustomer")]
         public async Task AllActions_ReturnRedirectToActionResultForUnauthenticatedUser(string url)
         {
             // Act
@@ -112,10 +62,64 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
             var content = await response.Content.ReadAsStringAsync();
-            Assert.Contains("<th>Id</th>", content);
+            Assert.Contains("Employees Management</a>", content);
+            Assert.Contains("Customers Management</a>", content);
+        }
+
+        [Fact]
+        public async Task Employees_ReturnsViewResultForAuthenticatedUser()
+        {
+
+            // Act
+            var response = await _clinetAuth.GetAsync($"AdminPanel/Employees");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+            var content = await response.Content.ReadAsStringAsync();
             Assert.Contains("<th>First Name</th>", content);
-            Assert.Contains("<th>Last Name</th>", content);
             Assert.Contains("<th>Position</th>", content);
+        }
+
+        [Fact]
+        public async Task Customers_ReturnsViewResultForAuthenticatedUser()
+        {
+            // Act
+            var response = await _clinetAuth.GetAsync("AdminPanel/Customers");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+            var content = await response.Content.ReadAsStringAsync();
+            Assert.Contains("<th>First Name</th>", content);
+            Assert.Contains("<th>PhoneNumber</th>", content);
+        }
+
+        [Fact]
+        public async Task CustomerDetails_ReturnsViewResultForAuthenticatedUser()
+        {
+            // Arrange
+            var id = 1;
+
+            // Act
+            var response = await _clinetAuth.GetAsync($"AdminPanel/CustomerDetails/{id}");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+            var content = await response.Content.ReadAsStringAsync();
+            Assert.Contains("<label for=\"LastName\">Last name</label>", content);
+            Assert.Contains("<label for=\"PostalCode\">Postal code</label>", content);
+        }
+
+        [Fact]
+        public async Task CustomerDetails_ReturnsNotFoundObjectResultWhenIdHasNoValueForAuthenticatedUser()
+        {
+            // Act
+            var response = await _clinetAuth.GetAsync($"AdminPanel/CustomerDetails");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -153,7 +157,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.Equal("/AdminPanel", response.Headers.Location.OriginalString);
+            Assert.Equal("/AdminPanel/Employees", response.Headers.Location.OriginalString);
         }
 
         [Fact]
@@ -232,7 +236,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.Equal("/AdminPanel", response.Headers.Location.OriginalString);
+            Assert.Equal("/AdminPanel/Employees", response.Headers.Location.OriginalString);
         }
 
         [Fact]
@@ -271,7 +275,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            Assert.Equal("/AdminPanel", response.Headers.Location.OriginalString);
+            Assert.Equal("/AdminPanel/Employees", response.Headers.Location.OriginalString);
         }
 
         [Fact]
