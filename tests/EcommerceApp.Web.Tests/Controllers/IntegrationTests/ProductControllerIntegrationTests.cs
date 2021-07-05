@@ -6,23 +6,22 @@ using Xunit;
 
 namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 {
-    public class CategoryControllerIntegrationTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class ProductControllerIntegrationTests : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _sut;
         private readonly HttpClient _client;
 
-        public CategoryControllerIntegrationTests(WebApplicationFactory<Startup> sut)
+        public ProductControllerIntegrationTests(WebApplicationFactory<Startup> sut)
         {
-            // Arrange
             _sut = sut;
             _client = _sut.GetGuestHttpClient();
         }
 
         [Fact]
-        public async Task Products_ReturnSuccessAndCorrectContentType()
+        public async Task Product_ReturnsSuccessAndCorrectContentTypeWhenIdHasValue()
         {
             // Act
-            var response = await _client.GetAsync("/Category/Products?categoryId=1");
+            var response = await _client.GetAsync("/Product/Product/1");
 
             // Assert
             response.EnsureSuccessStatusCode();
@@ -30,10 +29,10 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
         }
 
         [Fact]
-        public async Task Products_ReturnReturnNotFound()
+        public async Task Product_ReturnsNotFoundWhenIdHasNoValue()
         {
             // Act
-            var response = await _client.GetAsync("/Category/Products");
+            var response = await _client.GetAsync("/Product/Product");
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

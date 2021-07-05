@@ -18,11 +18,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
             // Arrange
             _sut = sut;
             _clientAuth = _sut.GetAdminPanelHttpClient();
-
-            _clientUnauth = _sut.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            _clientUnauth = _sut.GetGuestHttpClient();
         }
 
         [Theory]
