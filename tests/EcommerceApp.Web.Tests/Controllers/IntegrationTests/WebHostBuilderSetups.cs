@@ -53,7 +53,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
                             Position = "Position",
                             AppUserId = "123test"
                         });
-                        context.Users.Add(
+                        context.Users.AddRange(
                             new AppUser
                             {
                                 Id = "123test",
@@ -72,6 +72,15 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
                                             }
                                         }
                                     }
+                                }
+                            },
+                            new AppUser
+                            {
+                                Employee = new Employee
+                                {
+                                    Id = 2,
+                                    FirstName = "kaktus",
+                                    LastName = "flakowksi"
                                 }
                             }
                         );
