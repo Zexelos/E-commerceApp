@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -8,9 +7,9 @@ using Microsoft.Extensions.Options;
 
 namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests.TestAuthHandlers
 {
-    public class AdminTestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class EmployeeTestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        public AdminTestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
+        public EmployeeTestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
             UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {
         }
@@ -21,7 +20,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests.TestAuthHandlers
             {
                 new Claim(ClaimTypes.Name, "Test user"),
                 new Claim(ClaimTypes.NameIdentifier, "Test user"),
-                new Claim("IsAdmin", "True")
+                new Claim("IsEmployee", "True")
             };
             var identity = new ClaimsIdentity(claims, "Test");
             var principal = new ClaimsPrincipal(identity);

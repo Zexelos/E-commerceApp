@@ -17,7 +17,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
         {
             // Arrange
             _sut = sut;
-            _clientAuth = _sut.GetAdminPanelHttpClient();
+            _clientAuth = _sut.GetAdminHttpClient();
             _clientUnauth = _sut.GetGuestHttpClient();
         }
 
@@ -43,9 +43,9 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
         [Theory]
         [InlineData("AdminPanel/Index")]
         [InlineData("AdminPanel/Employees")]
-        [InlineData("AdminPanel/Employees/?selectedValue=FirstName&searchString=ziutek&pageSize=10&pageNumber=1")]
+        [InlineData("AdminPanel/Employees?selectedValue=FirstName&searchString=ziutek&pageSize=10&pageNumber=1")]
         [InlineData("AdminPanel/Customers")]
-        [InlineData("AdminPanel/Customers/?selectedValue=FirstName&searchString=ziutek&pageSize=10&pageNumber=1")]
+        [InlineData("AdminPanel/Customers?selectedValue=FirstName&searchString=ziutek&pageSize=10&pageNumber=1")]
         [InlineData("AdminPanel/CustomerDetails/1")]
         [InlineData("AdminPanel/AddEmployee/1")]
         [InlineData("AdminPanel/UpdateEmployee/1")]

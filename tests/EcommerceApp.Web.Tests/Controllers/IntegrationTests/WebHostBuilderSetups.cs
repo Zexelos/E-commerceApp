@@ -69,7 +69,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
             });
         }
 
-        public static HttpClient GetAdminPanelHttpClient(this WebApplicationFactory<Startup> webApplicationFactory)
+        public static HttpClient GetAdminHttpClient(this WebApplicationFactory<Startup> webApplicationFactory)
         {
             return webApplicationFactory.WithWebHostBuilder(builder =>
             {
@@ -136,6 +136,71 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
                                     Id = 2,
                                     FirstName = "kaktus",
                                     LastName = "flakowksi"
+                                }
+                            }
+                        );
+                        context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new(ex.Message);
+                    }
+                });
+            }).CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+        }
+
+        public static HttpClient GetEmployeeHttpClient(this WebApplicationFactory<Startup> webApplicationFactory)
+        {
+            return webApplicationFactory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddAuthentication("Test").AddScheme<AuthenticationSchemeOptions, EmployeeTestAuthHandler>("Test", options => { });
+
+                    var descriptor = services.SingleOrDefault(x => x.ServiceType == typeof(DbContextOptions<AppDbContext>));
+
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
+
+                    var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+
+                    services.AddDbContext<AppDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("InMemoryEmployeePanelTest");
+                        options.UseInternalServiceProvider(serviceProvider);
+                    });
+
+                    var sp = services.BuildServiceProvider();
+
+                    using var scope = sp.CreateScope();
+                    using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    try
+                    {
+                        context.Database.EnsureCreated();
+                        context.Orders.Add(
+                            new Order
+                            {
+                                Id = 1,
+                                OrderItems = new List<OrderItem>
+                                {
+                                    new OrderItem
+                                    {
+                                        Product = new Product
+                                        {
+                                            Id = 1,
+                                            Image = new byte[] { 1, 2, 3 },
+                                            Category = new Category
+                                            {
+                                                Id = 1,
+                                                Image = new byte[] { 1, 2, 3 }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         );
