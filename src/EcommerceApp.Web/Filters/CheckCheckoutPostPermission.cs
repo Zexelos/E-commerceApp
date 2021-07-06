@@ -21,7 +21,7 @@ namespace EcommerceApp.Web.Filters
             var appUserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var customerId = context.HttpContext.Request.Form["CustomerId"].ToString();
 
-            bool intParse = int.TryParse(customerId, out int parsedCartId);
+            bool intParse = int.TryParse(customerId, out int parsedCustomerId);
             var getCustomerId = await _customerService.GetCustomerIdByAppUserIdAsync(appUserId);
 
             if (intParse != true)
@@ -29,7 +29,7 @@ namespace EcommerceApp.Web.Filters
                 context.Result = new BadRequestResult();
             }
 
-            if (getCustomerId != parsedCartId && intParse == true)
+            if (getCustomerId != parsedCustomerId && intParse == true)
             {
                 context.Result = new UnauthorizedResult();
             }

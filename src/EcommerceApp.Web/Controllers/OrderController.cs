@@ -5,11 +5,13 @@ using EcommerceApp.Application.Interfaces;
 using EcommerceApp.Application.ViewModels.Order;
 using EcommerceApp.Web.Filters;
 using EcommerceApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace EcommerceApp.Web.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;

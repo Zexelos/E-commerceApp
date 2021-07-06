@@ -153,6 +153,14 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+            if (url.Contains("Category"))
+            {
+                Assert.StartsWith("/EmployeePanel/Categories", response.Headers.Location.OriginalString);
+            }
+            else
+            {
+                Assert.StartsWith("/EmployeePanel/Products", response.Headers.Location.OriginalString);
+            }
         }
 
         [Theory]

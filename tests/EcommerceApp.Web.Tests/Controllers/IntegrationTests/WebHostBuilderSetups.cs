@@ -253,6 +253,7 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
                             Email = "test@example.com",
                             Customer = new Customer
                             {
+                                Id = 1,
                                 AppUserId = "Test user",
                                 FirstName = "test",
                                 LastName = "integration",
@@ -263,16 +264,24 @@ namespace EcommerceApp.Web.Tests.Controllers.IntegrationTests
                                     {
                                         new CartItem
                                         {
-                                            Quantity = 5,
+                                            Id = 1,
+                                            Quantity = 1,
                                             Product = new Product
                                             {
                                                 Id = 1,
                                                 Name = "test",
                                                 UnitPrice = 1,
-                                                Image = new byte[]{1,2},
+                                                Image = new byte[] { 1, 2 },
                                                 UnitsInStock = 10,
                                             }
                                         }
+                                    }
+                                },
+                                Orders = new List<Order>
+                                {
+                                    new Order
+                                    {
+                                        ShipFirstName = "test"
                                     }
                                 }
                             }
