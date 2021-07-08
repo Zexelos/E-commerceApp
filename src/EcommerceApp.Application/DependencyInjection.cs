@@ -28,6 +28,7 @@ namespace EcommerceApp.Application
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<ICartItemService, CartItemService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IApiLoginService, ApiLoginService>();
             services.AddScoped(typeof(IPaginatorService<>), typeof(PaginatorService<>));
             services.AddMvc().AddFluentValidation();
             services.AddTransient<IValidator<EmployeeVM>, EmployeeVMValidator>();

@@ -39,10 +39,6 @@ namespace EcommerceAppApi.Controllers
         [TypeFilter(typeof(CheckCheckoutPostPermission))]
         public async Task<IActionResult> Checkout([FromBody] OrderCheckoutVM orderCheckoutVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             await _orderService.AddOrderAsync(orderCheckoutVM);
             return Ok();
         }

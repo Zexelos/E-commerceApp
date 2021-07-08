@@ -97,10 +97,6 @@ namespace EcommerceAppApi.Controllers
         [HttpPost("AddCategory")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryVM categoryVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             await _categoryService.AddCategoryAsync(categoryVM);
             return Ok();
         }
@@ -108,10 +104,6 @@ namespace EcommerceAppApi.Controllers
         [HttpPost("AddProduct")]
         public async Task<IActionResult> AddProduct([FromBody] ProductVM productVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             await _productService.AddProductAsync(productVM);
             return Ok();
         }
@@ -119,10 +111,6 @@ namespace EcommerceAppApi.Controllers
         [HttpPut("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory([FromBody] CategoryVM categoryVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             await _categoryService.UpdateCategoryAsync(categoryVM);
             return Ok();
         }
@@ -130,10 +118,6 @@ namespace EcommerceAppApi.Controllers
         [HttpPut("UpdateProduct")]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductVM productVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             await _productService.UpdateProductAsync(productVM);
             return Ok();
         }
