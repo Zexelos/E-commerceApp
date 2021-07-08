@@ -24,15 +24,11 @@ namespace EcommerceAppApi.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet("Checkout")]
+        [HttpGet("Checkout/{customerId}")]
         [TypeFilter(typeof(CheckCheckoutGetPermission))]
-        public async Task<IActionResult> Checkout(int? customerId)
+        public async Task<IActionResult> Checkout([FromRoute] int customerId)
         {
-            if (!customerId.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
-            return Ok(await _orderService.GetOrderCheckoutVMAsync(customerId.Value));
+            return Ok(await _orderService.GetOrderCheckoutVMAsync(customerId));
         }
 
         [HttpPost("Checkout")]
@@ -58,15 +54,11 @@ namespace EcommerceAppApi.Controllers
             return Ok(await _orderService.GetPaginatedCustomerOrdersAsync(appUserId, intPageSize, pageNumber.Value));
         }
 
-        [HttpGet("CustomerOrderDetails")]
-        public async Task<IActionResult> CustomerOrderDetails(int? id)
+        [HttpGet("CustomerOrderDetails/{id}")]
+        public async Task<IActionResult> CustomerOrderDetails([FromRoute] int id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
             var appUserId = User.Claims.First(x => x.Type == "UserId").Value;
-            return Ok(await _orderService.GetCustomerOrderDetailsAsync(appUserId, id.Value));
+            return Ok(await _orderService.GetCustomerOrderDetailsAsync(appUserId, id));
         }
     }
 }

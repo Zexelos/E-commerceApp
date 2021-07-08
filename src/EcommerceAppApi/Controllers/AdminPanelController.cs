@@ -65,13 +65,9 @@ namespace EcommerceAppApi.Controllers
             return Ok(await _customerService.GetPaginatedCustomersAsync(intPageSize, pageNumber.Value));
         }
 
-        [HttpGet("CustomerDetails")]
-        public async Task<IActionResult> CustomerDetails(int? id)
+        [HttpGet("CustomerDetails/{id}")]
+        public async Task<IActionResult> CustomerDetails([FromRoute] int? id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
             return Ok(await _customerService.GetCustomerDetailsAsync(id.Value));
         }
 
@@ -89,24 +85,16 @@ namespace EcommerceAppApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("DeleteEmployee")]
-        public async Task<IActionResult> DeleteEmployee([FromQuery] int? id)
+        [HttpDelete("DeleteEmployee/{id}")]
+        public async Task<IActionResult> DeleteEmployee([FromRoute] int? id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
             await _employeeService.DeleteEmployeeAsync(id.Value);
             return Ok();
         }
 
-        [HttpDelete("DeleteCustomer")]
-        public async Task<IActionResult> DeleteCustomer([FromQuery] int? id)
+        [HttpDelete("DeleteCustomer/{id}")]
+        public async Task<IActionResult> DeleteCustomer([FromRoute] int? id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
             await _customerService.DeleteCustomerAsync(id.Value);
             return Ok();
         }

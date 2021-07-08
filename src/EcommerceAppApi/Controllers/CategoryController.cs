@@ -15,11 +15,10 @@ namespace EcommerceAppApi.Controllers
             _productService = productService;
         }
 
-        [HttpGet("Products")]
-        public async Task<IActionResult> Products(int categoryId)
+        [HttpGet("Products/{categoryId}")]
+        public async Task<IActionResult> Products([FromRoute] int categoryId)
         {
-            var model = await _productService.GetProductsByCategoryIdAsync(categoryId);
-            return Ok(model);
+            return Ok(await _productService.GetProductsByCategoryIdAsync(categoryId));
         }
     }
 }

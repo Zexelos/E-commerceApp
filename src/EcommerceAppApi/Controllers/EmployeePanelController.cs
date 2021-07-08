@@ -84,14 +84,10 @@ namespace EcommerceAppApi.Controllers
             return Ok(await _orderService.GetPaginatedOrdersAsync(intPageSize, pageNumber.Value));
         }
 
-        [HttpGet("OrderDetails")]
-        public async Task<IActionResult> OrderDetails(int? id)
+        [HttpGet("OrderDetails/{id}")]
+        public async Task<IActionResult> OrderDetails([FromRoute] int id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
-            return Ok(await _orderService.GetOrderDetailsAsync(id.Value));
+            return Ok(await _orderService.GetOrderDetailsAsync(id));
         }
 
         [HttpPost("AddCategory")]
@@ -122,36 +118,24 @@ namespace EcommerceAppApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("DeleteCategory")]
-        public async Task<IActionResult> DeleteCategory(int? id)
+        [HttpDelete("DeleteCategory/{id}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
-            await _categoryService.DeleteCategoryAsync(id.Value);
+            await _categoryService.DeleteCategoryAsync(id);
             return Ok();
         }
 
-        [HttpDelete("DeleteProduct")]
-        public async Task<IActionResult> DeleteProduct(int? id)
+        [HttpDelete("DeleteProduct/{id}")]
+        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
-            await _productService.DeleteProductAsync(id.Value);
+            await _productService.DeleteProductAsync(id);
             return Ok();
         }
 
-        [HttpDelete("DeleteOrder")]
-        public async Task<IActionResult> DeleteOrder(int? id)
+        [HttpDelete("DeleteOrder/{id}")]
+        public async Task<IActionResult> DeleteOrder([FromRoute] int id)
         {
-            if (!id.HasValue)
-            {
-                return NotFound("You must pass a valid ID in the route");
-            }
-            await _orderService.DeleteOrderAsync(id.Value);
+            await _orderService.DeleteOrderAsync(id);
             return Ok();
         }
     }

@@ -28,31 +28,35 @@ namespace EcommerceAppApi.Controllers
         }
 
         [HttpPost("AddToCart")]
-        public async Task<IActionResult> AddToCart(int id, int quantity)
+        public async Task<IActionResult> AddToCart([FromQuery] int? id, [FromQuery] int? quantity)
         {
+            if (!id.HasValue || !quantity.HasValue)
+            {
+                return NotFound("You must pass a valid ID and quantity in the route");
+            }
             var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _cartItemService.AddCartItem(id, quantity, appUserId);
+            await _cartItemService.AddCartItem(id.Value, quantity.Value, appUserId);
             return Ok();
         }
 
-        [HttpPut("IncreaseCartItemQuantityByOne")]
-        public async Task<IActionResult> IncreaseCartItemQuantityByOne(int cartItemId)
+        [HttpPut("IncreaseCartItemQuantityByOne/{cartItemId}")]
+        public async Task<IActionResult> IncreaseCartItemQuantityByOne([FromRoute] int? cartItemId)
         {
-            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId);
+            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId.Value);
             return Ok();
         }
 
-        [HttpPut("DecreaseCartItemQuantityByOne")]
-        public async Task<IActionResult> DecreaseCartItemQuantityByOne(int cartItemId)
+        [HttpPut("DecreaseCartItemQuantityByOne/{cartItemId}")]
+        public async Task<IActionResult> DecreaseCartItemQuantityByOne([FromRoute] int? cartItemId)
         {
-            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId);
+            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId.Value);
             return Ok();
         }
 
-        [HttpDelete("DeleteCartItem")]
-        public async Task<IActionResult> DeleteCartItem(int cartItemId)
+        [HttpDelete("DeleteCartItem/{cartItemId}")]
+        public async Task<IActionResult> DeleteCartItem([FromRoute] int? cartItemId)
         {
-            await _cartItemService.DeleteCartItemAsync(cartItemId);
+            await _cartItemService.DeleteCartItemAsync(cartItemId.Value);
             return Ok();
         }
     }

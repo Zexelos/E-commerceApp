@@ -18,8 +18,8 @@ namespace EcommerceAppApi.Controllers
             _productService = productService;
         }
 
-        [HttpGet("Product")]
-        public async Task<IActionResult> Product(int id)
+        [HttpGet("Product/{id}")]
+        public async Task<IActionResult> Product([FromRoute] int id)
         {
             return Ok(await _productService.GetProductDetailsForUserAsync(id));
         }
