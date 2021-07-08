@@ -40,23 +40,23 @@ namespace EcommerceAppApi.Controllers
         }
 
         [HttpPut("IncreaseCartItemQuantityByOne/{cartItemId}")]
-        public async Task<IActionResult> IncreaseCartItemQuantityByOne([FromRoute] int? cartItemId)
+        public async Task<IActionResult> IncreaseCartItemQuantityByOne([FromRoute] int cartItemId)
         {
-            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId.Value);
+            await _cartItemService.IncreaseCartItemQuantityByOneAsync(cartItemId);
             return Ok();
         }
 
         [HttpPut("DecreaseCartItemQuantityByOne/{cartItemId}")]
-        public async Task<IActionResult> DecreaseCartItemQuantityByOne([FromRoute] int? cartItemId)
+        public async Task<IActionResult> DecreaseCartItemQuantityByOne([FromRoute] int cartItemId)
         {
-            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId.Value);
+            await _cartItemService.DecreaseCartItemQuantityByOneAsync(cartItemId);
             return Ok();
         }
 
         [HttpDelete("DeleteCartItem/{cartItemId}")]
-        public async Task<IActionResult> DeleteCartItem([FromRoute] int? cartItemId)
+        public async Task<IActionResult> DeleteCartItem([FromRoute] int cartItemId)
         {
-            await _cartItemService.DeleteCartItemAsync(cartItemId.Value);
+            await _cartItemService.DeleteCartItemAsync(cartItemId);
             return Ok();
         }
     }

@@ -66,9 +66,9 @@ namespace EcommerceAppApi.Controllers
         }
 
         [HttpGet("CustomerDetails/{id}")]
-        public async Task<IActionResult> CustomerDetails([FromRoute] int? id)
+        public async Task<IActionResult> CustomerDetails([FromRoute] int id)
         {
-            return Ok(await _customerService.GetCustomerDetailsAsync(id.Value));
+            return Ok(await _customerService.GetCustomerDetailsAsync(id));
         }
 
         [HttpPost("AddEmployee")]
@@ -86,16 +86,16 @@ namespace EcommerceAppApi.Controllers
         }
 
         [HttpDelete("DeleteEmployee/{id}")]
-        public async Task<IActionResult> DeleteEmployee([FromRoute] int? id)
+        public async Task<IActionResult> DeleteEmployee([FromRoute] int id)
         {
-            await _employeeService.DeleteEmployeeAsync(id.Value);
+            await _employeeService.DeleteEmployeeAsync(id);
             return Ok();
         }
 
         [HttpDelete("DeleteCustomer/{id}")]
-        public async Task<IActionResult> DeleteCustomer([FromRoute] int? id)
+        public async Task<IActionResult> DeleteCustomer([FromRoute] int id)
         {
-            await _customerService.DeleteCustomerAsync(id.Value);
+            await _customerService.DeleteCustomerAsync(id);
             return Ok();
         }
     }
