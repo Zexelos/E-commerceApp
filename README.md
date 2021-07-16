@@ -6,6 +6,9 @@ The application is designed to manage an online shop. It allows you to manage em
 
 **The application was developed based on Clean Architecture pattern.**
 
+###Live website version hosted on Oracle Cloud with Nginx:
+>https://ecommerce.adrianpolaczak.codes
+
 ## Technologies
 * .NET 5
 * Entity Framework Core 5
