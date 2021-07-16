@@ -6,8 +6,14 @@ The application is designed to manage an online shop. It allows you to manage em
 
 **The application was developed based on Clean Architecture pattern.**
 
-###Live website version hosted on Oracle Cloud with Nginx:
->https://ecommerce.adrianpolaczak.codes
+## Live version of the website hosted on Oracle Cloud with Nginx:
+
+### https://ecommerce.adrianpolaczak.codes
+
+Feel free to play around as an administrator:
+
+Email: ```admin@admin.com```  
+Password: ```Pa$$w0rd!```
 
 ## Technologies
 * .NET 5
